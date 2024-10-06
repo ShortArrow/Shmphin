@@ -6,12 +6,12 @@ namespace main.memory;
 public class SharedMemoryHelper
 {
     /// <summary>
-    /// 指定した共有メモリの名称と範囲からデータを読み出します。
+    /// Read data from the specified shared memory by name and range.
     /// </summary>
-    /// <param name="memoryName">共有メモリの名称</param>
-    /// <param name="offset">読み出し開始位置（バイト単位）</param>
-    /// <param name="length">読み出すデータの長さ（バイト単位）</param>
-    /// <returns>読み出したデータを含むバイト配列</returns>
+    /// <param name="memoryName">Name of the shared memory</param>
+    /// <param name="offset">Read start position (in bytes)</param>
+    /// <param name="length">Length of data to read (in bytes)</param>
+    /// <returns>Byte array containing the read data</returns>
     [SupportedOSPlatform("windows")]
     public static byte[] ReadFromSharedMemory(string memoryName, long offset, int length)
     {
@@ -19,24 +19,24 @@ public class SharedMemoryHelper
 
         try
         {
-            // 既存のメモリマップトファイルを開く
+            // open the existing memory-mapped file
             using MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(memoryName);
-            // 指定した範囲のビューを作成
+            // create a view accessor for the specified range
             using MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, length, MemoryMappedFileAccess.Read);
-            // バッファにデータを読み込む
+            // read data into the buffer
             accessor.ReadArray(0, buffer, 0, length);
         }
         catch (FileNotFoundException)
         {
-            Console.WriteLine("指定された共有メモリが見つかりません。");
+            Console.WriteLine("Not found the specified shared memory.");
         }
         catch (UnauthorizedAccessException)
         {
-            Console.WriteLine("共有メモリへのアクセスが拒否されました。");
+            Console.WriteLine("Permission denied to access the shared memory.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"エラーが発生しました: {ex.Message}");
+            Console.WriteLine($"Error occurred: {ex.Message}");
         }
 
         return buffer;
