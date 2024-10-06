@@ -1,11 +1,28 @@
-﻿namespace main;
+﻿using Spectre.Console;
 
-class Program {
-  static void Main(string[] args) {
-    if (args.Length > 0) {
-      Console.WriteLine($"引数: {string.Join(", ", args)}");
-    } else {
-      Console.WriteLine("引数がありません。");
-    }
+namespace main;
+
+class Program
+{
+  static void Main(string[] args)
+  {
+    // Create the layout
+    var layout = new Layout("Root")
+        .SplitColumns(
+            new Layout("Left"),
+            new Layout("Right")
+                .SplitRows(
+                    new Layout("Top"),
+                    new Layout("Bottom")));
+
+    // Update the left column
+    layout["Left"].Update(
+        new Panel(
+            Align.Center(
+                new Markup("Hello [blue]World![/]"),
+                VerticalAlignment.Middle))
+            .Expand());
+
+    AnsiConsole.Write(layout);
   }
 }
