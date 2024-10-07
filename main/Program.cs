@@ -7,20 +7,14 @@ class Program
   static Layout CreateLayout()
   {
     // Create the layout
-    var layout = new Layout("Root")
-        .SplitColumns(
-            new Layout("Left"),
-            new Layout("Right")
-                .SplitRows(
-                    new Layout("Top"),
-                    new Layout("Bottom")));
+    var layout = new Layout("Root").SplitColumns(
+        new Layout("Left"),
+        new Layout("Right").SplitRows(new Layout("Top"), new Layout("Bottom")));
 
     // Update the left column
     layout["Left"].Update(
-        new Panel(
-            Align.Center(
-                new Markup("Hello [blue]World![/]"),
-                VerticalAlignment.Middle))
+        new Panel(Align.Center(new Markup("Hello [blue]World![/]"),
+                               VerticalAlignment.Middle))
             .Expand());
     return layout;
   }
@@ -28,27 +22,29 @@ class Program
   {
     string input = string.Empty;
     AnsiConsole.Clear();
-    AnsiConsole.Live(new Markup("[bold green]Start Shmphin.[/]"))
-    .Start(ctx =>
+    var cts = new CancellationTokenSource();
+    Task.Run(() =>
+    {
+      while (true)
+      {
+        var key = Console.ReadKey(true);
+        if (key.Key.ToString().ToLower() == "q")
+        {
+          cts.Cancel();
+          break;
+        }
+      }
+    });
+    var startMessage = new Markup("[bold green]Start Shmphin.[/]");
+    AnsiConsole.Live(startMessage).Start(context =>
     {
       int counter = 0;
-      var inputTask = new Thread(() =>
+      while (!cts.Token.IsCancellationRequested)
       {
-        while (input != "q")
-        {
-          var key = Console.ReadKey(true);
-          input = key.KeyChar.ToString().ToLower();
-
-        }
-      });
-      inputTask.Start();
-      while (input != "q")
-      {
-        ctx.UpdateTarget(CreateLayout());
-        Thread.Sleep(1000);
+        context.UpdateTarget(CreateLayout());
         counter++;
+        Thread.Sleep(1000);
       }
-      inputTask.Join();
     });
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold red]Shmphin is Finished.[/]");
