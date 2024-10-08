@@ -18,33 +18,42 @@ class Program
             .Expand());
     return layout;
   }
-  static void Main(string[] args)
+  static async Task Main(string[] args)
   {
     string input = string.Empty;
     AnsiConsole.Clear();
     var cts = new CancellationTokenSource();
-    Task.Run(() =>
+    var inputTask = Task.Run(() =>
     {
-      while (true)
+      while (!cts.Token.IsCancellationRequested)
       {
         var key = Console.ReadKey(true);
-        if (key.Key.ToString().ToLower() == "q")
+        if (key.KeyChar.ToString()
+        .Equals("q", StringComparison.CurrentCultureIgnoreCase))
         {
-          cts.Cancel();
-          break;
+          cts.Cancel(); // Request cancellation
         }
       }
     });
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
-    AnsiConsole.Live(startMessage).Start(context =>
+    await AnsiConsole.Live(startMessage)
+    .StartAsync(async context =>
     {
       int counter = 0;
       while (!cts.Token.IsCancellationRequested)
       {
         context.UpdateTarget(CreateLayout());
         counter++;
-        Thread.Sleep(1000);
+        try
+        {
+          await Task.Delay(1000, cts.Token);
+        }
+        catch (TaskCanceledException)
+        {
+          // No thing to do
+        }
       }
+      await inputTask;
     });
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold red]Shmphin is Finished.[/]");
