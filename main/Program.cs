@@ -4,7 +4,7 @@ namespace main;
 
 class Program
 {
-  static Layout CreateLayout()
+  static Layout CreateLayout(String message)
   {
     // Create the layout
     var layout = new Layout("Root").SplitColumns(
@@ -16,12 +16,17 @@ class Program
         new Panel(Align.Center(new Markup("Hello [blue]World![/]"),
                                VerticalAlignment.Middle))
             .Expand());
+    layout["Right"]["Top"].Update(
+        new Panel(Align.Center(new Markup($"[green]{message}[/]"),
+                               VerticalAlignment.Middle))
+            .Expand());
     return layout;
   }
   static async Task Main(string[] args)
   {
     string input = string.Empty;
     AnsiConsole.Clear();
+    var uts = new TaskCompletionSource<bool>(false);
     var cts = new CancellationTokenSource();
     var inputTask = Task.Run(() =>
     {
@@ -33,6 +38,10 @@ class Program
         {
           cts.Cancel(); // Request cancellation
         }
+        else if (key.KeyChar.ToString().Equals("u", StringComparison.CurrentCultureIgnoreCase))
+        {
+          uts.TrySetResult(true);
+        }
       }
     });
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
@@ -42,11 +51,19 @@ class Program
       int counter = 0;
       while (!cts.Token.IsCancellationRequested)
       {
-        context.UpdateTarget(CreateLayout());
+        var layout = CreateLayout("normal");
+        var updateTask = uts.Task;
+        if (updateTask.IsCompleted)
+        {
+          layout = CreateLayout("updated");
+          uts = new TaskCompletionSource<bool>(false);
+        }
+
+        context.UpdateTarget(layout);
         counter++;
         try
         {
-          await Task.Delay(1000, cts.Token);
+          await Task.WhenAny(Task.Delay(1000, cts.Token), uts.Task);
         }
         catch (TaskCanceledException)
         {
