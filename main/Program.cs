@@ -7,38 +7,12 @@ namespace main;
 [SupportedOSPlatform("windows")]
 class Program
 {
-  private static string sharedMemoryName = string.Empty;
-  private static byte[] bytes= new byte[8];
-  static Layout CreateLayout(string message)
-  {
-    // Create the layout
-    var layout = new Layout("Root").SplitColumns(
-        new Layout("Left"),
-        new Layout("Right").SplitRows(new Layout("Top"), new Layout("Bottom")));
-
-    // Update the left column
-    layout["Left"].Update(
-        new Panel(Align.Center(new Markup($"[blue]{sharedMemoryName}[/]"),
-                               VerticalAlignment.Middle))
-            .Expand());
-    layout["Right"]["Top"].Update(
-        new Panel(Align.Center(new Markup($"[green]{message}[/]"),
-                               VerticalAlignment.Middle))
-            .Expand());
-    layout["Right"]["Bottom"].Update(
-        new Panel(Align.Center(new Markup($"[yellow]{BitConverter.ToString(bytes)}[/]"),
-                               VerticalAlignment.Middle))
-            .Expand());
-    return layout;
-  }
+  private static byte[] bytes = new byte[8];
   static async Task Main(string[] args)
   {
     var input = string.Empty;
     AnsiConsole.Clear();
-    AnsiConsole.MarkupLine($"Welcome! [bold green]Shmphin[/] is a shared memory editor.");
-    sharedMemoryName = AnsiConsole.Prompt(
-      new TextPrompt<string>("Enter the shared memory name:")
-    );
+    memory.Params.SharedMemoryName = ui.Input.GetSharedMemoryName();
     var uts = new TaskCompletionSource<bool>(false);
     var cts = new CancellationTokenSource();
     var inputTask = Task.Run(() =>
@@ -64,13 +38,12 @@ class Program
       int counter = 0;
       while (!cts.Token.IsCancellationRequested)
       {
-        var layout = CreateLayout("normal");
+        var layout = ui.Ui.CreateLayout("normal");
         var updateTask = uts.Task;
         if (updateTask.IsCompleted)
         {
-          layout = CreateLayout("updated");
-          var buffer = memory.SharedMemoryHelper.ReadFromSharedMemory(sharedMemoryName, 0, 8);
-          bytes = buffer;
+          layout = ui.Ui.CreateLayout("updated");
+          memory.SnapShot.UpdateSnapShot();
           uts = new TaskCompletionSource<bool>(false);
         }
 

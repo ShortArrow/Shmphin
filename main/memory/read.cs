@@ -8,19 +8,18 @@ public class SharedMemoryHelper
     /// <summary>
     /// Read data from the specified shared memory by name and range.
     /// </summary>
-    /// <param name="memoryName">Name of the shared memory</param>
     /// <param name="offset">Read start position (in bytes)</param>
     /// <param name="length">Length of data to read (in bytes)</param>
     /// <returns>Byte array containing the read data</returns>
     [SupportedOSPlatform("windows")]
-    public static byte[] ReadFromSharedMemory(string memoryName, long offset, int length)
+    public static byte[] ReadFromSharedMemory(long offset, int length)
     {
         byte[] buffer = new byte[length];
 
         try
         {
             // open the existing memory-mapped file
-            using MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(memoryName);
+            using MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(Params.SharedMemoryName);
             // create a view accessor for the specified range
             using MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, length, MemoryMappedFileAccess.Read);
             // read data into the buffer
