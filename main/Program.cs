@@ -1,12 +1,15 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Runtime.Versioning;
+using Microsoft.VisualBasic;
 using Spectre.Console;
 
 namespace main;
 
+[SupportedOSPlatform("windows")]
 class Program
 {
   private static string sharedMemoryName = string.Empty;
-  static Layout CreateLayout(String message)
+  private static byte[] bytes= new byte[8];
+  static Layout CreateLayout(string message)
   {
     // Create the layout
     var layout = new Layout("Root").SplitColumns(
@@ -20,6 +23,10 @@ class Program
             .Expand());
     layout["Right"]["Top"].Update(
         new Panel(Align.Center(new Markup($"[green]{message}[/]"),
+                               VerticalAlignment.Middle))
+            .Expand());
+    layout["Right"]["Bottom"].Update(
+        new Panel(Align.Center(new Markup($"[yellow]{BitConverter.ToString(bytes)}[/]"),
                                VerticalAlignment.Middle))
             .Expand());
     return layout;
@@ -62,6 +69,8 @@ class Program
         if (updateTask.IsCompleted)
         {
           layout = CreateLayout("updated");
+          var buffer = memory.SharedMemoryHelper.ReadFromSharedMemory(sharedMemoryName, 0, 8);
+          bytes = buffer;
           uts = new TaskCompletionSource<bool>(false);
         }
 

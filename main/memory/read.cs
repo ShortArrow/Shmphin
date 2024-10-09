@@ -25,6 +25,7 @@ public class SharedMemoryHelper
             using MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, length, MemoryMappedFileAccess.Read);
             // read data into the buffer
             accessor.ReadArray(0, buffer, 0, length);
+            accessor.Dispose();
         }
         catch (FileNotFoundException)
         {
