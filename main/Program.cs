@@ -15,22 +15,7 @@ class Program
     memory.Params.SharedMemoryName = ui.Input.GetSharedMemoryName();
     var uts = new TaskCompletionSource<bool>(false);
     var cts = new CancellationTokenSource();
-    var inputTask = Task.Run(() =>
-    {
-      while (!cts.Token.IsCancellationRequested)
-      {
-        var key = Console.ReadKey(true);
-        if (key.KeyChar.ToString()
-        .Equals("q", StringComparison.CurrentCultureIgnoreCase))
-        {
-          cts.Cancel(); // Request cancellation
-        }
-        else if (key.KeyChar.ToString().Equals("u", StringComparison.CurrentCultureIgnoreCase))
-        {
-          uts.TrySetResult(true);
-        }
-      }
-    });
+    var inputTask = Task.Run(() => ui.Input.InputLoop(cts, uts));
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
