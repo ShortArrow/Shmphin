@@ -12,6 +12,7 @@ class Program
   {
     var input = string.Empty;
     AnsiConsole.Clear();
+    ui.Welcome.Show();
     memory.Params.SharedMemoryName = ui.Input.GetSharedMemoryName();
     var uts = new TaskCompletionSource<bool>(false);
     var cts = new CancellationTokenSource();
