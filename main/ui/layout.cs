@@ -38,7 +38,7 @@ class Ui
     );
     layout["Main"]["Left"].Update(
       new Panel(Align.Center(
-        new Markup($"[yellow]{BitConverter.ToString(memory.SnapShot.Current)}[/]"),
+        CreateDiffView(),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Default : Color.Green)
@@ -54,8 +54,14 @@ class Ui
     );
     return layout;
   }
-  private void CreateDiffView()
+  private static Markup CreateDiffView()
   {
-
+    var before = memory.SnapShot.Before;
+    var current = memory.SnapShot.Current;
+    var diff = before.Zip(current, (b, c) => (Before: b, Current: c)).ToArray();
+    var diffMarkup = diff.Select(d => d.Before == d.Current 
+      ? $"[yellow]{d.Current:X2}[/]" 
+      : $"[red]{d.Current:X2}[/]");
+    return new Markup(string.Join(" ", diffMarkup));
   }
 }
