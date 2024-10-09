@@ -5,6 +5,12 @@ namespace main.ui;
 
 class Ui
 {
+  private static bool _isExMode = false;
+  public static bool IsExMode
+  {
+    get => _isExMode;
+    set => _isExMode = value;
+  }
   public static Layout CreateLayout(string message)
   {
     // Create the layout
@@ -27,10 +33,10 @@ class Ui
             .Expand());
     layout["Main"]["Left"].Update(
         new Panel(Align.Center(new Markup($"[yellow]{BitConverter.ToString(memory.SnapShot.Current)}[/]"),
-                               VerticalAlignment.Middle))
+                               VerticalAlignment.Middle)).BorderColor(IsExMode ? Color.Blue : Color.Default)
             .Expand());
     layout["Footer"].Update(
-        new Panel(Align.Center(new Markup($"[green]Shmphin[/]"),
+        new Panel(Align.Center(new Markup($"[green]{Input.inputBuffer}[/]"),
                                VerticalAlignment.Middle))
             .Expand());
     return layout;

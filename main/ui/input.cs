@@ -6,7 +6,7 @@ namespace main.ui;
 
 class Input
 {
-  private static StringBuilder inputBuffer = new StringBuilder();
+  public static StringBuilder inputBuffer = new();
   public static string GetSharedMemoryName()
   {
     return AnsiConsole.Prompt(
@@ -18,14 +18,38 @@ class Input
     while (!cts.Token.IsCancellationRequested)
     {
       var key = Console.ReadKey(true);
-      if (key.KeyChar.ToString()
-      .Equals("q", StringComparison.CurrentCultureIgnoreCase))
+      var name = key.KeyChar.ToString();
+      if (name.Equals("q", StringComparison.CurrentCultureIgnoreCase))
       {
         cts.Cancel(); // Request cancellation
       }
-      else if (key.KeyChar.ToString().Equals("u", StringComparison.CurrentCultureIgnoreCase))
+      else if (name.Equals("u", StringComparison.CurrentCultureIgnoreCase))
       {
         uts.TrySetResult(true);
+      }
+      else if (name.Equals(":", StringComparison.CurrentCultureIgnoreCase))
+      {
+        Ui.IsExMode = true;
+        inputBuffer.Clear();
+        inputBuffer.Append(">");
+      }
+      else if (Ui.IsExMode)
+      {
+        if(name.Equals("{Enter}", StringComparison.CurrentCultureIgnoreCase))
+        {
+          Ui.IsExMode = false;
+          // Execute the command
+          inputBuffer.Clear();
+          inputBuffer.Append("Command executed.");
+        }
+        else if(name.Equals("{Backspace}", StringComparison.CurrentCultureIgnoreCase))
+        {
+          inputBuffer.Remove(inputBuffer.Length - 1, 1);
+        }
+        else
+        {
+          inputBuffer.Append(key.KeyChar);
+        }
       }
     }
   }
