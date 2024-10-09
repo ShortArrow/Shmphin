@@ -19,36 +19,39 @@ class Input
     {
       var key = Console.ReadKey(true);
       var name = key.KeyChar.ToString();
-      if (name.Equals("q", StringComparison.CurrentCultureIgnoreCase))
+      if (Ui.IsExMode)
       {
-        cts.Cancel(); // Request cancellation
-      }
-      else if (name.Equals("u", StringComparison.CurrentCultureIgnoreCase))
-      {
-        uts.TrySetResult(true);
-      }
-      else if (name.Equals(":", StringComparison.CurrentCultureIgnoreCase))
-      {
-        Ui.IsExMode = true;
-        inputBuffer.Clear();
-        inputBuffer.Append(">");
-      }
-      else if (Ui.IsExMode)
-      {
-        if(name.Equals("{Enter}", StringComparison.CurrentCultureIgnoreCase))
+        if (key.Key == ConsoleKey.Enter)
         {
           Ui.IsExMode = false;
           // Execute the command
           inputBuffer.Clear();
           inputBuffer.Append("Command executed.");
         }
-        else if(name.Equals("{Backspace}", StringComparison.CurrentCultureIgnoreCase))
+        else if (key.Key == ConsoleKey.Backspace)
         {
           inputBuffer.Remove(inputBuffer.Length - 1, 1);
         }
         else
         {
           inputBuffer.Append(key.KeyChar);
+        }
+      }
+      else
+      {
+        if (name.Equals("q", StringComparison.CurrentCultureIgnoreCase))
+        {
+          cts.Cancel(); // Request cancellation
+        }
+        else if (name.Equals("u", StringComparison.CurrentCultureIgnoreCase))
+        {
+          uts.TrySetResult(true); // Request update SnapShot
+        }
+        else if (name.Equals(":", StringComparison.CurrentCultureIgnoreCase))
+        {
+          Ui.IsExMode = true;  // Enter Ex mode
+          inputBuffer.Clear();
+          inputBuffer.Append('>');
         }
       }
     }

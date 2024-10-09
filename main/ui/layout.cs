@@ -33,11 +33,12 @@ class Ui
             .Expand());
     layout["Main"]["Left"].Update(
         new Panel(Align.Center(new Markup($"[yellow]{BitConverter.ToString(memory.SnapShot.Current)}[/]"),
-                               VerticalAlignment.Middle)).BorderColor(IsExMode ? Color.Blue : Color.Default)
+                               VerticalAlignment.Middle)).BorderColor(IsExMode ? Color.Default: Color.Green)
             .Expand());
     layout["Footer"].Update(
         new Panel(Align.Center(new Markup($"[green]{Input.inputBuffer}[/]"),
                                VerticalAlignment.Middle))
+            .BorderColor(IsExMode ? Color.Green: Color.Default)
             .Expand());
     return layout;
   }
