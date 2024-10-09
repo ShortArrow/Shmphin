@@ -1,9 +1,11 @@
-﻿using Spectre.Console;
+﻿using Microsoft.VisualBasic;
+using Spectre.Console;
 
 namespace main;
 
 class Program
 {
+  private static string sharedMemoryName = string.Empty;
   static Layout CreateLayout(String message)
   {
     // Create the layout
@@ -13,7 +15,7 @@ class Program
 
     // Update the left column
     layout["Left"].Update(
-        new Panel(Align.Center(new Markup("Hello [blue]World![/]"),
+        new Panel(Align.Center(new Markup($"[blue]{sharedMemoryName}[/]"),
                                VerticalAlignment.Middle))
             .Expand());
     layout["Right"]["Top"].Update(
@@ -24,8 +26,12 @@ class Program
   }
   static async Task Main(string[] args)
   {
-    string input = string.Empty;
+    var input = string.Empty;
     AnsiConsole.Clear();
+    AnsiConsole.MarkupLine($"Welcome! [bold green]Shmphin[/] is a shared memory editor.");
+    sharedMemoryName = AnsiConsole.Prompt(
+      new TextPrompt<string>("Enter the shared memory name:")
+    );
     var uts = new TaskCompletionSource<bool>(false);
     var cts = new CancellationTokenSource();
     var inputTask = Task.Run(() =>
