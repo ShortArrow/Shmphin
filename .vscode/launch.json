@@ -3,12 +3,28 @@
     {
       "type": "coreclr",
       "request": "launch",
-      "name": "Launch .NET Core App",
+      "name": "Launch Internal",
       "program": "${workspaceFolder}/main/bin/Debug/net8.0/main.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "integratedTerminal"
+    },
+    {
+      "type": "coreclr",
+      "request": "launch",
+      "name": "Launch External",
+      "program": "${workspaceFolder}/main/bin/Debug/net8.0/main.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "externalTerminal"
+    },
+    {
+      "type": "coreclr",
+      "request": "attach",
+      "name": "Attach",
+      "processId": "${command:pickProcess}"
     }
   ]
 }
