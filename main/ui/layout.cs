@@ -67,7 +67,8 @@ class Ui
     var header = new List<Markup>();
     for (int i = 0; i < 8; i++)
     {
-      header.Add(new Markup($"[blue]{i:X2}[/]"));
+      var color = i % 2 == 0 ? "blue" : "aqua";
+      header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
     grid.AddRow([.. header]);
     for (int i = 0; i < diff.Length; i += 8)
