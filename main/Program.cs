@@ -34,7 +34,7 @@ class Program
         counter++;
         try
         {
-          await Task.WhenAny(Task.Delay(1000, ui.Input.cts.Token), ui.Input.uts.Task);
+          await Task.WhenAny(Task.Delay(100, ui.Input.cts.Token), ui.Input.uts.Task);
         }
         catch (TaskCanceledException)
         {
