@@ -64,13 +64,19 @@ class Ui
     {
       grid.AddColumn();
     }
+    var header = new List<Markup>();
+    for (int i = 0; i < 8; i++)
+    {
+      header.Add(new Markup($"[blue]{i:X2}[/]"));
+    }
+    grid.AddRow([.. header]);
     for (int i = 0; i < diff.Length; i += 8)
     {
       var row = diff.Skip(i).Take(8).Select(d =>
       {
         var byteValue = d.Current;
         var markup = d.Before == d.Current
-          ? $"[yellow]{byteValue:X2}[/]"
+          ? $"[white]{byteValue:X2}[/]"
           : $"[red]{byteValue:X2}[/]";
         return new Markup(markup);
       }).ToArray();
