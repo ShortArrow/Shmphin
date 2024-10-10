@@ -1,4 +1,5 @@
 
+using System.Diagnostics;
 using System.Text;
 using Spectre.Console;
 
@@ -18,7 +19,7 @@ class Input
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {
     return keyInfo
-      .Key
+      .KeyChar
       .ToString()
       .Equals(name, StringComparison.CurrentCultureIgnoreCase);
   }
@@ -27,7 +28,6 @@ class Input
     while (!cts.Token.IsCancellationRequested)
     {
       var key = Console.ReadKey(true);
-      var name = key.KeyChar.ToString();
       if (Ui.IsExMode)
       {
         if (key.Key == ConsoleKey.Enter)
@@ -48,6 +48,7 @@ class Input
       }
       else
       {
+        Debug.WriteLine($"nomal mode: {key.KeyChar}");
         if (KeyCheck(key, "q"))
         {
           cts.Cancel(); // Request cancellation
