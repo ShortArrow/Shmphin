@@ -15,6 +15,13 @@ class Input
       new TextPrompt<string>("Enter the shared memory name:")
     );
   }
+  public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
+  {
+    return keyInfo
+      .Key
+      .ToString()
+      .Equals(name, StringComparison.CurrentCultureIgnoreCase);
+  }
   public static void InputLoop()
   {
     while (!cts.Token.IsCancellationRequested)
@@ -41,20 +48,24 @@ class Input
       }
       else
       {
-        if (name.Equals("q", StringComparison.CurrentCultureIgnoreCase))
+        if (KeyCheck(key, "q"))
         {
           cts.Cancel(); // Request cancellation
         }
-        else if (name.Equals("u", StringComparison.CurrentCultureIgnoreCase))
+        else if (KeyCheck(key, "u"))
         {
           uts.TrySetResult(true); // Request update SnapShot
         }
-        else if (name.Equals(":", StringComparison.CurrentCultureIgnoreCase))
+        else if (KeyCheck(key, ":"))
         {
           Ui.IsExMode = true;  // Enter Ex mode
           inputBuffer.Clear();
           inputBuffer.Append('>');
         }
+        else if (KeyCheck(key, "h")) { Cursor.MoveLeft(); }
+        else if (KeyCheck(key, "j")) { Cursor.MoveDown(); }
+        else if (KeyCheck(key, "k")) { Cursor.MoveUp(); }
+        else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
       }
     }
   }
