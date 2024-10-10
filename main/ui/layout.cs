@@ -54,14 +54,28 @@ class Ui
     );
     return layout;
   }
-  private static Markup CreateDiffView()
+  private static Grid CreateDiffView()
   {
     var before = memory.SnapShot.Before;
     var current = memory.SnapShot.Current;
     var diff = before.Zip(current, (b, c) => (Before: b, Current: c)).ToArray();
-    var diffMarkup = diff.Select(d => d.Before == d.Current 
-      ? $"[yellow]{d.Current:X2}[/]" 
-      : $"[red]{d.Current:X2}[/]");
-    return new Markup(string.Join(" ", diffMarkup));
+    var grid = new Grid();
+    for (int i = 0; i < 8; i++)
+    {
+      grid.AddColumn();
+    }
+    for (int i = 0; i < diff.Length; i += 8)
+    {
+      var row = diff.Skip(i).Take(8).Select(d =>
+      {
+        var byteValue = d.Current;
+        var markup = d.Before == d.Current
+          ? $"[yellow]{byteValue:X2}[/]"
+          : $"[red]{byteValue:X2}[/]";
+        return new Markup(markup);
+      }).ToArray();
+      grid.AddRow(row);
+    }
+    return grid;
   }
 }
