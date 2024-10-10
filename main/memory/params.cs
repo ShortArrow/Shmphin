@@ -4,7 +4,7 @@ namespace main.memory;
 class Params
 {
   private static string _sharedMemoryName = string.Empty;
-  private static uint _size = 0;
+  private static uint _size = 24;
   private static uint _offset = 0;
   public static string SharedMemoryName
   {

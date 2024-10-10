@@ -3,14 +3,14 @@ namespace main.memory;
 
 class SnapShot
 {
-  private static byte[] _before = new byte[8];
-  private static byte[] _current = new byte[8];
+  private static byte[] _before = new byte[Params.Size];
+  private static byte[] _current = new byte[Params.Size];
 
   [SupportedOSPlatform("windows")]
   public static void UpdateSnapShot()
   {
     _before = _current;
-    _current = SharedMemoryHelper.ReadFromSharedMemory(Params.Offset, 24);
+    _current = SharedMemoryHelper.ReadFromSharedMemory(Params.Offset, (int)Params.Size);
   }
   public static byte[] Before
   {
