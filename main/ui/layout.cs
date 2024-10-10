@@ -1,28 +1,14 @@
-using System.Data;
 using Spectre.Console;
 
 namespace main.ui;
 
-enum Focus
-{
-  header,
-  main,
-  footer
-}
-
 class Ui
 {
   private static bool _isExMode = false;
-  private static Focus _focus = Focus.main;
   public static bool IsExMode
   {
     get => _isExMode;
     set => _isExMode = value;
-  }
-  public static Focus Focus
-  {
-    get => _focus;
-    set => _focus = value;
   }
   public static Layout CreateLayout(string message)
   {
@@ -47,6 +33,7 @@ class Ui
         new Markup($"[green]{message}[/]"),
         VerticalAlignment.Middle
       ))
+      .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
       .Expand()
     );
     layout["Main"]["Left"].Update(
@@ -54,7 +41,7 @@ class Ui
         CreateDiffView(),
         VerticalAlignment.Middle
       ))
-      .BorderColor(IsExMode ? Color.Default : Color.Green)
+      .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
       .Expand()
     );
     layout["Footer"].Update(
