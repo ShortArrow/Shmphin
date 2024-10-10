@@ -6,6 +6,8 @@ namespace main.ui;
 
 class Input
 {
+  public static TaskCompletionSource<bool> uts = new(false);
+  public static CancellationTokenSource cts = new();
   public static StringBuilder inputBuffer = new();
   public static string GetSharedMemoryName()
   {
@@ -13,7 +15,7 @@ class Input
       new TextPrompt<string>("Enter the shared memory name:")
     );
   }
-  public static void InputLoop(CancellationTokenSource cts, TaskCompletionSource<bool> uts)
+  public static void InputLoop()
   {
     while (!cts.Token.IsCancellationRequested)
     {

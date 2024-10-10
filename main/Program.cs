@@ -13,30 +13,28 @@ class Program
     AnsiConsole.Clear();
     ui.Welcome.Show();
     memory.Params.SharedMemoryName = ui.Input.GetSharedMemoryName();
-    var uts = new TaskCompletionSource<bool>(false);
-    var cts = new CancellationTokenSource();
-    var inputTask = Task.Run(() => ui.Input.InputLoop(cts, uts));
+    var inputTask = Task.Run(() => ui.Input.InputLoop());
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
       int counter = 0;
-      while (!cts.Token.IsCancellationRequested)
+      while (!ui.Input.cts.Token.IsCancellationRequested)
       {
         var layout = ui.Ui.CreateLayout("normal");
-        var updateTask = uts.Task;
+        var updateTask = ui.Input.uts.Task;
         if (updateTask.IsCompleted)
         {
           layout = ui.Ui.CreateLayout("updated");
           memory.SnapShot.UpdateSnapShot();
-          uts = new TaskCompletionSource<bool>(false);
+          ui.Input.uts = new TaskCompletionSource<bool>(false);
         }
 
         context.UpdateTarget(layout);
         counter++;
         try
         {
-          await Task.WhenAny(Task.Delay(1000, cts.Token), uts.Task);
+          await Task.WhenAny(Task.Delay(1000, ui.Input.cts.Token), ui.Input.uts.Task);
         }
         catch (TaskCanceledException)
         {
