@@ -2,13 +2,27 @@ using Spectre.Console;
 
 namespace main.ui;
 
+public enum GridType
+{
+  grid8byte,
+  grid16byte,
+  grid32byte,
+  grid64byte
+}
+
 class Ui
 {
-  private static bool _isExMode = false;
+  private static bool isExMode = false;
   public static bool IsExMode
   {
-    get => _isExMode;
-    set => _isExMode = value;
+    get => isExMode;
+    set => isExMode = value;
+  }
+  private static GridType gridType = GridType.grid8byte;
+  public static GridType GridType
+  {
+    get => gridType;
+    set => gridType = value;
   }
   public static Layout CreateLayout(string message)
   {
@@ -60,10 +74,10 @@ class Ui
     var before = memory.SnapShot.Before;
     var current = memory.SnapShot.Current;
     var diff = before.Zip(current, (b, c) => (Before: b, Current: c)).ToArray();
-    
+
     // Create the grid
     var grid = new Grid();
-    
+
     // Create the columns
     for (int i = 0; i < 8; i++)
     {
@@ -78,7 +92,7 @@ class Ui
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
     grid.AddRow([.. header]);
-    
+
     // Create the main grid
     for (int i = 0; i < diff.Length; i += 8)
     {
@@ -103,7 +117,7 @@ class Ui
         }
         rowData.Add(new Markup(markup));
       }
-      grid.AddRow(rowData.ToArray());
+      grid.AddRow([.. rowData]);
     }
     return grid;
   }
