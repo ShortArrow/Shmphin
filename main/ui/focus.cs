@@ -15,16 +15,11 @@ class Focus
   }
   public static void ChangeFocus()
   {
-    switch (_targetPanel)
+    _targetPanel = _targetPanel switch
     {
-      case TargetPanel.Left:
-        _targetPanel = TargetPanel.Right;
-        break;
-      case TargetPanel.Right:
-        _targetPanel = TargetPanel.Left;
-        break;
-      default:
-        throw new Exception("Invalid TargetPanel value");
-    }
+      TargetPanel.Left => TargetPanel.Right,
+      TargetPanel.Right => TargetPanel.Left,
+      _ => throw new Exception("Invalid TargetPanel value"),
+    };
   }
 }
