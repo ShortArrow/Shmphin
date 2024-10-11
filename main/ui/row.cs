@@ -1,5 +1,5 @@
 class Row
 {
-  private static Cell[]? items;
-  public static Cell[] Items { get => items ?? []; set => items = value; }
+  private Cell[]? items;
+  public Cell[] Items { get => items ?? []; set => items = value; }
 }
