@@ -1,3 +1,4 @@
+namespace main.model;
 class Cell
 {
   private uint x;

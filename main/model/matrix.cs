@@ -1,3 +1,4 @@
+namespace main.model;
 class Matrix
 {
   private static Row[]? rows;

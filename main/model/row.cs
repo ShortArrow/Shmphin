@@ -1,3 +1,4 @@
+namespace main.model;
 class Row
 {
   private Cell[]? items;
