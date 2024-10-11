@@ -56,14 +56,21 @@ class Ui
   }
   private static Grid CreateDiffView()
   {
+    // Create set of memory snapshots
     var before = memory.SnapShot.Before;
     var current = memory.SnapShot.Current;
     var diff = before.Zip(current, (b, c) => (Before: b, Current: c)).ToArray();
+    
+    // Create the grid
     var grid = new Grid();
+    
+    // Create the columns
     for (int i = 0; i < 8; i++)
     {
       grid.AddColumn();
     }
+
+    // Create the header
     var header = new List<Markup>();
     for (int i = 0; i < 8; i++)
     {
@@ -71,37 +78,33 @@ class Ui
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
     grid.AddRow([.. header]);
+    
+    // Create the main grid
     for (int i = 0; i < diff.Length; i += 8)
     {
       var rowData = new List<Markup>();
       for (int j = 0; j < 8 && (i + j) < diff.Length; j++)
       {
-        var d = diff[i + j];
-        var byteValue = d.Current;
+        var (Before, Current) = diff[i + j];
         string markup;
-
-        int currentX = j; // 列番号
-        int currentY = i / 8; // 行番号
-
+        int currentX = j; // Column number
+        int currentY = i / 8; // Row number
         if (currentX == Cursor.X && currentY == Cursor.Y)
         {
-          // Cursorの位置の場合、前景黒、背景白で表示
-          markup = $"[black on white]{byteValue:X2}[/]";
+          // Display foreground black and background white at the cursor position
+          markup = $"[black on white]{Current:X2}[/]";
         }
         else
         {
-          // 通常の表示
-          markup = d.Before == d.Current
-            ? $"[white]{byteValue:X2}[/]"
-            : $"[red]{byteValue:X2}[/]";
+          // Display normal
+          markup = Before == Current
+            ? $"[white]{Current:X2}[/]"
+            : $"[red]{Current:X2}[/]";
         }
-
         rowData.Add(new Markup(markup));
       }
-
       grid.AddRow(rowData.ToArray());
     }
-
     return grid;
   }
 }
