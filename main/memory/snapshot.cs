@@ -10,7 +10,7 @@ class SnapShot
   public static void UpdateSnapShot()
   {
     _before = _current;
-    _current = SharedMemoryHelper.ReadFromSharedMemory(Params.Offset, (int)Params.Size);
+    _current = SharedMemoryReader.ReadFromSharedMemory(Params.Offset, (int)Params.Size);
   }
   public static byte[] Before
   {
