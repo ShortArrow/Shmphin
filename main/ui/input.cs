@@ -2,12 +2,12 @@
 using System.Diagnostics;
 using System.Text;
 using Spectre.Console;
+using main.operation;
 
 namespace main.ui;
 
 class Input
 {
-  public static TaskCompletionSource<bool> uts = new(false);
   public static CancellationTokenSource cts = new();
   public static StringBuilder inputBuffer = new();
   public static string GetSharedMemoryName()
@@ -55,7 +55,7 @@ class Input
         }
         else if (KeyCheck(key, "u"))
         {
-          uts.TrySetResult(true); // Request update SnapShot
+          Operation.UpdateMemory.Execute();
         }
         else if (KeyCheck(key, ":"))
         {
@@ -68,6 +68,7 @@ class Input
         else if (KeyCheck(key, "k")) { Cursor.MoveUp(); }
         else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
         else if (KeyCheck(key, "m")) { GridMode.ChangeGridType(); }
+        else if (KeyCheck(key, "c")) { Operation.ChangeMemory.Execute(); }
         else if (key.Key == ConsoleKey.Tab)
         {
           Focus.ChangeFocus();

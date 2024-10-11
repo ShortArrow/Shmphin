@@ -6,7 +6,6 @@ namespace main;
 [SupportedOSPlatform("windows")]
 class Program
 {
-  private static byte[] bytes = new byte[8];
   static async Task Main(string[] args)
   {
     var input = string.Empty;
@@ -22,19 +21,12 @@ class Program
       while (!ui.Input.cts.Token.IsCancellationRequested)
       {
         var layout = ui.Ui.CreateLayout("normal");
-        var updateTask = ui.Input.uts.Task;
-        if (updateTask.IsCompleted)
-        {
-          layout = ui.Ui.CreateLayout("updated");
-          memory.SnapShot.UpdateSnapShot();
-          ui.Input.uts = new TaskCompletionSource<bool>(false);
-        }
 
         context.UpdateTarget(layout);
         counter++;
         try
         {
-          await Task.WhenAny(Task.Delay(100, ui.Input.cts.Token), ui.Input.uts.Task);
+          await Task.Delay(1, ui.Input.cts.Token);
         }
         catch (TaskCanceledException)
         {
