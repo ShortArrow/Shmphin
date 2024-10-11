@@ -17,7 +17,7 @@ class GridMode
       else throw new Exception("Invalid ColumnsLength value");
     }
   }
-  private static uint cellLength = 2;
+  private static uint cellLength = 1;
   /// <summary>
   /// The length of the cell in bytes
   /// </summary>
