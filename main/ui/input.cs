@@ -67,6 +67,7 @@ class Input
         else if (KeyCheck(key, "j")) { Cursor.MoveDown(); }
         else if (KeyCheck(key, "k")) { Cursor.MoveUp(); }
         else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
+        else if (KeyCheck(key, "m")) { GridMode.ChangeGridType(); }
         else if (key.Key == ConsoleKey.Tab)
         {
           Focus.ChangeFocus();

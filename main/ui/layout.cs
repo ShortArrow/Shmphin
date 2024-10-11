@@ -2,14 +2,6 @@ using Spectre.Console;
 
 namespace main.ui;
 
-public enum GridType
-{
-  grid8byte,
-  grid16byte,
-  grid32byte,
-  grid64byte
-}
-
 class Ui
 {
   private static bool isExMode = false;
@@ -17,12 +9,6 @@ class Ui
   {
     get => isExMode;
     set => isExMode = value;
-  }
-  private static GridType gridType = GridType.grid8byte;
-  public static GridType GridType
-  {
-    get => gridType;
-    set => gridType = value;
   }
   public static Layout CreateLayout(string message)
   {
@@ -77,16 +63,15 @@ class Ui
 
     // Create the grid
     var grid = new Grid();
-
-    // Create the columns
-    for (int i = 0; i < 8; i++)
+    var columnsQuantity = GridMode.ColumnsLength;
+    for (int i = 0; i < columnsQuantity; i++)
     {
       grid.AddColumn();
     }
 
     // Create the header
     var header = new List<Markup>();
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < columnsQuantity; i++)
     {
       var color = i % 2 == 0 ? "blue" : "aqua";
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
@@ -94,15 +79,15 @@ class Ui
     grid.AddRow([.. header]);
 
     // Create the main grid
-    for (int i = 0; i < diff.Length; i += 8)
+    for (uint i = 0; i < diff.Length; i += columnsQuantity)
     {
       var rowData = new List<Markup>();
-      for (int j = 0; j < 8 && (i + j) < diff.Length; j++)
+      for (uint j = 0; j < columnsQuantity && (i + j) < diff.Length; j++)
       {
         var (Before, Current) = diff[i + j];
         string markup;
-        int currentX = j; // Column number
-        int currentY = i / 8; // Row number
+        uint currentX = j; // Column number
+        uint currentY = i / columnsQuantity; // Row number
         if (currentX == Cursor.X && currentY == Cursor.Y)
         {
           // Display foreground black and background white at the cursor position
