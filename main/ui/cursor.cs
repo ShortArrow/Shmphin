@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace main.ui;
 
@@ -25,7 +24,6 @@ class Cursor
   public static void MoveDown()
   {
     Debug.WriteLine($"move down: x: {x}, y: {y}");
-    Debug.WriteLine($"cell length: {GridMode.CellLength}");
     var height = memory.Params.Size / (GridMode.ColumnsLength * GridMode.CellLength);
     if (y < height - 1) { y++; }
   }

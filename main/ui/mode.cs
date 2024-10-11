@@ -1,4 +1,4 @@
-using System.Globalization;
+using System.Diagnostics;
 
 namespace main.ui;
 
@@ -39,6 +39,6 @@ class GridMode
 
     ColumnsLength = columnsLengthPatterns[(currentColumnIndex + 1) % columnsLengthPatterns.Count];
     CellLength = cellLengthPatterns[(currentCellIndex + 1) % cellLengthPatterns.Count];
-
+    Debug.WriteLine($"grid mode: columnsLength: {columnsLength}, cellLength: {cellLength}");
   }
 }
