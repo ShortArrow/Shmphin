@@ -4,10 +4,10 @@ namespace main;
 
 class Program
 {
-  static void Main(string[] args)
+  static Task<int> Main(string[] args)
   {
     cli.Parser parser = new();
-    parser.rootCommand.Invoke(args);
+    return parser.rootCommand.InvokeAsync(args);
   }
 }
 
