@@ -1,13 +1,16 @@
 ﻿using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Help;
+using System.CommandLine.Parsing;
 
 namespace main;
 
 class Program
 {
-  static Task<int> Main(string[] args)
+  static async Task<int> Main(string[] args)
   {
-    cli.Parser parser = new();
-    return parser.rootCommand.InvokeAsync(args);
+    var parser = new cli.Parser();
+    return await parser.rootCommandWithSplash.InvokeAsync(args);
   }
 }
 
