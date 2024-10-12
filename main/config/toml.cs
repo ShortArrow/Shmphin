@@ -2,31 +2,47 @@ using Tommy;
 
 namespace main.config;
 
-class Toml
+class Toml : IConfigFile
 {
-  private static readonly string configPath = "config.toml";
-  public static string ConfigPath
+  private static readonly string configName = "config.toml";
+  private static string configPath = configName;
+  private static TomlTable? table;
+  public static void UpdateTomlPath(string? path = null)
   {
-    get => configPath;
+    if (path != null)
+    {
+      if (!Path.Exists(path)) throw new FileNotFoundException($"File not found: {path}");
+      configPath = path;
+    }
+    else
+    {
+      string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      configPath = Path.Combine(appDataPath, Common.AppName, configName);
+      if (!Directory.Exists(appDataPath))
+      {
+        Directory.CreateDirectory(appDataPath);
+      }
+      if (!Path.Exists(configPath))
+      {
+        File.Create(configPath).Close();
+      }
+    }
   }
-  public static void GetToml()
+  public static TomlTable GetToml()
   {
-    // Parse into a node
     using StreamReader reader = File.OpenText(configPath);
-    // Parse the table
-    TomlTable table = TOML.Parse(reader);
+    return TOML.Parse(reader);
+  }
+  public static void SyncToml()
+  {
+    table = GetToml();
+  }
+  public static void GenToml()
+  {
 
-    Console.WriteLine(table["title"].ToString());  // Prints "TOML Example"
-
-    // You can check the type of the node via a property and access the exact type via As*-property
-    Console.WriteLine(table["owner"]["dob"].IsDateTime); // Prints "True"
-
-    // You can also do both with C# 7 syntax
-    if (table["owner"]["dob"] is TomlDateTime dateTime)
-      Console.WriteLine(dateTime.AsDateTime.ToString()); // Some types contain additional properties related to formatting
-
-    // You can also iterate through all nodes inside an array or a table
-    foreach (TomlNode node in table["database"]["ports"])
-      Console.WriteLine(node.ToString());
+  }
+  public static string? GetSharedMemoryName()
+  {
+    return table?["default"]["sharedmemory"]["name"].ToString();
   }
 }

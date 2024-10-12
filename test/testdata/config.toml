@@ -1,0 +1,7 @@
+[default.sharedmemory]
+name = "SHMSHM"
+size = 1024
+offset = 0
+
+[debug]
+debug = true
