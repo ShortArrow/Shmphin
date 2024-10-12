@@ -7,25 +7,12 @@ namespace main.cli;
 
 public class Parser
 {
-  static readonly Option<string> sharedMemoryNameOption = new(
-    aliases: ["-n", "--name"], description: "Shared memory name"
-  );
-  static readonly Option<uint?> sharedMemorySizeOption = new(
-    aliases: ["-s", "--size"], description: "Shared memory size"
-  );
-  static readonly Option<uint?> sharedMemoryOffsetOption = new(
-    aliases: ["-o", "--offset"], description: "Shared memory offset"
-  );
-  static readonly Option<string> configFileOption = new(
-    aliases: ["-c", "--config"], description: "Config file path"
-  );
-  private static readonly string splash = "Shmphin";
-  public readonly RootCommand rootCommand = new(description: splash)
+  public readonly RootCommand rootCommand = new(description: "Shmphin is a shared memory editor")
   {
-    sharedMemoryNameOption,
-    sharedMemorySizeOption,
-    sharedMemoryOffsetOption,
-    configFileOption
+    Options.sharedMemoryName,
+    Options.sharedMemorySize,
+    Options.sharedMemoryOffset,
+    Options.configFile
 };
   public readonly Command testCommand = new(name: "test", description: "Test command");
   public readonly Command testConfigCommand = new(name: "config", description: "Test config command");
@@ -41,7 +28,7 @@ public class Parser
 
     rootCommand.SetHandler(
         Handler.TUI,
-        sharedMemoryNameOption, sharedMemorySizeOption, sharedMemoryOffsetOption, configFileOption
+        Options.sharedMemoryName, Options.sharedMemorySize, Options.sharedMemoryOffset, Options.configFile
     );
     rootCommandWithSplash = new CommandLineBuilder(rootCommand)
       .UseDefaults()
