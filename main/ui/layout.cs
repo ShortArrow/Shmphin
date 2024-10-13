@@ -1,3 +1,4 @@
+using main.model;
 using Spectre.Console;
 
 namespace main.ui;
@@ -56,11 +57,6 @@ class Ui
   }
   private static Grid CreateDiffView()
   {
-    // Create set of memory snapshots
-    var before = memory.SnapShot.Before;
-    var current = memory.SnapShot.Current;
-    var diff = before.Zip(current, (b, c) => (Before: b, Current: c)).ToArray();
-
     // Create the grid
     var grid = new Grid();
     var columnsQuantity = GridMode.ColumnsLength;
@@ -79,26 +75,26 @@ class Ui
     grid.AddRow([.. header]);
 
     // Create the main grid
-    for (uint i = 0; i < diff.Length; i += columnsQuantity)
+    var diff = new Matrix();
+    diff.Update();
+    for (uint i = 0; i < diff.Width; i++)
     {
       var rowData = new List<Markup>();
-      for (uint j = 0; j < columnsQuantity && (i + j) < diff.Length; j++)
+      for (uint j = 0; j < diff.Height; j++)
       {
-        var (Before, Current) = diff[i + j];
+        var cell = diff.GetCell(j, i);
         string markup;
-        uint currentX = j; // Column number
-        uint currentY = i / columnsQuantity; // Row number
-        if (currentX == Cursor.X && currentY == Cursor.Y)
+        if (cell.X == Cursor.X && cell.Y == Cursor.Y)
         {
           // Display foreground black and background white at the cursor position
-          markup = $"[black on white]{Current:X2}[/]";
+          markup = $"[black on white]{cell.Current:X2}[/]";
         }
         else
         {
           // Display normal
-          markup = Before == Current
-            ? $"[white]{Current:X2}[/]"
-            : $"[red]{Current:X2}[/]";
+          markup = cell.Before == cell.Current
+            ? $"[white]{cell.Current:X2}[/]"
+            : $"[red]{cell.Current:X2}[/]";
         }
         rowData.Add(new Markup(markup));
       }
