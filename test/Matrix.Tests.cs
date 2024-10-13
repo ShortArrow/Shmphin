@@ -1,5 +1,4 @@
 using main.model;
-using Spectre.Console;
 
 namespace test;
 
@@ -29,5 +28,13 @@ public class MatrixTests
   {
     Assert.Equal(current, matrix.GetCell(position[0], position[1]).Current);
     Assert.Equal(before, matrix.GetCell(position[0], position[1]).Before);
+  }
+  [Fact]
+  public void TestGetColumn()
+  {
+    Assert.Equal(2, matrix.GetColumn(0).Length);
+    Assert.Equal(2, matrix.GetColumn(7).Length);
+    Assert.Equal(101, matrix.GetColumn(1)[0].Current[0]);
+    Assert.Equal(109, matrix.GetColumn(1)[1].Current[0]);
   }
 }
