@@ -1,20 +1,12 @@
 namespace main.model;
-class Cell
+public class Cell(byte[] before, byte[] current, uint x, uint y)
 {
-  private uint x;
-  private uint y;
-
-  public uint X { get => x; set => x = value; }
-  public uint Y { get => y; set => y = value; }
-  private byte[] before = new byte[1];
+  private uint x = x;
+  private uint y = y;
+  public uint X { get => x; }
+  public uint Y { get => y; }
+  private byte[] before = before;
   public byte[] Before { get => before; }
-  private byte[] current = new byte[1];
-  public byte[] Current
-  {
-    get => current; set
-    {
-      before = current;
-      current = value;
-    }
-  }
+  private byte[] current = current;
+  public byte[] Current { get => current; }
 }
