@@ -47,19 +47,30 @@ public class Input
   }
   public static byte[] ParseNewValue(string inputString)
   {
+    if (string.IsNullOrEmpty(inputString))
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
+    }
+
+    // 文字列の長さが奇数の場合、先頭に '0' を追加
+    if (inputString.Length % 2 != 0)
+    {
+      inputString = "0" + inputString;
+    }
+
     List<byte> byteList = [];
 
-    if (ulong.TryParse(inputString, out ulong value))
+    for (int i = 0; i < inputString.Length; i += 2)
     {
-      if (value <= byte.MaxValue)
-        byteList.Add((byte)value);
+      string hexByte = inputString.Substring(i, 2);
+      if (byte.TryParse(hexByte, System.Globalization.NumberStyles.HexNumber, null, out byte value))
+      {
+        byteList.Add(value);
+      }
       else
-        throw new Exception($"Invalid input {inputString} (value is too large)");
-
-    }
-    else
-    {
-      throw new Exception($"Invalid input {inputString}");
+      {
+        throw new Exception($"Invalid input {inputString} (contains non-hex characters)");
+      }
     }
 
     return [.. byteList];
