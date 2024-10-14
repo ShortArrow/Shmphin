@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.Versioning;
 
@@ -46,35 +47,40 @@ public class SharedMemory
   /// <param name="data">Data to write</param>
   /// <return>True if the write operation is successful, false otherwise</return> 
   [SupportedOSPlatform("windows")]
-  public static bool WriteToSharedMemory(long offset, byte[] data)
+  public static bool WriteToSharedMemory(ulong offset, byte[] data)
   {
     try
     {
       MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(Params.SharedMemoryName);
       // arguments (position in shared memory, length, access type)
-      MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, data.Length, MemoryMappedFileAccess.Write);
+      MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor((long)offset, data.Length, MemoryMappedFileAccess.Write);
       // arguments (position in accessor, buffer, position in buffer, length)
       accessor.WriteArray(0, data, 0, data.Length);
       accessor.Dispose();
     }
     catch (FileNotFoundException)
     {
-      Console.WriteLine("Not found the specified shared memory.");
+      Debug.WriteLine("Not found the specified shared memory.");
+      throw new Exception("Not found the specified shared memory.");
     }
     catch (UnauthorizedAccessException)
     {
-      Console.WriteLine("Permission denied to access the shared memory.");
+      Debug.WriteLine("Permission denied to access the shared memory.");
+      throw new Exception("Permission denied to access the shared memory.");
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error occurred: {ex.Message}");
+      Debug.WriteLine($"Error occurred: {ex.Message}");
+      throw new Exception($"Error occurred: {ex.Message}");
     }
     return true;
   }
 
   [SupportedOSPlatform("windows")]
-  internal static void Update(object index, byte[] newValue)
+  internal static void Update(ulong index, byte[] newValue)
   {
-    WriteToSharedMemory((long)index, newValue);
+    Debug.WriteLine($"Update shared memory: index: {index}, newValue: {newValue}");
+    WriteToSharedMemory(index, newValue);
+    Debug.WriteLine("Update shared memory: done");
   }
 }
