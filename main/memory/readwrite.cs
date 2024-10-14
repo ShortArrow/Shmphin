@@ -72,8 +72,9 @@ public class SharedMemory
     return true;
   }
 
+  [SupportedOSPlatform("windows")]
   internal static void Update(object index, byte[] newValue)
   {
-    throw new NotImplementedException();
+    WriteToSharedMemory((long)index, newValue);
   }
 }

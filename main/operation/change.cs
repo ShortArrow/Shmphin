@@ -6,12 +6,9 @@ namespace main.operation;
 class ChangeMemory : IOperation
 {
   [SupportedOSPlatform("windows")]
-  public override void Execute()
+  public override async void Execute()
   {
-    var task = Input.NewValue();
-    task.Start();
-    task.Wait();
-    byte[] newValue = task.Result;
+    var newValue = await Input.NewValue();
     Matrix matrix = new();
     matrix.Update();
     var index = matrix.GetIndex(Cursor.X, Cursor.Y);

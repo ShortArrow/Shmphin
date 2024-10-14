@@ -29,7 +29,6 @@ public class Matrix
       uint position = i / cellLength;
       uint x = position % GridMode.ColumnsLength;
       uint y = position / GridMode.ColumnsLength;
-      Debug.WriteLine($"Cell created at X: {x}, Y: {y}");
       cells[index++] = new Cell(
         beforeSegment,
         currentSegment,
