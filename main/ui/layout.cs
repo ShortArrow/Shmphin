@@ -77,24 +77,24 @@ class Ui
     // Create the main grid
     var diff = new Matrix();
     diff.Update();
-    for (uint i = 0; i < diff.Width; i++)
+    for (uint h = 0; h < diff.Height; h++)
     {
       var rowData = new List<Markup>();
-      for (uint j = 0; j < diff.Height; j++)
+      for (uint w = 0; w < diff.Width; w++)
       {
-        var cell = diff.GetCell(j, i);
+        var cell = diff.GetCell(w, h);
         string markup;
         if (cell.X == Cursor.X && cell.Y == Cursor.Y)
         {
           // Display foreground black and background white at the cursor position
-          markup = $"[black on white]{cell.Current:X2}[/]";
+          markup = $"[black on white]{cell.Current[0]:X2}[/]";
         }
         else
         {
           // Display normal
           markup = cell.Before == cell.Current
-            ? $"[white]{cell.Current:X2}[/]"
-            : $"[red]{cell.Current:X2}[/]";
+            ? $"[white]{cell.Current[0]:X2}[/]"
+            : $"[red]{cell.Current[0]:X2}[/]";
         }
         rowData.Add(new Markup(markup));
       }

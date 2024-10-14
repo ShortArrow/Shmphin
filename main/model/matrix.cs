@@ -6,8 +6,13 @@ public class Matrix
 {
   private Cell[]? cells;
   public uint Length { get => (uint)(cells?.Length ?? 0); }
-  public uint Height { get => GridMode.ColumnsLength; }
-  public uint Width { get => Length == 0 ? (Length / Height) : 0; }
+  public uint Width { get => GridMode.ColumnsLength; }
+  public uint Height
+  {
+    get => (Length == 0)
+      ? 0
+      : (Length / GridMode.CellLength / GridMode.ColumnsLength);
+  }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
     before ??= memory.SnapShot.Before;
