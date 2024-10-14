@@ -39,7 +39,7 @@ class Ui
     layout["Main"]["Right"]["Bottom"].Update(
       new Panel(Align.Center(
         IsNewValueMode
-          ? new Markup($"[red]{Input.inputBuffer}[/]")
+          ? new Markup($"[red]{Input.InputBuffer}[/]")
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
       ))
@@ -56,7 +56,7 @@ class Ui
     );
     layout["Footer"].Update(
       new Panel(Align.Center(
-        new Markup($"[green]{Input.inputBuffer}[/]"),
+        new Markup($"[green]{Input.InputBuffer}[/]"),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Red : Color.Default)

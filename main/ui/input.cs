@@ -21,7 +21,8 @@ public class Input
     set => mode = value;
   }
   public static CancellationTokenSource cts = new();
-  public static StringBuilder inputBuffer = new();
+  private static readonly StringBuilder inputBuffer = new();
+  public static string InputBuffer => inputBuffer.ToString();
   private static TaskCompletionSource<byte[]>? newValueTcs;
   public static string GetSharedMemoryName()
   {
