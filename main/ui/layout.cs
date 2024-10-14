@@ -86,12 +86,13 @@ class Ui
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
     header.Add(new Markup("")); // Empty cell for right row number column
-    grid.AddRow([.. header]);
+    grid.AddRow(header.ToArray());
 
     // Create the main grid
     for (uint h = 0; h < diff.Height; h++)
     {
-      var rowData = new List<Markup> { new($"[yellow]{h:X2}[/]") }; // Left row number
+      var rowColor = h % 2 == 0 ? "yellow" : "darkorange";
+      var rowData = new List<Markup> { new($"[{rowColor}]{h:X2}[/]") }; // Left row number
       for (uint w = 0; w < diff.Width; w++)
       {
         var cell = diff.GetCell(w, h);
@@ -110,7 +111,7 @@ class Ui
         }
         rowData.Add(new Markup(markup));
       }
-      rowData.Add(new Markup($"[yellow]{h:X2}[/]")); // Right row number
+      rowData.Add(new Markup($"[{rowColor}]{h:X2}[/]")); // Right row number
       grid.AddRow([.. rowData]);
     }
     return grid;
