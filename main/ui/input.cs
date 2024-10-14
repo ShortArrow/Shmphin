@@ -136,6 +136,8 @@ public class Input
           else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
           else if (KeyCheck(key, "m")) { GridMode.ChangeGridType(); }
           else if (KeyCheck(key, "c")) { Operation.ChangeMemory.Execute(); }
+          else if (KeyCheck(key, "?")) { Operation.ShowHelp.Execute(); }
+          else if (KeyCheck(key, "/")) { Operation.Search.Execute(); }
           else if (key.Key == ConsoleKey.Tab) { Focus.ChangeFocus(); }
           break;
         default:
