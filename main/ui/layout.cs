@@ -71,24 +71,27 @@ class Ui
 
     // Create the grid
     var grid = new Grid();
+    grid.AddColumn(); // Left row number column
     for (int i = 0; i < diff.Width; i++)
     {
       grid.AddColumn();
     }
+    grid.AddColumn(); // Right row number column
 
     // Create the header
-    var header = new List<Markup>();
+    var header = new List<Markup> { new Markup("") }; // Empty cell for left row number column
     for (int i = 0; i < diff.Width; i++)
     {
       var color = i % 2 == 0 ? "blue" : "aqua";
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
+    header.Add(new Markup("")); // Empty cell for right row number column
     grid.AddRow([.. header]);
 
     // Create the main grid
     for (uint h = 0; h < diff.Height; h++)
     {
-      var rowData = new List<Markup>();
+      var rowData = new List<Markup> { new($"[yellow]{h:X2}[/]") }; // Left row number
       for (uint w = 0; w < diff.Width; w++)
       {
         var cell = diff.GetCell(w, h);
@@ -102,11 +105,12 @@ class Ui
         {
           // Display normal
           markup = (cell.BeforeValue == cell.CurrentValue)
-            ? $"[white]{cell.CurrentValue:X2}[/]"
-            : $"[red]{cell.CurrentValue:X2}[/]";
+              ? $"[white]{cell.CurrentValue:X2}[/]"
+              : $"[red]{cell.CurrentValue:X2}[/]";
         }
         rowData.Add(new Markup(markup));
       }
+      rowData.Add(new Markup($"[yellow]{h:X2}[/]")); // Right row number
       grid.AddRow([.. rowData]);
     }
     return grid;
