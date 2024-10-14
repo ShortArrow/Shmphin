@@ -4,14 +4,14 @@ namespace main.ui;
 
 class Cursor
 {
-  private static int x = 0;
-  private static int y = 0;
-  public static int X
+  private static uint x = 0;
+  private static uint y = 0;
+  public static uint X
   {
     get => x;
     set => x = value;
   }
-  public static int Y
+  public static uint Y
   {
     get => y;
     set => y = value;

@@ -10,11 +10,25 @@ class Input
 {
   public static CancellationTokenSource cts = new();
   public static StringBuilder inputBuffer = new();
+  public static bool IsNewValueMode = false;
   public static string GetSharedMemoryName()
   {
     return AnsiConsole.Prompt(
       new TextPrompt<string>("Enter the shared memory name:")
     );
+  }
+  internal static Task<byte[]> NewValue()
+  {
+    return Task.Run(async () =>
+    {
+      IsNewValueMode = true;
+      inputBuffer.Clear();
+      while (IsNewValueMode)
+      {
+        await Task.Delay(100);
+      }
+      return Encoding.ASCII.GetBytes(inputBuffer.ToString());
+    });
   }
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {

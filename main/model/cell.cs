@@ -1,5 +1,3 @@
-using System.Transactions;
-
 namespace main.model;
 public class Cell(byte[] before, byte[] current, uint x, uint y)
 {
