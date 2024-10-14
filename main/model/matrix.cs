@@ -5,13 +5,15 @@ namespace main.model;
 public class Matrix
 {
   private Cell[]? cells;
+  private readonly uint cellSize = GridMode.CellLength;
   public uint Length { get => (uint)(cells?.Length ?? 0); }
-  public uint Width { get => GridMode.ColumnsLength; }
+  private readonly uint width = GridMode.ColumnsLength;
+  public uint Width { get => width; }
   public uint Height
   {
     get => (Length == 0)
       ? 0
-      : (Length / GridMode.CellLength / GridMode.ColumnsLength);
+      : (Length / cellSize / Width);
   }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
