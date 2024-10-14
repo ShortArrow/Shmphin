@@ -1,3 +1,5 @@
+using System.Transactions;
+
 namespace main.model;
 public class Cell(byte[] before, byte[] current, uint x, uint y)
 {
@@ -9,4 +11,32 @@ public class Cell(byte[] before, byte[] current, uint x, uint y)
   public byte[] Before { get => before; }
   private readonly byte[] current = current;
   public byte[] Current { get => current; }
+  public ulong CurrentValue
+  {
+    get
+    {
+      return current.Length switch
+      {
+        1 => current[0],
+        2 => BitConverter.ToUInt16(current, 0),
+        4 => BitConverter.ToUInt32(current, 0),
+        8 => BitConverter.ToUInt64(current, 0),
+        _ => 0 // Default case, replace with actual logic
+      };
+    }
+  }
+  public ulong BeforeValue
+  {
+    get
+    {
+      return before.Length switch
+      {
+        1 => before[0],
+        2 => BitConverter.ToUInt16(before, 0),
+        4 => BitConverter.ToUInt32(before, 0),
+        8 => BitConverter.ToUInt64(before, 0),
+        _ => 0 // Default case, replace with actual logic
+      };
+    }
+  }
 }

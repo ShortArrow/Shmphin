@@ -87,14 +87,14 @@ class Ui
         if (cell.X == Cursor.X && cell.Y == Cursor.Y)
         {
           // Display foreground black and background white at the cursor position
-          markup = $"[black on white]{cell.Current[0]:X2}[/]";
+          markup = $"[black on white]{cell.CurrentValue:X2}[/]";
         }
         else
         {
           // Display normal
-          markup = (cell.Before[0] == cell.Current[0])
-            ? $"[white]{cell.Current[0]:X2}[/]"
-            : $"[red]{cell.Current[0]:X2}[/]";
+          markup = (cell.BeforeValue == cell.CurrentValue)
+            ? $"[white]{cell.CurrentValue:X2}[/]"
+            : $"[red]{cell.CurrentValue:X2}[/]";
         }
         rowData.Add(new Markup(markup));
       }
