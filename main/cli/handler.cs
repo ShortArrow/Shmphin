@@ -1,5 +1,6 @@
 using Spectre.Console;
 using main.ui;
+using main.operation;
 
 namespace main.cli;
 
@@ -30,6 +31,7 @@ public class Handler
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
+      Operation.UpdateMemory.Execute();
       while (!Input.IsCancellationRequested)
       {
         var layout = Ui.CreateLayout("normal");
