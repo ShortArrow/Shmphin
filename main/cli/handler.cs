@@ -1,6 +1,5 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
 using Spectre.Console;
+using main.ui;
 
 namespace main.cli;
 
@@ -11,8 +10,8 @@ public class Handler
     AnsiConsole.Clear();
     if (sharedMemoryName == null)
     {
-      ui.Welcome.Show();
-      memory.Params.SharedMemoryName = ui.Input.GetSharedMemoryName();
+      Welcome.Show();
+      memory.Params.SharedMemoryName = Input.GetSharedMemoryName();
     }
     if (sharedMemorySize != null)
     {
@@ -27,13 +26,13 @@ public class Handler
       config.Config.UpdateConfig(configFile);
     }
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
-    var inputTask = Task.Run(() => ui.Input.InputLoop());
+    var inputTask = Task.Run(() => Input.InputLoop());
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
-      while (!ui.Input.cts.Token.IsCancellationRequested)
+      while (!Input.IsCancellationRequested)
       {
-        var layout = ui.Ui.CreateLayout("normal");
+        var layout = Ui.CreateLayout("normal");
         context.UpdateTarget(layout);
       }
       await inputTask;

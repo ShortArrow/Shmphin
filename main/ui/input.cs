@@ -20,7 +20,8 @@ public class Input
     get => mode;
     set => mode = value;
   }
-  public static CancellationTokenSource cts = new();
+  private static readonly CancellationTokenSource cts = new();
+  public static bool IsCancellationRequested => cts.Token.IsCancellationRequested;
   private static readonly StringBuilder inputBuffer = new();
   public static string InputBuffer => inputBuffer.ToString();
   private static TaskCompletionSource<byte[]>? newValueTcs;
