@@ -57,17 +57,19 @@ class Ui
   }
   private static Grid CreateDiffView()
   {
+    var diff = new Matrix();
+    diff.Update();
+
     // Create the grid
     var grid = new Grid();
-    var columnsQuantity = GridMode.ColumnsLength;
-    for (int i = 0; i < columnsQuantity; i++)
+    for (int i = 0; i < diff.Width; i++)
     {
       grid.AddColumn();
     }
 
     // Create the header
     var header = new List<Markup>();
-    for (int i = 0; i < columnsQuantity; i++)
+    for (int i = 0; i < diff.Width; i++)
     {
       var color = i % 2 == 0 ? "blue" : "aqua";
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
@@ -75,8 +77,6 @@ class Ui
     grid.AddRow([.. header]);
 
     // Create the main grid
-    var diff = new Matrix();
-    diff.Update();
     for (uint h = 0; h < diff.Height; h++)
     {
       var rowData = new List<Markup>();
@@ -92,7 +92,7 @@ class Ui
         else
         {
           // Display normal
-          markup = cell.Before == cell.Current
+          markup = (cell.Before == cell.Current)
             ? $"[white]{cell.Current[0]:X2}[/]"
             : $"[red]{cell.Current[0]:X2}[/]";
         }
