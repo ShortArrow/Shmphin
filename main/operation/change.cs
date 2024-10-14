@@ -11,7 +11,7 @@ class ChangeMemory : IOperation
     var newValue = await Input.NewValue();
     Matrix matrix = new();
     matrix.Update();
-    var index = matrix.GetIndex(Cursor.X, Cursor.Y);
+    var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
     memory.SharedMemory.Update(index, newValue);
     memory.SnapShot.UpdateSnapShot();
   }

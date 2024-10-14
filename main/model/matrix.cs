@@ -49,7 +49,7 @@ public class Matrix
     if (cells == null) throw new Exception("Matrix not initialized");
     return cells.Where(cell => cell.X == x).ToArray();
   }
-  public ulong GetIndex(uint x, uint y)
+  public static ulong GetIndex(uint x, uint y)
   {
     return y * GridMode.ColumnsLength * GridMode.CellLength + x;
   }

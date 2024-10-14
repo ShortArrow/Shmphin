@@ -30,7 +30,7 @@ class Ui
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        new Markup($"[green]{message}[/]"),
+        CreateCursorView(),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
@@ -63,6 +63,11 @@ class Ui
       .Expand()
     );
     return layout;
+  }
+  public static Markup CreateCursorView()
+  {
+    var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
+    return new Markup($"[bold]({Cursor.X}, {Cursor.Y}), index = {index}[/] ");
   }
   private static Grid CreateDiffView()
   {
