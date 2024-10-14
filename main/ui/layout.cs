@@ -92,7 +92,7 @@ class Ui
         else
         {
           // Display normal
-          markup = (cell.Before == cell.Current)
+          markup = (cell.Before[0] == cell.Current[0])
             ? $"[white]{cell.Current[0]:X2}[/]"
             : $"[red]{cell.Current[0]:X2}[/]";
         }
