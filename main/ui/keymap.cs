@@ -10,7 +10,6 @@ class KeyMap
       new("k", "move cursor up"),
       new("l", "move cursor right"),
       new("h", "move cursor left"),
-      new("m", "change grid type"),
       new("c", "change memory with input")
     ]
   );

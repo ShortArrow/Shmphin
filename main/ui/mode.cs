@@ -31,14 +31,4 @@ class GridMode
       else throw new Exception("Invalid CellLength value");
     }
   }
-  public static void ChangeGridType()
-  {
-    // Round-robin switch columnsLength and cellLength
-    var currentColumnIndex = columnsLengthPatterns.IndexOf(columnsLength);
-    var currentCellIndex = cellLengthPatterns.IndexOf(cellLength);
-
-    ColumnsLength = columnsLengthPatterns[(currentColumnIndex + 1) % columnsLengthPatterns.Count];
-    CellLength = cellLengthPatterns[(currentCellIndex + 1) % cellLengthPatterns.Count];
-    Debug.WriteLine($"grid mode: columnsLength: {columnsLength}, cellLength: {cellLength}");
-  }
 }
