@@ -86,9 +86,9 @@ public class Input
           if (key.Key == ConsoleKey.Enter)
           {
             mode = InputMode.Normal;
-            // Execute the command
+            var command = inputBuffer.ToString()[1..]; // Remove the first character '>'
+            Parser.Parse(command).Execute();
             inputBuffer.Clear();
-            inputBuffer.Append("Command executed.");
           }
           else if (key.Key == ConsoleKey.Backspace)
           {

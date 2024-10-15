@@ -1,5 +1,5 @@
 namespace main.operation;
-abstract class IOperation
+public abstract class IOperation
 {
   public virtual void Execute()
   {
