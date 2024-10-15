@@ -1,7 +1,8 @@
 namespace main.operation;
-class Search : Operation
+
+class Columns : Operation
 {
-  public override string Name => "search";
+  public override string Name => "columns";
   public override void Execute()
   {
     throw new NotImplementedException();

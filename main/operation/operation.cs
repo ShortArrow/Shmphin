@@ -30,4 +30,7 @@ class Operations
   public static IOperation ChangeMemory => new ChangeMemory();
   public static IOperation ShowHelp => new ShowHelp();
   public static IOperation Search => new Search();
+  public static IOperation Size => new Size();
+  public static IOperation Cell => new Cell();
+  public static IOperation Columns => new Columns();
 }

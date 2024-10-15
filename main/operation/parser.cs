@@ -11,6 +11,9 @@ public class Parser
       "update" => Operations.UpdateMemory,
       "help" => Operations.ShowHelp,
       "search" => Operations.Search,
+      "size" => Operations.Size,
+      "columns" => Operations.Columns,
+      "cell" => Operations.Cell,
       _ => throw new Exception("Invalid command")
     };
   }

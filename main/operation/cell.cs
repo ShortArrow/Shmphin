@@ -1,7 +1,7 @@
 namespace main.operation;
-class Search : Operation
+class Cell : Operation
 {
-  public override string Name => "search";
+  public override string Name => "cell";
   public override void Execute()
   {
     throw new NotImplementedException();
