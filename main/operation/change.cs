@@ -3,8 +3,9 @@ using main.model;
 using main.ui;
 
 namespace main.operation;
-class ChangeMemory : IOperation
+class ChangeMemory : Operation
 {
+  public override string Name => "change";
   [SupportedOSPlatform("windows")]
   public override async void Execute()
   {

@@ -1,5 +1,5 @@
 namespace main.operation;
-class Search : IOperation
+class Search : Operation
 {
   public override void Execute()
   {

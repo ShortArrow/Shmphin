@@ -31,7 +31,7 @@ public class Handler
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
-      Operation.UpdateMemory.Execute();
+      Operations.UpdateMemory.Execute();
       while (!Input.IsCancellationRequested)
       {
         var layout = Ui.CreateLayout("normal");

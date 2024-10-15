@@ -87,8 +87,10 @@ public class Input
           {
             mode = InputMode.Normal;
             var command = inputBuffer.ToString()[1..]; // Remove the first character '>'
-            Parser.Parse(command).Execute();
+            var operation = Parser.Parse(command);
+            operation.Execute();
             inputBuffer.Clear();
+            Debug.WriteLine($"Command: [{operation.Name}]");
           }
           else if (key.Key == ConsoleKey.Backspace)
           {
@@ -129,15 +131,15 @@ public class Input
             inputBuffer.Clear();
             inputBuffer.Append('>');
           }
-          else if (KeyCheck(key, "u")) { Operation.UpdateMemory.Execute(); }
+          else if (KeyCheck(key, "u")) { Operations.UpdateMemory.Execute(); }
           else if (KeyCheck(key, "h")) { Cursor.MoveLeft(); }
           else if (KeyCheck(key, "j")) { Cursor.MoveDown(); }
           else if (KeyCheck(key, "k")) { Cursor.MoveUp(); }
           else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
           else if (KeyCheck(key, "m")) { GridMode.ChangeGridType(); }
-          else if (KeyCheck(key, "c")) { Operation.ChangeMemory.Execute(); }
-          else if (KeyCheck(key, "?")) { Operation.ShowHelp.Execute(); }
-          else if (KeyCheck(key, "/")) { Operation.Search.Execute(); }
+          else if (KeyCheck(key, "c")) { Operations.ChangeMemory.Execute(); }
+          else if (KeyCheck(key, "?")) { Operations.ShowHelp.Execute(); }
+          else if (KeyCheck(key, "/")) { Operations.Search.Execute(); }
           else if (key.Key == ConsoleKey.Tab) { Focus.ChangeFocus(); }
           break;
         default:

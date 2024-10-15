@@ -7,8 +7,10 @@ public class Parser
     var split = input.Split(' ');
     return split[0] switch
     {
-      "change" => Operation.ChangeMemory,
-      "update" => Operation.UpdateMemory,
+      "change" => Operations.ChangeMemory,
+      "update" => Operations.UpdateMemory,
+      "help" => Operations.ShowHelp,
+      "search" => Operations.Search,
       _ => throw new Exception("Invalid command")
     };
   }

@@ -1,7 +1,7 @@
 using System.Runtime.Versioning;
 
 namespace main.operation;
-class UpdateMemory : IOperation
+class UpdateMemory : Operation
 {
   [SupportedOSPlatform("windows")]
   public override void Execute()
