@@ -7,3 +7,21 @@ class Search : Operation
     throw new NotImplementedException();
   }
 }
+
+class Next : Operation
+{
+  public override string Name => "next";
+  public override void Execute()
+  {
+    throw new NotImplementedException();
+  }
+}
+
+class Prev : Operation
+{
+  public override string Name => "prev";
+  public override void Execute()
+  {
+    throw new NotImplementedException();
+  }
+}

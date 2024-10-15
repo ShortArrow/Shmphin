@@ -1,7 +1,7 @@
 namespace main.operation;
-class Help : Operation
+class Quit : Operation
 {
-  public override string Name => "help";
+  public override string Name => "quit";
   public override void Execute()
   {
     throw new NotImplementedException();
