@@ -1,9 +1,13 @@
+using main.memory;
+using main.ui;
+
 namespace main.operation;
 class Cell : Operation
 {
   public override string Name => "cell";
-  public override void Execute()
+  public override async void Execute()
   {
-    throw new NotImplementedException();
+    var cellsize = await Input.NewCellSize();
+    Params.Size = cellsize;
   }
 }

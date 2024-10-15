@@ -9,7 +9,8 @@ public enum InputMode
 {
   Normal,
   Ex,
-  NewValue
+  NewValue,
+  NewCellSize 
 }
 
 public class Input
@@ -25,6 +26,7 @@ public class Input
   private static readonly StringBuilder inputBuffer = new();
   public static string InputBuffer => inputBuffer.ToString();
   private static TaskCompletionSource<byte[]>? newValueTcs;
+  private static TaskCompletionSource<uint>? newCellSizeTcs;
   public static string GetSharedMemoryName()
   {
     return AnsiConsole.Prompt(
@@ -37,6 +39,13 @@ public class Input
     Debug.WriteLine("New value mode");
     newValueTcs = new TaskCompletionSource<byte[]>();
     return newValueTcs.Task;
+  }
+  internal static Task<uint> NewCellSize()
+  {
+    mode = InputMode.NewCellSize;
+    Debug.WriteLine("New cell size mode");
+    newCellSizeTcs = new TaskCompletionSource<uint>();
+    return newCellSizeTcs.Task;
   }
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {
@@ -103,6 +112,26 @@ public class Input
           }
           break;
         case InputMode.NewValue:
+          if (key.Key == ConsoleKey.Enter)
+          {
+            mode = InputMode.Normal;
+            var inputString = inputBuffer.ToString();
+            var result = ParseNewValue(inputString);
+            inputBuffer.Clear();
+            newValueTcs?.SetResult(result);
+          }
+          else if (key.Key == ConsoleKey.Backspace)
+          {
+            if (inputBuffer.Length > 0)
+              inputBuffer.Remove(inputBuffer.Length - 1, 1);
+          }
+          else
+          {
+            Debug.WriteLine($"New value mode: {key.KeyChar}");
+            inputBuffer.Append(key.KeyChar);
+          }
+          break;
+        case InputMode.NewCellSize:
           if (key.Key == ConsoleKey.Enter)
           {
             mode = InputMode.Normal;
