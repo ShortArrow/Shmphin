@@ -8,6 +8,7 @@
     "ms-vscode.mono-debug",
     "ms-vscode.powershell",
     "evgeniypeshkov.syntax-highlighter",
-    "pspester.pester-test"
+    "pspester.pester-test",
+    "editorconfig.editorconfig"
   ]
 }
