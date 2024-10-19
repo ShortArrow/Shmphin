@@ -31,7 +31,7 @@ class Ui
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        CreateCursorView(),
+        MainGrid.CreateCursorView(),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
@@ -64,18 +64,5 @@ class Ui
       .Expand()
     );
     return layout;
-  }
-  public static Grid CreateCursorView()
-  {
-    var grid = new Grid();
-    var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
-
-    grid.AddColumns(2);
-    grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
-    grid.AddRow("x", $"{Cursor.X}");
-    grid.AddRow("y", $"{Cursor.Y}");
-    grid.AddRow("byteIndex", $"{index}");
-    grid.AddRow("wordIndex", $"{index / 2}");
-    return grid;
   }
 }

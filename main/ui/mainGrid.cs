@@ -10,10 +10,33 @@ enum EvenOdd
 
 class MainGrid
 {
+  private static readonly Matrix diff = new();
   private static EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
   private static void ToggleRowColor()
   {
     currentRowColor = currentRowColor == EvenOdd.Even ? EvenOdd.Odd : EvenOdd.Even;
+  }
+  public static Grid CreateCursorView()
+  {
+    diff.Update();
+    var grid = new Grid();
+    var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
+
+    grid.AddColumns(2);
+    grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
+    var dict = new Dictionary<string, string>{
+      {"x", $"{Cursor.X}"},
+      {"y", $"{Cursor.Y}"},
+      {"byteIndex", $"{index}"},
+      {"wordIndex", $"{index / 2}"},
+      {"BeforeValue", $"{diff.GetCell(Cursor.X, Cursor.Y).BeforeValue}"},
+      {"CurrentValue", $"{diff.GetCell(Cursor.X, Cursor.Y).CurrentValue}"}
+    };
+    foreach (var item in dict)
+    {
+      grid.AddRow(new Text(item.Key), new Text(item.Value).RightJustified());
+    }
+    return grid;
   }
   private static Markup RowNumber(uint value, bool IsCurrentRow = false)
   {
@@ -42,7 +65,6 @@ class MainGrid
   }
   public static Grid CreateDiffView()
   {
-    var diff = new Matrix();
     diff.Update();
 
     // Create the grid
