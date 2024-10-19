@@ -84,7 +84,7 @@ class Ui
     grid.AddColumn(); // Right row number column
 
     // Create the header
-    var header = new List<Markup> { new Markup("") }; // Empty cell for left row number column
+    var header = new List<Markup> { new("") }; // Empty cell for left row number column
     for (int i = 0; i < diff.Width; i++)
     {
       var color = i % 2 == 0 ? "blue" : "aqua";
