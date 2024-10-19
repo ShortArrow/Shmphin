@@ -1,10 +1,22 @@
 using main.model;
+
 using Spectre.Console;
 
 namespace main.ui;
 
+enum EvenOdd
+{
+  Odd,
+  Even
+}
+
 class Ui
 {
+  private static EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
+  private static void ToggleRowColor()
+  {
+    currentRowColor = currentRowColor == EvenOdd.Even ? EvenOdd.Odd : EvenOdd.Even;
+  }
   public static Layout CreateLayout(string message)
   {
     var IsExMode = Input.Mode == InputMode.Ex;
@@ -69,13 +81,41 @@ class Ui
     var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
     return new Markup($"[bold]({Cursor.X}, {Cursor.Y}), index = {index}[/] ");
   }
+  private static Markup RowNumber(uint value, bool IsCurrentRow = false)
+  {
+    var high = value & 0xFFFF_0000;
+    var low = value & 0x0000_FFFF;
+
+    var color = (currentRowColor == EvenOdd.Even) ? "yellow" : "darkorange";
+    var background = "default";
+    if (IsCurrentRow)
+    {
+      background = color;
+      color = "black";
+    }
+    return new($"[{color} on {background}]0x{high:X4}_{low:X4}[/]");
+  }
+  private static Markup CellValue(uint value, EvenOdd evenodd)
+  {
+    var color = (evenodd == EvenOdd.Even) ? "blue" : "aqua";
+    var background = "default";
+    if (value == Cursor.X)
+    {
+      background = color;
+      color = "black";
+    }
+    return new Markup($"[{color} on {background}]{value:X2}[/]");
+  }
   private static Grid CreateDiffView()
   {
     var diff = new Matrix();
     diff.Update();
 
     // Create the grid
-    var grid = new Grid();
+    var grid = new Grid
+    {
+      Expand = true
+    };
     grid.AddColumn(); // Left row number column
     for (int i = 0; i < diff.Width; i++)
     {
@@ -87,8 +127,8 @@ class Ui
     var header = new List<Markup> { new("") }; // Empty cell for left row number column
     for (int i = 0; i < diff.Width; i++)
     {
-      var color = i % 2 == 0 ? "blue" : "aqua";
-      header.Add(new Markup($"[{color}]{i:X2}[/]"));
+      EvenOdd evenOdd = i % 2 == 0 ? EvenOdd.Even : EvenOdd.Odd;
+      header.Add(CellValue((uint)i, evenOdd));
     }
     header.Add(new Markup("")); // Empty cell for right row number column
     grid.AddRow([.. header]);
@@ -96,28 +136,34 @@ class Ui
     // Create the main grid
     for (uint h = 0; h < diff.Height; h++)
     {
-      var rowColor = h % 2 == 0 ? "yellow" : "darkorange";
-      var rowData = new List<Markup> { new($"[{rowColor}]{h:X2}[/]") }; // Left row number
+      var IsCurrentRow = Cursor.Y == h;
+
+      var rowData = new List<Markup>
+      { // Left row number
+        RowNumber(h * diff.Width, IsCurrentRow)
+      };
+
       for (uint w = 0; w < diff.Width; w++)
       {
         var cell = diff.GetCell(w, h);
         string markup;
         if (cell.X == Cursor.X && cell.Y == Cursor.Y)
-        {
-          // Display foreground black and background white at the cursor position
+        { // Display cursor position
           markup = $"[black on white]{cell.CurrentValue:X2}[/]";
         }
         else
-        {
-          // Display normal
+        { // Display normal
           markup = (cell.BeforeValue == cell.CurrentValue)
               ? $"[white]{cell.CurrentValue:X2}[/]"
               : $"[red]{cell.CurrentValue:X2}[/]";
         }
         rowData.Add(new Markup(markup));
       }
-      rowData.Add(new Markup($"[{rowColor}]{h:X2}[/]")); // Right row number
+
+      // Right row number
+      rowData.Add(RowNumber((h + 1) * diff.Width - 1, IsCurrentRow));
       grid.AddRow([.. rowData]);
+      ToggleRowColor();
     }
     return grid;
   }
