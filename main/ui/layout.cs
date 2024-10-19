@@ -79,7 +79,7 @@ class Ui
   public static Markup CreateCursorView()
   {
     var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
-    return new Markup($"[bold]({Cursor.X}, {Cursor.Y}), index = {index}[/] ");
+    return new Markup($"[bold]({Cursor.X}, {Cursor.Y}),\nbyteIndex = {index}\nwordIndex = {index / 2}[/]");
   }
   private static Markup RowNumber(uint value, bool IsCurrentRow = false)
   {
@@ -95,7 +95,7 @@ class Ui
     }
     return new($"[{color} on {background}]0x{high:X4}_{low:X4}[/]");
   }
-  private static Markup CellValue(uint value, EvenOdd evenodd)
+  private static Markup HeaderNumber(uint value, EvenOdd evenodd)
   {
     var color = (evenodd == EvenOdd.Even) ? "blue" : "aqua";
     var background = "default";
@@ -128,7 +128,7 @@ class Ui
     for (int i = 0; i < diff.Width; i++)
     {
       EvenOdd evenOdd = i % 2 == 0 ? EvenOdd.Even : EvenOdd.Odd;
-      header.Add(CellValue((uint)i, evenOdd));
+      header.Add(HeaderNumber((uint)i, evenOdd));
     }
     header.Add(new Markup("")); // Empty cell for right row number column
     grid.AddRow([.. header]);
@@ -146,16 +146,24 @@ class Ui
       for (uint w = 0; w < diff.Width; w++)
       {
         var cell = diff.GetCell(w, h);
+        var formatted = cell.Length switch
+        {
+          1 => $"{cell.CurrentValue:X2}",
+          2 => $"{cell.CurrentValue:X4}",
+          4 => $"{cell.CurrentValue:X8}",
+          8 => $"{cell.CurrentValue:X16}",
+          _ => $"{cell.CurrentValue:X2}"
+        };
         string markup;
         if (cell.X == Cursor.X && cell.Y == Cursor.Y)
         { // Display cursor position
-          markup = $"[black on white]{cell.CurrentValue:X2}[/]";
+          markup = $"[black on white]{formatted}[/]";
         }
         else
         { // Display normal
           markup = (cell.BeforeValue == cell.CurrentValue)
-              ? $"[white]{cell.CurrentValue:X2}[/]"
-              : $"[red]{cell.CurrentValue:X2}[/]";
+              ? $"[white]{formatted}[/]"
+              : $"[red]{formatted}[/]";
         }
         rowData.Add(new Markup(markup));
       }

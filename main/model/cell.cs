@@ -9,6 +9,12 @@ public class Cell(byte[] before, byte[] current, uint x, uint y)
   public byte[] Before { get => before; }
   private readonly byte[] current = current;
   public byte[] Current { get => current; }
+  public uint Length
+  {
+    get => ((uint)current.Length > (uint)before.Length)
+    ? (uint)current.Length
+    : (uint)before.Length;
+  }
   public ulong CurrentValue
   {
     get

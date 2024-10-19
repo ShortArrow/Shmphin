@@ -10,7 +10,7 @@ public enum InputMode
   Normal,
   Ex,
   NewValue,
-  NewCellSize 
+  NewCellSize
 }
 
 public class Input
@@ -53,6 +53,28 @@ public class Input
       .KeyChar
       .ToString()
       .Equals(name, StringComparison.CurrentCultureIgnoreCase);
+  }
+  public static uint ParseCellSize(string inputString)
+  {
+    if (string.IsNullOrEmpty(inputString))
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
+    }
+    else if (uint.TryParse(inputString, out uint value))
+    {
+      return value switch
+      {
+        1 => 1,
+        2 => 2,
+        4 => 4,
+        8 => 8,
+        _ => throw new Exception($"Invalid input {inputString} (input should be 1, 2, 4, or 8)")
+      };
+    }
+    else
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a number)");
+    }
   }
   public static byte[] ParseNewValue(string inputString)
   {
@@ -136,9 +158,9 @@ public class Input
           {
             mode = InputMode.Normal;
             var inputString = inputBuffer.ToString();
-            var result = ParseNewValue(inputString);
+            var result = ParseCellSize(inputString);
             inputBuffer.Clear();
-            newValueTcs?.SetResult(result);
+            newCellSizeTcs?.SetResult(result);
           }
           else if (key.Key == ConsoleKey.Backspace)
           {
