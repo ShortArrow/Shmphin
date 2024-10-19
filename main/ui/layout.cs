@@ -91,7 +91,7 @@ class Ui
       header.Add(new Markup($"[{color}]{i:X2}[/]"));
     }
     header.Add(new Markup("")); // Empty cell for right row number column
-    grid.AddRow(header.ToArray());
+    grid.AddRow([.. header]);
 
     // Create the main grid
     for (uint h = 0; h < diff.Height; h++)
