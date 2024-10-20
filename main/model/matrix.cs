@@ -1,34 +1,34 @@
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+
 using main.ui;
 
 namespace main.model;
 public class Matrix
 {
   private Cell[]? cells;
-  private readonly uint cellSize = GridMode.CellLength;
+  private uint cellSize = GridMode.CellLength;
   public uint Length { get => (uint)(cells?.Length ?? 0); }
-  private readonly uint width = GridMode.ColumnsLength;
+  private uint width = GridMode.ColumnsLength;
   public uint Width { get => width; }
-  public uint Height
-  {
-    get => (Length == 0)
-      ? 0
-      : (Length / cellSize / Width);
-  }
+  private uint height = 0;
+  public uint Height { get => height; }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
     before ??= memory.SnapShot.Before;
     current ??= memory.SnapShot.Current;
     cells = new Cell[current.Length / GridMode.CellLength];
+    cellSize = GridMode.CellLength;
+    width = GridMode.ColumnsLength;
+    height = (Length == 0) ? 0 : (Length / cellSize / width);
     uint index = 0;
-    uint cellLength = GridMode.CellLength;
-    for (uint i = 0; i < current.Length; i += cellLength)
+    for (uint i = 0; i < current.Length; i += cellSize)
     {
-      var beforeSegment = new ArraySegment<byte>(before, (int)i, (int)cellLength).ToArray();
-      var currentSegment = new ArraySegment<byte>(current, (int)i, (int)cellLength).ToArray();
-      uint position = i / cellLength;
-      uint x = position % GridMode.ColumnsLength;
-      uint y = position / GridMode.ColumnsLength;
+      var beforeSegment = new ArraySegment<byte>(before, (int)i, (int)cellSize).ToArray();
+      var currentSegment = new ArraySegment<byte>(current, (int)i, (int)cellSize).ToArray();
+      uint position = i / cellSize;
+      uint x = position % width;
+      uint y = position / width;
       cells[index++] = new Cell(
         beforeSegment,
         currentSegment,

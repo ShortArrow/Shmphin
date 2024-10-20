@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using Spectre.Console;
 using main.operation;
+using System.Runtime.CompilerServices;
 
 namespace main.ui;
 
@@ -10,7 +11,8 @@ public enum InputMode
   Normal,
   Ex,
   NewValue,
-  NewCellSize
+  NewCellSize,
+  NewColumnsLength
 }
 
 public class Input
@@ -27,6 +29,7 @@ public class Input
   public static string InputBuffer => inputBuffer.ToString();
   private static TaskCompletionSource<byte[]>? newValueTcs;
   private static TaskCompletionSource<uint>? newCellSizeTcs;
+  private static TaskCompletionSource<uint>? newColumnsLengthTcs;
   public static string GetSharedMemoryName()
   {
     return AnsiConsole.Prompt(
@@ -46,6 +49,12 @@ public class Input
     Debug.WriteLine("New cell size mode");
     newCellSizeTcs = new TaskCompletionSource<uint>();
     return newCellSizeTcs.Task;
+  }
+  internal static Task<uint> NewColumnsLength(){
+    mode = InputMode.NewColumnsLength;
+    Debug.WriteLine("New columns length mode");
+    newColumnsLengthTcs = new TaskCompletionSource<uint>();
+    return newColumnsLengthTcs.Task;
   }
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {
@@ -75,6 +84,30 @@ public class Input
     {
       throw new Exception($"Invalid input {inputString} (input should be a number)");
     }
+  }
+
+  private static uint ParseColumnsLength(string inputString)
+  {
+    if(string.IsNullOrEmpty(inputString))
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
+    }
+    else if (uint.TryParse(inputString, out uint value))
+    {
+      return value switch
+      {
+        8 => 8,
+        16 => 16,
+        32 => 32,
+        64 => 64,
+        _ => throw new Exception($"Invalid input {inputString} (input should be 8, 16, 32, or 64)")
+      };
+    }
+    else
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a number)");
+    }
+
   }
   public static byte[] ParseNewValue(string inputString)
   {
@@ -161,6 +194,26 @@ public class Input
             var result = ParseCellSize(inputString);
             inputBuffer.Clear();
             newCellSizeTcs?.SetResult(result);
+          }
+          else if (key.Key == ConsoleKey.Backspace)
+          {
+            if (inputBuffer.Length > 0)
+              inputBuffer.Remove(inputBuffer.Length - 1, 1);
+          }
+          else
+          {
+            Debug.WriteLine($"New value mode: {key.KeyChar}");
+            inputBuffer.Append(key.KeyChar);
+          }
+          break;
+        case InputMode.NewColumnsLength:
+          if (key.Key == ConsoleKey.Enter)
+          {
+            mode = InputMode.Normal;
+            var inputString = inputBuffer.ToString();
+            var result = ParseColumnsLength(inputString);
+            inputBuffer.Clear();
+            newColumnsLengthTcs?.SetResult(result);
           }
           else if (key.Key == ConsoleKey.Backspace)
           {

@@ -1,10 +1,13 @@
+using main.ui;
+
 namespace main.operation;
 
 class Columns : Operation
 {
   public override string Name => "columns";
-  public override void Execute()
+  public override async void Execute()
   {
-    throw new NotImplementedException();
+    var columnsLength = await Input.NewColumnsLength();
+    GridMode.ColumnsLength = columnsLength;
   }
 }
