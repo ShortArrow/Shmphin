@@ -6,7 +6,8 @@ namespace main.cli;
 
 public class Handler
 {
-  internal static async Task TUI(string? sharedMemoryName, uint? sharedMemorySize, uint? sharedMemoryOffset, string? configFile)
+  readonly config.CurrentConfig config = new();
+  internal async Task TUI(string? sharedMemoryName, uint? sharedMemorySize, uint? sharedMemoryOffset, string? configFile)
   {
     AnsiConsole.Clear();
     if (sharedMemoryName == null)
@@ -24,7 +25,7 @@ public class Handler
     }
     if (configFile != null)
     {
-      config.Config.UpdateConfig(configFile);
+      config.UpdateConfig(configFile);
     }
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
     var inputTask = Task.Run(() => Input.InputLoop());

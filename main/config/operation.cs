@@ -1,24 +1,29 @@
 namespace main.config;
 
-public class Config
+public class CurrentConfig
 {
-  private static string? sharedMemoryName = Toml.GetSharedMemoryName();
-  public static string? SharedMemoryName
+  private readonly Toml toml = new();
+  private string? sharedMemoryName;
+  public string? SharedMemoryName
   {
     get => sharedMemoryName;
     set => sharedMemoryName = value;
   }
-  public static void SyncConfig()
+  public CurrentConfig()
   {
-    Toml.SyncToml();
+    sharedMemoryName = toml.GetSharedMemoryName();
   }
-  public static void UpdateConfig(string? path = null)
+  public void SyncConfig()
   {
-    Toml.UpdateTomlPath(path);
-    Toml.SyncToml();
+    toml.SyncToml();
   }
-  public static string? GetSharedMemoryName()
+  public void UpdateConfig(string? path = null)
   {
-    return Toml.GetSharedMemoryName();
+    toml.UpdateTomlPath(path);
+    toml.SyncToml();
+  }
+  public string? GetSharedMemoryName()
+  {
+    return toml.GetSharedMemoryName();
   }
 }

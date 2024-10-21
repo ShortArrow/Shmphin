@@ -4,10 +4,10 @@ namespace main.config;
 
 class Toml : IConfigFile
 {
-  private static readonly string configName = "config.toml";
-  private static string configPath = configName;
-  private static TomlTable? table;
-  public static void UpdateTomlPath(string? path = null)
+  private static readonly string defaultConfigName = "config.toml";
+  private string configPath = defaultConfigName;
+  private TomlTable? table;
+  public void UpdateTomlPath(string? path = null)
   {
     if (path != null)
     {
@@ -17,7 +17,7 @@ class Toml : IConfigFile
     else
     {
       string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-      configPath = Path.Combine(appDataPath, Common.AppName, configName);
+      configPath = Path.Combine(appDataPath, Common.AppName, defaultConfigName);
       if (!Directory.Exists(appDataPath))
       {
         Directory.CreateDirectory(appDataPath);
@@ -28,21 +28,55 @@ class Toml : IConfigFile
       }
     }
   }
-  public static TomlTable GetToml()
+  public TomlTable GetToml()
   {
     using StreamReader reader = File.OpenText(configPath);
     return TOML.Parse(reader);
   }
-  public static void SyncToml()
+  public void SyncToml()
   {
     table = GetToml();
   }
-  public static void GenToml()
+  public void GenToml()
   {
-
+    throw new NotImplementedException();
   }
-  public static string? GetSharedMemoryName()
+  public string? GetSharedMemoryName()
   {
     return table?["default"]["sharedmemory"]["name"].ToString();
+  }
+  public uint? GetColumnsLength()
+  {
+    var response = table?["default"]["columns"]["length"]?.ToString();
+    return response != null ? Convert.ToUInt32(response) : null;
+  }
+  public uint? GetCellLength()
+  {
+    var response = table?["default"]["cell"]["length"]?.ToString();
+    return response != null ? Convert.ToUInt32(response) : null;
+  }
+  public static string GenerateToml()
+  {
+    var toml = new TomlTable
+    {
+      ["default"] = new TomlTable
+      {
+        ["sharedmemory"] = new TomlTable
+        {
+          ["name"] = "shmphin"
+        },
+        ["columns"] = new TomlTable
+        {
+          ["length"] = 8
+        },
+        ["cell"] = new TomlTable
+        {
+          ["length"] = 1
+        }
+      }
+    };
+    using var writer = new StringWriter();
+    toml.WriteTo(writer);
+    return writer.ToString();
   }
 }

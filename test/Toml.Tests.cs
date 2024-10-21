@@ -5,12 +5,13 @@ public class TomlTests
   [Fact]
   public void ReadShmNameFromConfigFile()
   {
-    main.config.Config.UpdateConfig(
+    var config = new main.config.CurrentConfig();
+    config.UpdateConfig(
       Path.GetFullPath(
         "../../../testdata/config.toml"
       )
     );
-    var actual = main.config.Config.SharedMemoryName;
+    var actual = config.SharedMemoryName;
     var expected = "SHMSHM";
     Assert.Equal(expected, actual);
   }

@@ -10,13 +10,14 @@ public class Parser
   public System.CommandLine.Parsing.Parser rootCommandWithSplash;
   public Parser()
   {
+    Handler handler = new Handler();
     Commands.rootCommand.AddCommand(Commands.testCommand);
     Commands.rootCommand.AddCommand(Commands.dumpCommand);
     Commands.rootCommand.AddCommand(Commands.helpCommand);
     Commands.testCommand.AddCommand(Commands.testConfigCommand);
 
     Commands.rootCommand.SetHandler(
-      Handler.TUI,
+      handler.TUI,
       Options.sharedMemoryName, Options.sharedMemorySize, Options.sharedMemoryOffset, Options.configFile
     );
     rootCommandWithSplash = new CommandLineBuilder(Commands.rootCommand)
