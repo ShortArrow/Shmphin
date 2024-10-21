@@ -32,7 +32,9 @@ class MainGrid
       {"wordIndex", $"{index / 2}"},
       {"BeforeValue", $"{diff.GetCell(Cursor.X, Cursor.Y).BeforeValue}"},
       {"CurrentValue", $"{diff.GetCell(Cursor.X, Cursor.Y).CurrentValue}"},
-      {"Address", $"{address}"}
+      {"Address", $"{address}"},
+      {"gridWidth", $"{diff.Width}"},
+      {"gridHeight", $"{diff.Height}"},
     };
     foreach (var item in dict)
     {
