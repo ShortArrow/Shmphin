@@ -24,13 +24,15 @@ class MainGrid
 
     grid.AddColumns(2);
     grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
+    var address = FromatAddress((uint)index);
     var dict = new Dictionary<string, string>{
       {"x", $"{Cursor.X}"},
       {"y", $"{Cursor.Y}"},
       {"byteIndex", $"{index}"},
       {"wordIndex", $"{index / 2}"},
       {"BeforeValue", $"{diff.GetCell(Cursor.X, Cursor.Y).BeforeValue}"},
-      {"CurrentValue", $"{diff.GetCell(Cursor.X, Cursor.Y).CurrentValue}"}
+      {"CurrentValue", $"{diff.GetCell(Cursor.X, Cursor.Y).CurrentValue}"},
+      {"Address", $"{address}"}
     };
     foreach (var item in dict)
     {
@@ -38,30 +40,27 @@ class MainGrid
     }
     return grid;
   }
-  private static Markup RowNumber(uint value, bool IsCurrentRow = false)
+  private static string FromatAddress(uint value)
   {
     var high = value & 0xFFFF_0000;
     var low = value & 0x0000_FFFF;
-
+    return $"0x{high:X4}_{low:X4}";
+  }
+  private static Markup RowNumber(uint value, bool IsCurrentRow = false)
+  {
+    var address = FromatAddress(value);
     var color = (currentRowColor == EvenOdd.Even) ? "yellow" : "darkorange";
-    var background = "default";
-    if (IsCurrentRow)
-    {
-      background = color;
-      color = "black";
-    }
-    return new($"[{color} on {background}]0x{high:X4}_{low:X4}[/]");
+    var foreground = IsCurrentRow ? "black" : color;
+    var background = IsCurrentRow ? color : "default";
+    return new($"[{foreground} on {background}]{address}[/]");
   }
   private static Markup HeaderNumber(uint value, EvenOdd evenodd)
   {
     var color = (evenodd == EvenOdd.Even) ? "blue" : "aqua";
-    var background = "default";
-    if (value == Cursor.X)
-    {
-      background = color;
-      color = "black";
-    }
-    return new Markup($"[{color} on {background}]{value:X2}[/]");
+    var IsCurrentColumn = Cursor.X == value;
+    var foreground = IsCurrentColumn ? "black" : color;
+    var background = IsCurrentColumn ? color : "default";
+    return new Markup($"[{foreground} on {background}]{value:X2}[/]");
   }
   public static Grid CreateDiffView()
   {
