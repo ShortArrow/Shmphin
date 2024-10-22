@@ -1,15 +1,16 @@
-using main.model;
+using main.config;
 
 using Spectre.Console;
 
 namespace main.ui;
 
-class Ui
+class Ui(IConfig config, Cursor cursor)
 {
-  public static Layout CreateLayout(string message)
+  private readonly MainGrid mainGrid = new(config, cursor);
+  public Layout CreateLayout(IConfig config, Input input)
   {
-    var IsExMode = Input.Mode == InputMode.Ex;
-    var IsNewValueMode = Input.Mode == InputMode.NewValue;
+    var IsExMode = input.Mode == InputMode.Ex;
+    var IsNewValueMode = input.Mode == InputMode.NewValue;
     // Create the layout
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),
@@ -25,13 +26,13 @@ class Ui
     // Update the left column
     layout["Header"].Update(
       new Panel(Align.Center(
-        new Markup($"[blue]{memory.Params.SharedMemoryName}[/]"),
+        new Markup($"[blue]{config.SharedMemoryName}[/]"),
         VerticalAlignment.Middle
       ))
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        MainGrid.CreateCursorView(),
+        mainGrid.CreateCursorView(),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
@@ -40,7 +41,7 @@ class Ui
     layout["Main"]["Right"]["Bottom"].Update(
       new Panel(Align.Center(
         IsNewValueMode
-          ? new Markup($"[red]{Input.InputBuffer}[/]")
+          ? new Markup($"[red]{input.InputBuffer}[/]")
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
       ))
@@ -49,7 +50,7 @@ class Ui
     );
     layout["Main"]["Left"].Update(
       new Panel(Align.Center(
-        MainGrid.CreateDiffView(),
+        mainGrid.CreateDiffView(),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
@@ -57,7 +58,7 @@ class Ui
     );
     layout["Footer"].Update(
       new Panel(Align.Center(
-        new Markup($"[green]{Input.InputBuffer}[/]"),
+        new Markup($"[green]{input.InputBuffer}[/]"),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Red : Color.Default)

@@ -1,5 +1,5 @@
 namespace main.operation;
-class Help : Operation
+class Help() : Operation()
 {
   public override string Name => "help";
   public override void Execute()

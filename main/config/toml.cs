@@ -51,6 +51,16 @@ class Toml : IConfigFile
     var response = table?["default"]["cell"]["length"]?.ToString();
     return response != null ? Convert.ToUInt32(response) : null;
   }
+  public uint? GetSharedMemorySize()
+  {
+    var response = table?["default"]["sharedmemory"]["size"]?.ToString();
+    return response != null ? Convert.ToUInt32(response) : null;
+  }
+  public uint? GetSharedMemoryOffset()
+  {
+    var response = table?["default"]["sharedmemory"]["offset"]?.ToString();
+    return response != null ? Convert.ToUInt32(response) : null;
+  }
   public static string GenerateToml()
   {
     var toml = new TomlTable
@@ -86,12 +96,18 @@ class TomlConfig : IConfig
   public uint? ColumnsLength => columnsLength;
   private uint? cellLength;
   public uint? CellLength => cellLength;
+  private uint? sharedMemorySize;
+  public uint? SharedMemorySize => sharedMemorySize;
+  private uint? sharedMemoryOffset;
+  public uint? SharedMemoryOffset => sharedMemoryOffset;
   public void Sync()
   {
     toml.SyncToml();
     sharedMemoryName = toml.GetSharedMemoryName();
     columnsLength = toml.GetColumnsLength();
     cellLength = toml.GetCellLength();
+    sharedMemorySize = toml.GetSharedMemorySize();
+    sharedMemoryOffset = toml.GetSharedMemoryOffset();
   }
   public void UpdateConfig(string configFile)
   {

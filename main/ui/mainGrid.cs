@@ -1,5 +1,6 @@
 using Spectre.Console;
 using main.model;
+using main.config;
 
 namespace main.ui;
 enum EvenOdd
@@ -8,30 +9,30 @@ enum EvenOdd
   Even
 }
 
-class MainGrid
+class MainGrid(IConfig config, Cursor cursor)
 {
-  private static readonly Matrix diff = new();
-  private static EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
-  private static void ToggleRowColor()
+  private readonly Matrix diff = new(config);
+  private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
+  private void ToggleRowColor()
   {
     currentRowColor = currentRowColor == EvenOdd.Even ? EvenOdd.Odd : EvenOdd.Even;
   }
-  public static Grid CreateCursorView()
+  public Grid CreateCursorView()
   {
     diff.Update();
     var grid = new Grid();
-    var index = Matrix.GetIndex(Cursor.X, Cursor.Y);
+    var index = Matrix.GetIndex(cursor.X, cursor.Y);
 
     grid.AddColumns(2);
     grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
     var address = FromatAddress((uint)index);
     var dict = new Dictionary<string, string>{
-      {"x", $"{Cursor.X}"},
-      {"y", $"{Cursor.Y}"},
+      {"x", $"{cursor.X}"},
+      {"y", $"{cursor.Y}"},
       {"byteIndex", $"{index}"},
       {"wordIndex", $"{index / 2}"},
-      {"BeforeValue", $"{diff.GetCell(Cursor.X, Cursor.Y).BeforeValue}"},
-      {"CurrentValue", $"{diff.GetCell(Cursor.X, Cursor.Y).CurrentValue}"},
+      {"BeforeValue", $"{diff.GetCell(cursor.X, cursor.Y).BeforeValue}"},
+      {"CurrentValue", $"{diff.GetCell(cursor.X, cursor.Y).CurrentValue}"},
       {"Address", $"{address}"},
       {"gridWidth", $"{diff.Width}"},
       {"gridHeight", $"{diff.Height}"},
@@ -48,7 +49,7 @@ class MainGrid
     var low = value & 0x0000_FFFF;
     return $"0x{high:X4}_{low:X4}";
   }
-  private static Markup RowNumber(uint value, bool IsCurrentRow = false)
+  private Markup RowNumber(uint value, bool IsCurrentRow = false)
   {
     var address = FromatAddress(value);
     var color = (currentRowColor == EvenOdd.Even) ? "yellow" : "darkorange";
@@ -56,15 +57,15 @@ class MainGrid
     var background = IsCurrentRow ? color : "default";
     return new($"[{foreground} on {background}]{address}[/]");
   }
-  private static Markup HeaderNumber(uint value, EvenOdd evenodd)
+  private Markup HeaderNumber(uint value, EvenOdd evenodd)
   {
     var color = (evenodd == EvenOdd.Even) ? "blue" : "aqua";
-    var IsCurrentColumn = Cursor.X == value;
+    var IsCurrentColumn = cursor.X == value;
     var foreground = IsCurrentColumn ? "black" : color;
     var background = IsCurrentColumn ? color : "default";
     return new Markup($"[{foreground} on {background}]{value:X2}[/]");
   }
-  public static Grid CreateDiffView()
+  public Grid CreateDiffView()
   {
     diff.Update();
 
@@ -93,7 +94,7 @@ class MainGrid
     // Create the main grid
     for (uint h = 0; h < diff.Height; h++)
     {
-      var IsCurrentRow = Cursor.Y == h;
+      var IsCurrentRow = cursor.Y == h;
 
       var rowData = new List<Markup>
       { // Left row number
@@ -112,7 +113,7 @@ class MainGrid
           _ => $"{cell.CurrentValue:X2}"
         };
         string markup;
-        if (cell.X == Cursor.X && cell.Y == Cursor.Y)
+        if (cell.X == cursor.X && cell.Y == cursor.Y)
         { // Display cursor position
           markup = $"[black on white]{formatted}[/]";
         }

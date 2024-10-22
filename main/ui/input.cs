@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using Spectre.Console;
 using main.operation;
-using System.Runtime.CompilerServices;
+using main.config;
 
 namespace main.ui;
 
@@ -17,129 +17,55 @@ public enum InputMode
 
 public class Input
 {
-  private static InputMode mode = InputMode.Normal;
-  public static InputMode Mode
+  private readonly Operations operations;
+  private readonly Parser parser;
+  public Input(IConfig config)
+  {
+    operations = new(config);
+    parser = new Parser(operations);
+  }
+  private InputMode mode = InputMode.Normal;
+  public InputMode Mode
   {
     get => mode;
     set => mode = value;
   }
-  private static readonly CancellationTokenSource cts = new();
-  public static bool IsCancellationRequested => cts.Token.IsCancellationRequested;
-  private static readonly StringBuilder inputBuffer = new();
-  public static string InputBuffer => inputBuffer.ToString();
-  private static TaskCompletionSource<byte[]>? newValueTcs;
-  private static TaskCompletionSource<uint>? newCellSizeTcs;
-  private static TaskCompletionSource<uint>? newColumnsLengthTcs;
+  private readonly CancellationTokenSource cts = new();
+  public bool IsCancellationRequested => cts.Token.IsCancellationRequested;
+  private readonly StringBuilder inputBuffer = new();
+  public string InputBuffer => inputBuffer.ToString();
+  private TaskCompletionSource<byte[]>? newValueTcs;
+  private TaskCompletionSource<uint>? newCellSizeTcs;
+  private TaskCompletionSource<uint>? newColumnsLengthTcs;
   public static string GetSharedMemoryName()
   {
     return AnsiConsole.Prompt(
       new TextPrompt<string>("Enter the shared memory name:")
     );
   }
-  internal static Task<byte[]> NewValue()
+  internal Task<byte[]> NewValue()
   {
     mode = InputMode.NewValue;
     Debug.WriteLine("New value mode");
     newValueTcs = new TaskCompletionSource<byte[]>();
     return newValueTcs.Task;
   }
-  internal static Task<uint> NewCellSize()
+  internal Task<uint> NewCellSize()
   {
     mode = InputMode.NewCellSize;
     Debug.WriteLine("New cell size mode");
     newCellSizeTcs = new TaskCompletionSource<uint>();
     return newCellSizeTcs.Task;
   }
-  internal static Task<uint> NewColumnsLength(){
+  internal Task<uint> NewColumnsLength()
+  {
     mode = InputMode.NewColumnsLength;
     Debug.WriteLine("New columns length mode");
     newColumnsLengthTcs = new TaskCompletionSource<uint>();
     return newColumnsLengthTcs.Task;
   }
-  public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
-  {
-    return keyInfo
-      .KeyChar
-      .ToString()
-      .Equals(name, StringComparison.CurrentCultureIgnoreCase);
-  }
-  public static uint ParseCellSize(string inputString)
-  {
-    if (string.IsNullOrEmpty(inputString))
-    {
-      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
-    }
-    else if (uint.TryParse(inputString, out uint value))
-    {
-      return value switch
-      {
-        1 => 1,
-        2 => 2,
-        4 => 4,
-        8 => 8,
-        _ => throw new Exception($"Invalid input {inputString} (input should be 1, 2, 4, or 8)")
-      };
-    }
-    else
-    {
-      throw new Exception($"Invalid input {inputString} (input should be a number)");
-    }
-  }
 
-  private static uint ParseColumnsLength(string inputString)
-  {
-    if(string.IsNullOrEmpty(inputString))
-    {
-      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
-    }
-    else if (uint.TryParse(inputString, out uint value))
-    {
-      return value switch
-      {
-        8 => 8,
-        16 => 16,
-        32 => 32,
-        64 => 64,
-        _ => throw new Exception($"Invalid input {inputString} (input should be 8, 16, 32, or 64)")
-      };
-    }
-    else
-    {
-      throw new Exception($"Invalid input {inputString} (input should be a number)");
-    }
-
-  }
-  public static byte[] ParseNewValue(string inputString)
-  {
-    if (string.IsNullOrEmpty(inputString))
-    {
-      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
-    }
-
-    // 文字列の長さが奇数の場合、先頭に '0' を追加
-    if (inputString.Length % 2 != 0)
-    {
-      inputString = "0" + inputString;
-    }
-
-    List<byte> byteList = [];
-
-    for (int i = 0; i < inputString.Length; i += 2)
-    {
-      string hexByte = inputString.Substring(i, 2);
-      if (byte.TryParse(hexByte, System.Globalization.NumberStyles.HexNumber, null, out byte value))
-      {
-        byteList.Add(value);
-      }
-      else
-      {
-        throw new Exception($"Invalid input {inputString} (contains non-hex characters)");
-      }
-    }
-
-    return [.. byteList];
-  }
-  public static void InputLoop()
+  public void InputLoop()
   {
     while (!cts.Token.IsCancellationRequested)
     {
@@ -151,7 +77,7 @@ public class Input
           {
             mode = InputMode.Normal;
             var command = inputBuffer.ToString()[1..]; // Remove the first character '>'
-            var operation = Parser.Parse(command);
+            var operation = parser.Parse(command);
             operation.Execute();
             inputBuffer.Clear();
             Debug.WriteLine($"Command: [{operation.Name}]");
@@ -171,7 +97,7 @@ public class Input
           {
             mode = InputMode.Normal;
             var inputString = inputBuffer.ToString();
-            var result = ParseNewValue(inputString);
+            var result = Parse.NewValue(inputString);
             inputBuffer.Clear();
             newValueTcs?.SetResult(result);
           }
@@ -191,7 +117,7 @@ public class Input
           {
             mode = InputMode.Normal;
             var inputString = inputBuffer.ToString();
-            var result = ParseCellSize(inputString);
+            var result = Parse.CellSize(inputString);
             inputBuffer.Clear();
             newCellSizeTcs?.SetResult(result);
           }
@@ -211,7 +137,7 @@ public class Input
           {
             mode = InputMode.Normal;
             var inputString = inputBuffer.ToString();
-            var result = ParseColumnsLength(inputString);
+            var result = Parse.ColumnsLength(inputString);
             inputBuffer.Clear();
             newColumnsLengthTcs?.SetResult(result);
           }
@@ -228,21 +154,21 @@ public class Input
           break;
         case InputMode.Normal:
           Debug.WriteLine($"nomal mode: {key.KeyChar}");
-          if (KeyCheck(key, "q")) { cts.Cancel(); }
-          else if (KeyCheck(key, ":"))
+          if (Parse.KeyCheck(key, "q")) { cts.Cancel(); }
+          else if (Parse.KeyCheck(key, ":"))
           {
             mode = InputMode.Ex;  // Enter Ex mode
             inputBuffer.Clear();
             inputBuffer.Append('>');
           }
-          else if (KeyCheck(key, "u")) { Operations.UpdateMemory.Execute(); }
-          else if (KeyCheck(key, "h")) { Cursor.MoveLeft(); }
-          else if (KeyCheck(key, "j")) { Cursor.MoveDown(); }
-          else if (KeyCheck(key, "k")) { Cursor.MoveUp(); }
-          else if (KeyCheck(key, "l")) { Cursor.MoveRight(); }
-          else if (KeyCheck(key, "c")) { Operations.ChangeMemory.Execute(); }
-          else if (KeyCheck(key, "?")) { Operations.Help.Execute(); }
-          else if (KeyCheck(key, "/")) { Operations.Search.Execute(); }
+          else if (Parse.KeyCheck(key, "u")) { operations.UpdateMemory.Execute(); }
+          else if (Parse.KeyCheck(key, "h")) { operations.Left.Execute(); }
+          else if (Parse.KeyCheck(key, "j")) { operations.Down.Execute(); }
+          else if (Parse.KeyCheck(key, "k")) { operations.Up.Execute(); }
+          else if (Parse.KeyCheck(key, "l")) { operations.Right.Execute(); }
+          else if (Parse.KeyCheck(key, "c")) { operations.ChangeMemory.Execute(); }
+          else if (Parse.KeyCheck(key, "?")) { operations.Help.Execute(); }
+          else if (Parse.KeyCheck(key, "/")) { operations.Search.Execute(); }
           else if (key.Key == ConsoleKey.Tab) { Focus.ChangeFocus(); }
           break;
         default:

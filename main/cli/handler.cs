@@ -1,42 +1,40 @@
 using Spectre.Console;
 using main.ui;
 using main.operation;
+using main.config;
 
 namespace main.cli;
 
 public class Handler
 {
-  private config.CurrentConfig? config;
+  private CurrentConfig? config;
+  private Operations? operations;
+  private Input? input;
+  private Ui? ui;
+  private ui.Cursor? cursor;
   internal async Task TUI(string? sharedMemoryName, uint? sharedMemorySize, uint? sharedMemoryOffset, string? configFile)
   {
-    config = new(new config.Command(sharedMemoryName, 8, 1)); // TODO: use cli flags
+    config = new(new Command(sharedMemoryName, 8, 1, sharedMemorySize, sharedMemoryOffset)); // TODO: use cli flags
+    operations = new(config);
+    input = new(config);
+    cursor = new(config);
+    ui = new(config, cursor);
     AnsiConsole.Clear();
-    if (sharedMemoryName == null)
+    if (config.SharedMemoryName == null)
     {
       Welcome.Show();
-      memory.Params.SharedMemoryName = Input.GetSharedMemoryName();
+      config.SharedMemoryName = Input.GetSharedMemoryName();
     }
-    if (sharedMemorySize != null)
-    {
-      memory.Params.Size = (uint)sharedMemorySize;
-    }
-    if (sharedMemoryOffset != null)
-    {
-      memory.Params.Offset = (uint)sharedMemoryOffset;
-    }
-    if (configFile != null)
-    {
-      config.UpdateConfig(configFile);
-    }
+    config.UpdateConfig(configFile);
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
-    var inputTask = Task.Run(() => Input.InputLoop());
+    var inputTask = Task.Run(() => input.InputLoop());
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
-      Operations.UpdateMemory.Execute();
-      while (!Input.IsCancellationRequested)
+      operations.UpdateMemory.Execute();
+      while (!input.IsCancellationRequested)
       {
-        var layout = Ui.CreateLayout("normal");
+        var layout = ui.CreateLayout(config, input);
         context.UpdateTarget(layout);
       }
       await inputTask;

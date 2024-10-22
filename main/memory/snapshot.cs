@@ -1,23 +1,39 @@
 using System.Runtime.Versioning;
+
+using main.config;
+
 namespace main.memory;
 
 class SnapShot
 {
-  private static byte[] _before = new byte[Params.Size];
-  private static byte[] _current = new byte[Params.Size];
+  private readonly IConfig? config;
+  private readonly SharedMemory sharedMemory;
+  private byte[] _before = [];
+  private byte[] _current = [];
+  public SnapShot(IConfig conf)
+  {
+    config = conf ?? throw new NullReferenceException();
+    sharedMemory = new(conf);
+    if (config.SharedMemorySize == null) throw new NullReferenceException();
+    _before = new byte[(uint)config.SharedMemorySize];
+    _current = new byte[(uint)config.SharedMemorySize];
+  }
 
   [SupportedOSPlatform("windows")]
-  public static void UpdateSnapShot()
+  public void UpdateSnapShot()
   {
     _before = _current;
-    _current = SharedMemory.ReadFromSharedMemory(Params.Offset, (int)Params.Size);
+    if (config == null) throw new NullReferenceException();
+    if (config.SharedMemoryOffset == null) throw new NullReferenceException();
+    if (config.SharedMemorySize == null) throw new NullReferenceException();
+    _current = sharedMemory.ReadFromSharedMemory((int)config.SharedMemoryOffset, (int)config.SharedMemorySize);
   }
-  public static byte[] Before
+  public byte[] Before
   {
     get => _before;
     set => _before = value;
   }
-  public static byte[] Current
+  public byte[] Current
   {
     get => _current;
     set => _current = value;

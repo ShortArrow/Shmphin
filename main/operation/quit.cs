@@ -1,5 +1,5 @@
 namespace main.operation;
-class Quit : Operation
+class Quit() : Operation()
 {
   public override string Name => "quit";
   public override void Execute()

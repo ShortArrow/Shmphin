@@ -1,6 +1,6 @@
 namespace main.operation;
 
-public class Mark : Operation
+public class Mark() : Operation()
 {
   public override string Name => "mark";
   public override void Execute()
@@ -9,7 +9,7 @@ public class Mark : Operation
   }
 }
 
-public class Unmark : Operation
+public class Unmark() : Operation()
 {
   public override string Name => "unmark";
   public override void Execute()
@@ -18,7 +18,7 @@ public class Unmark : Operation
   }
 }
 
-public class Jump : Operation
+public class Jump() : Operation()
 {
   public override string Name => "jump";
   public override void Execute()
@@ -27,7 +27,7 @@ public class Jump : Operation
   }
 }
 
-public class Clear : Operation
+public class Clear() : Operation()
 {
   public override string Name => "clear";
   public override void Execute()

@@ -1,27 +1,27 @@
 namespace main.operation;
 
-public class Parser
+public class Parser(Operations operations)
 {
-  public static IOperation Parse(string input)
+  public IOperation Parse(string input)
   {
     var split = input.Split(' ');
     return split[0] switch
     {
-      "change" => Operations.ChangeMemory, // change memory value at current cell
-      "update" => Operations.UpdateMemory, // update current memory snapshot
-      "help" => Operations.Help, // display help
-      "search" => Operations.Search, // search for a byte sequence
-      "size" => Operations.Size, // update size of the memory displayed
-      "columns" => Operations.Columns, // update quantity of columns displayed
-      "cell" => Operations.Cell, // update cell byte size displayed
-      "mark" => Operations.Mark, // book mark the current cell
-      "unmark" => Operations.Unmark, // remove the book mark from the current cell
-      "jump" => Operations.Jump, // jump to the book marked cell
-      "clear" => Operations.Clear, // clear all book marks
-      "next" => Operations.Next, // move to the next cell search result
-      "prev" => Operations.Prev, // move to the previous cell search result
-      "exit" => Operations.Quit, // exit the program
-      "quit" => Operations.Quit, // exit the program
+      "change" => operations.ChangeMemory, // change memory value at current cell
+      "update" => operations.UpdateMemory, // update current memory snapshot
+      "help" => operations.Help, // display help
+      "search" => operations.Search, // search for a byte sequence
+      "size" => operations.Size, // update size of the memory displayed
+      "columns" => operations.Columns, // update quantity of columns displayed
+      "cell" => operations.Cell, // update cell byte size displayed
+      "mark" => operations.Mark, // book mark the current cell
+      "unmark" => operations.Unmark, // remove the book mark from the current cell
+      "jump" => operations.Jump, // jump to the book marked cell
+      "clear" => operations.Clear, // clear all book marks
+      "next" => operations.Next, // move to the next cell search result
+      "prev" => operations.Prev, // move to the previous cell search result
+      "exit" => operations.Quit, // exit the program
+      "quit" => operations.Quit, // exit the program
       _ => throw new Exception("Invalid command")
     };
   }

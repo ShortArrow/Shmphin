@@ -2,9 +2,11 @@ using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.Versioning;
 
+using main.config;
+
 namespace main.memory;
 
-public class SharedMemory
+public class SharedMemory(IConfig config)
 {
   /// <summary>
   /// Read data from the specified shared memory by name and range.
@@ -13,12 +15,12 @@ public class SharedMemory
   /// <param name="length">Length of data to read (in bytes)</param>
   /// <returns>Byte array containing the read data</returns>
   [SupportedOSPlatform("windows")]
-  public static byte[] ReadFromSharedMemory(long offset, int length)
+  public byte[] ReadFromSharedMemory(long offset, int length)
   {
     byte[] buffer = new byte[length];
     try
     {
-      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(Params.SharedMemoryName);
+      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(config.SharedMemoryName ?? "NONAME");
       // arguments (position in shared memory, length, access type)
       MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, length, MemoryMappedFileAccess.Read);
       // arguments (position in accessor, buffer, position in buffer, length)
@@ -45,13 +47,13 @@ public class SharedMemory
   /// <param name="offset">Read start position (in bytes)</param>
   /// <param name="length">Length of data to read (in bytes)</param>
   /// <param name="data">Data to write</param>
-  /// <return>True if the write operation is successful, false otherwise</return> 
+  /// <return>True if the write operation is successful, false otherwise</return>
   [SupportedOSPlatform("windows")]
-  public static bool WriteToSharedMemory(ulong offset, byte[] data)
+  public bool WriteToSharedMemory(ulong offset, byte[] data)
   {
     try
     {
-      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(Params.SharedMemoryName);
+      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(config.SharedMemoryName ?? "NONAME");
       // arguments (position in shared memory, length, access type)
       MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor((long)offset, data.Length, MemoryMappedFileAccess.Write);
       // arguments (position in accessor, buffer, position in buffer, length)
@@ -77,7 +79,7 @@ public class SharedMemory
   }
 
   [SupportedOSPlatform("windows")]
-  internal static void Update(ulong index, byte[] newValue)
+  internal void Update(ulong index, byte[] newValue)
   {
     Debug.WriteLine($"Update shared memory: index: {index}, newValue: {newValue}");
     WriteToSharedMemory(index, newValue);

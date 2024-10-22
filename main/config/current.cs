@@ -1,10 +1,9 @@
-using main.memory;
-
 namespace main.config;
 
 public class CurrentConfig(Command command) : IConfig
 {
   private readonly TomlConfig toml = new();
+  private readonly Default defaultConf = new();
   private string? sharedMemoryName;
   public string? SharedMemoryName
   {
@@ -12,7 +11,7 @@ public class CurrentConfig(Command command) : IConfig
       sharedMemoryName
       ?? command.SharedMemoryName
       ?? toml.SharedMemoryName
-      ?? Params.SharedMemoryName;
+      ?? defaultConf.SharedMemoryName;
     set => sharedMemoryName = value;
   }
   private uint? columnsLength;
@@ -21,7 +20,8 @@ public class CurrentConfig(Command command) : IConfig
     get =>
       columnsLength
       ?? command.ColumnsLength
-      ?? toml.ColumnsLength;
+      ?? toml.ColumnsLength
+      ?? defaultConf.ColumnsLength;
     set => columnsLength = value;
   }
   private uint? cellLength;
@@ -30,15 +30,39 @@ public class CurrentConfig(Command command) : IConfig
     get =>
       cellLength
       ?? command.CellLength
-      ?? toml.CellLength;
+      ?? toml.CellLength
+      ?? defaultConf.CellLength;
     set => cellLength = value;
+  }
+  private uint? sharedMemorySize;
+  public uint? SharedMemorySize
+  {
+    get =>
+      sharedMemorySize
+      ?? command.SharedMemorySize
+      ?? toml.SharedMemorySize
+      ?? defaultConf.SharedMemorySize;
+    set => sharedMemorySize = value;
+  }
+  private uint? sharedMemoryOffset;
+  public uint? SharedMemoryOffset
+  {
+    get =>
+      sharedMemoryOffset
+      ?? command.SharedMemoryOffset
+      ?? toml.SharedMemoryOffset
+      ?? defaultConf.SharedMemoryOffset;
+    set => sharedMemoryOffset = value;
   }
   public void Sync()
   {
     toml.Sync();
   }
-  public void UpdateConfig(string configFile)
+  public void UpdateConfig(string? configFile)
   {
-    toml.UpdateConfig(configFile);
+    if (configFile != null)
+    {
+      toml.UpdateConfig(configFile);
+    }
   }
 }

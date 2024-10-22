@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-
+using main.config;
 using main.ui;
 
 namespace main.model;
-public class Matrix
+public class Matrix(IConfig config)
 {
   private Cell[]? cells;
   private uint cellSize = GridMode.CellLength;
@@ -15,8 +13,8 @@ public class Matrix
   public uint Height { get => height; }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
-    before ??= memory.SnapShot.Before;
-    current ??= memory.SnapShot.Current;
+    before ??= new memory.SnapShot(config).Before;
+    current ??= new memory.SnapShot(config).Current;
     cells = new Cell[current.Length / GridMode.CellLength];
     cellSize = GridMode.CellLength;
     width = GridMode.ColumnsLength;
