@@ -1,7 +1,5 @@
 using main.config;
 
-using Microsoft.VisualBasic;
-
 namespace test;
 
 public class TomlTests
