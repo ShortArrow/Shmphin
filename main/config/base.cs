@@ -14,7 +14,7 @@ public interface IConfigFile
 
 public interface IConfig
 {
-  public abstract string SharedMemoryName { get; }
-  public abstract uint ColumnsLength { get; }
-  public abstract uint CellLength { get; }
+  public abstract string? SharedMemoryName { get; }
+  public abstract uint? ColumnsLength { get; }
+  public abstract uint? CellLength { get; }
 }

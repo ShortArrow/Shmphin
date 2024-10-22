@@ -37,10 +37,6 @@ class Toml : IConfigFile
   {
     table = GetToml();
   }
-  public void GenToml()
-  {
-    throw new NotImplementedException();
-  }
   public string? GetSharedMemoryName()
   {
     return table?["default"]["sharedmemory"]["name"].ToString();
@@ -78,5 +74,28 @@ class Toml : IConfigFile
     using var writer = new StringWriter();
     toml.WriteTo(writer);
     return writer.ToString();
+  }
+}
+
+class TomlConfig : IConfig
+{
+  private readonly Toml toml = new();
+  private string? sharedMemoryName;
+  public string? SharedMemoryName => sharedMemoryName;
+  private uint? columnsLength;
+  public uint? ColumnsLength => columnsLength;
+  private uint? cellLength;
+  public uint? CellLength => cellLength;
+  public void Sync()
+  {
+    toml.SyncToml();
+    sharedMemoryName = toml.GetSharedMemoryName();
+    columnsLength = toml.GetColumnsLength();
+    cellLength = toml.GetCellLength();
+  }
+  public void UpdateConfig(string configFile)
+  {
+    toml.UpdateTomlPath(configFile);
+    Sync();
   }
 }

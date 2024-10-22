@@ -6,9 +6,10 @@ namespace main.cli;
 
 public class Handler
 {
-  readonly config.CurrentConfig config = new();
+  private config.CurrentConfig? config;
   internal async Task TUI(string? sharedMemoryName, uint? sharedMemorySize, uint? sharedMemoryOffset, string? configFile)
   {
+    config = new(new config.Command(sharedMemoryName, 8, 1)); // TODO: use cli flags
     AnsiConsole.Clear();
     if (sharedMemoryName == null)
     {
