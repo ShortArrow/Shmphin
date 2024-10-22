@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace main.ui;
 
-class Cursor(IConfig config)
+public class Cursor(IConfig config)
 {
   private IConfig config = config;
   private uint x = 0;

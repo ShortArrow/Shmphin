@@ -15,9 +15,9 @@ public class Handler
   internal async Task TUI(string? sharedMemoryName, uint? sharedMemorySize, uint? sharedMemoryOffset, string? configFile)
   {
     config = new(new Command(sharedMemoryName, 8, 1, sharedMemorySize, sharedMemoryOffset)); // TODO: use cli flags
-    operations = new(config);
-    input = new(config);
     cursor = new(config);
+    operations = new(config, cursor);
+    input = new(config);
     ui = new(config, cursor);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
