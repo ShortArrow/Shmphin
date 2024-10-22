@@ -19,9 +19,9 @@ public class Input
 {
   private readonly Operations operations;
   private readonly Parser parser;
-  public Input(IConfig config)
+  public Input(IConfig config, Cursor cursor)
   {
-    operations = new(config);
+    operations = new(config, cursor);
     parser = new Parser(operations);
   }
   private InputMode mode = InputMode.Normal;

@@ -17,7 +17,7 @@ public class Handler
     config = new(new Command(sharedMemoryName, 8, 1, sharedMemorySize, sharedMemoryOffset)); // TODO: use cli flags
     cursor = new(config);
     operations = new(config, cursor);
-    input = new(config);
+    input = new(config, cursor);
     ui = new(config, cursor);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
