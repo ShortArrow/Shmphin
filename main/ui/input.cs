@@ -166,9 +166,9 @@ public class Input
           else if (Parse.KeyCheck(key, "j")) { operations.Down.Execute(); }
           else if (Parse.KeyCheck(key, "k")) { operations.Up.Execute(); }
           else if (Parse.KeyCheck(key, "l")) { operations.Right.Execute(); }
-          else if (Parse.KeyCheck(key, "c")) { operations.ChangeMemory.Execute(); }
-          else if (Parse.KeyCheck(key, "?")) { operations.Help.Execute(); }
-          else if (Parse.KeyCheck(key, "/")) { operations.Search.Execute(); }
+          // else if (Parse.KeyCheck(key, "c")) { operations.ChangeMemory.Execute(); }
+          // else if (Parse.KeyCheck(key, "?")) { operations.Help.Execute(); }
+          // else if (Parse.KeyCheck(key, "/")) { operations.Search.Execute(); }
           else if (key.Key == ConsoleKey.Tab) { Focus.ChangeFocus(); }
           break;
         default:
