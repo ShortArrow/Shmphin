@@ -1,21 +1,40 @@
 using main.config;
 
+using Microsoft.VisualBasic;
+
 namespace test;
 
 public class TomlTests
 {
-  [Fact]
-  public void ReadShmNameFromConfigFile()
+  readonly CurrentConfig config = new(new(null, null, null));
+  public TomlTests()
   {
-    var config = new CurrentConfig(new("SHMSHM", 8, 1));
     config.UpdateConfig(
       Path.GetFullPath(
         "../../../testdata/config.toml"
       )
     );
     config.Sync();
+  }
+  [Fact]
+  public void ReadSharedMemoryName()
+  {
     var actual = config.SharedMemoryName;
-    var expected = "SHMSHM";
+    var expected = "TESTshmTEST";
+    Assert.Equal(expected, actual);
+  }
+  [Fact]
+  public void ReadCellLength()
+  {
+    var actual = config.CellLength;
+    var expected = (uint)1;
+    Assert.Equal(expected, actual);
+  }
+  [Fact]
+  public void ReadColumnsLength()
+  {
+    var actual = config.ColumnsLength;
+    var expected = (uint)10;
     Assert.Equal(expected, actual);
   }
 }
