@@ -13,6 +13,6 @@ class ChangeMemory(memory.Memory memory, ui.Cursor cursor, Input input) : Operat
     var newValue = await input.NewValue();
     var index = Matrix.GetIndex(cursor.X, cursor.Y);
     memory.SharedMemory.Update(index, newValue);
-    memory.SnapShot.UpdateSnapShot();
+    memory.SnapShot.Update();
   }
 }

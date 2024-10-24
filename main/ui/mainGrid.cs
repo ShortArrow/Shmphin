@@ -11,7 +11,7 @@ enum EvenOdd
 
 class MainGrid(IConfig config, Cursor cursor)
 {
-  private readonly Matrix diff = new(config);
+  private readonly Matrix matrix = new(config);
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
   private void ToggleRowColor()
   {
@@ -19,7 +19,7 @@ class MainGrid(IConfig config, Cursor cursor)
   }
   public Grid CreateCursorView()
   {
-    diff.Update();
+    matrix.Update();
     var grid = new Grid();
     var index = Matrix.GetIndex(cursor.X, cursor.Y);
 
@@ -31,11 +31,11 @@ class MainGrid(IConfig config, Cursor cursor)
       {"y", $"{cursor.Y}"},
       {"byteIndex", $"{index}"},
       {"wordIndex", $"{index / 2}"},
-      {"BeforeValue", $"{diff.GetCell(cursor.X, cursor.Y).BeforeValue}"},
-      {"CurrentValue", $"{diff.GetCell(cursor.X, cursor.Y).CurrentValue}"},
+      {"BeforeValue", $"{matrix.GetCell(cursor.X, cursor.Y).BeforeValue}"},
+      {"CurrentValue", $"{matrix.GetCell(cursor.X, cursor.Y).CurrentValue}"},
       {"Address", $"{address}"},
-      {"gridWidth", $"{diff.Width}"},
-      {"gridHeight", $"{diff.Height}"},
+      {"gridWidth", $"{matrix.Width}"},
+      {"gridHeight", $"{matrix.Height}"},
     };
     foreach (var item in dict)
     {
@@ -67,7 +67,7 @@ class MainGrid(IConfig config, Cursor cursor)
   }
   public Grid CreateDiffView()
   {
-    diff.Update();
+    matrix.Update();
 
     // Create the grid
     var grid = new Grid
@@ -75,7 +75,7 @@ class MainGrid(IConfig config, Cursor cursor)
       Expand = true
     };
     grid.AddColumn(); // Left row number column
-    for (int i = 0; i < diff.Width; i++)
+    for (int i = 0; i < matrix.Width; i++)
     {
       grid.AddColumn();
     }
@@ -83,7 +83,7 @@ class MainGrid(IConfig config, Cursor cursor)
 
     // Create the header
     var header = new List<Markup> { new("") }; // Empty cell for left row number column
-    for (int i = 0; i < diff.Width; i++)
+    for (int i = 0; i < matrix.Width; i++)
     {
       EvenOdd evenOdd = i % 2 == 0 ? EvenOdd.Even : EvenOdd.Odd;
       header.Add(HeaderNumber((uint)i, evenOdd));
@@ -92,18 +92,18 @@ class MainGrid(IConfig config, Cursor cursor)
     grid.AddRow([.. header]);
 
     // Create the main grid
-    for (uint h = 0; h < diff.Height; h++)
+    for (uint h = 0; h < matrix.Height; h++)
     {
       var IsCurrentRow = cursor.Y == h;
 
       var rowData = new List<Markup>
       { // Left row number
-        RowNumber(h * diff.Width, IsCurrentRow)
+        RowNumber(h * matrix.Width, IsCurrentRow)
       };
 
-      for (uint w = 0; w < diff.Width; w++)
+      for (uint w = 0; w < matrix.Width; w++)
       {
-        var cell = diff.GetCell(w, h);
+        var cell = matrix.GetCell(w, h);
         var formatted = cell.Length switch
         {
           1 => $"{cell.CurrentValue:X2}",
@@ -127,7 +127,7 @@ class MainGrid(IConfig config, Cursor cursor)
       }
 
       // Right row number
-      rowData.Add(RowNumber((h + 1) * diff.Width - 1, IsCurrentRow));
+      rowData.Add(RowNumber((h + 1) * matrix.Width - 1, IsCurrentRow));
       grid.AddRow([.. rowData]);
       ToggleRowColor();
     }

@@ -4,7 +4,7 @@ using main.config;
 
 namespace main.memory;
 
-class SnapShot
+public class SnapShot
 {
   private readonly IConfig? config;
   private readonly SharedMemory sharedMemory;
@@ -20,7 +20,7 @@ class SnapShot
   }
 
   [SupportedOSPlatform("windows")]
-  public void UpdateSnapShot()
+  public void Update()
   {
     _before = _current;
     if (config == null) throw new NullReferenceException();

@@ -10,6 +10,6 @@ class UpdateMemory(IConfig config) : Operation()
   public override void Execute()
   {
     memory.Memory memory = new(config);
-    memory.SnapShot.UpdateSnapShot();
+    memory.SnapShot.Update();
   }
 }

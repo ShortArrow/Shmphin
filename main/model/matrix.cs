@@ -1,23 +1,23 @@
 using main.config;
-using main.ui;
+using main.memory;
 
 namespace main.model;
-public class Matrix(IConfig config)
+public class Matrix(IConfig config, SnapShot snapShot)
 {
   private Cell[]? cells;
-  private uint cellSize = GridMode.CellLength;
+  private uint cellSize = config.CellLength ?? 1;
   public uint Length { get => (uint)(cells?.Length ?? 0); }
-  private uint width = GridMode.ColumnsLength;
+  private uint width = config.ColumnsLength ?? 8;
   public uint Width { get => width; }
   private uint height = 0;
   public uint Height { get => height; }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
-    before ??= new memory.SnapShot(config).Before;
-    current ??= new memory.SnapShot(config).Current;
-    cells = new Cell[current.Length / GridMode.CellLength];
-    cellSize = GridMode.CellLength;
-    width = GridMode.ColumnsLength;
+    before ??= snapShot.Before;
+    current ??= snapShot.Current;
+    cellSize = config.CellLength ?? 1;
+    width = config.ColumnsLength ?? 8;
+    cells = new Cell[current.Length / cellSize];
     height = (Length == 0) ? 0 : (Length / cellSize / width);
     uint index = 0;
     for (uint i = 0; i < current.Length; i += cellSize)
@@ -47,8 +47,8 @@ public class Matrix(IConfig config)
     if (cells == null) throw new Exception("Matrix not initialized");
     return cells.Where(cell => cell.X == x).ToArray();
   }
-  public static ulong GetIndex(uint x, uint y)
+  public ulong GetIndex(uint x, uint y)
   {
-    return y * GridMode.ColumnsLength * GridMode.CellLength + x;
+    return y * width * cellSize + x;
   }
 }
