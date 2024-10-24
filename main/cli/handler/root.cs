@@ -3,9 +3,9 @@ using main.ui;
 using main.operation;
 using main.config;
 
-namespace main.cli;
+namespace main.cli.handler;
 
-public class Handler
+public class Root
 {
   private CurrentConfig? config;
   private Operations? operations;
@@ -42,5 +42,4 @@ public class Handler
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold red]Shmphin is Finished.[/]");
   }
-
 }

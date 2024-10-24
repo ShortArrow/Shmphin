@@ -10,7 +10,7 @@ public class Parser
   public System.CommandLine.Parsing.Parser rootCommandWithSplash;
   public Parser()
   {
-    Handler handler = new Handler();
+    var handler = new handler.Root();
     Commands.rootCommand.AddCommand(Commands.testCommand);
     Commands.rootCommand.AddCommand(Commands.dumpCommand);
     Commands.rootCommand.AddCommand(Commands.helpCommand);
