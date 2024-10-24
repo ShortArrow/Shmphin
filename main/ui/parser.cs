@@ -1,5 +1,5 @@
 namespace main.ui;
-class Parse
+public class Parse
 {
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {

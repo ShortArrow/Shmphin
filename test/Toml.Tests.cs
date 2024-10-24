@@ -4,7 +4,7 @@ namespace test;
 
 public class TomlTests
 {
-  readonly CurrentConfig config = new(new(null, null, null));
+  readonly TomlConfig config = new();
   public TomlTests()
   {
     config.UpdateConfig(

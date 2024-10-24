@@ -14,7 +14,7 @@ public class ParseTests
   [InlineData("FF", new byte[] { 0xFF })]
   public void TestParseNewValue(string input, byte[] expected)
   {
-    var actual = Input.ParseNewValue(input);
+    var actual = Parse.NewValue(input);
     Assert.Equal(expected, actual);
   }
 }

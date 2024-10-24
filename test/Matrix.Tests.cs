@@ -1,10 +1,21 @@
 using main.model;
 
+using test.mock;
+
 namespace test;
 
 public class MatrixTests
 {
-  Matrix matrix = new();
+
+  readonly Matrix matrix = new(
+    new MockConfig(
+      sharedMemoryName: "test",
+      cellLength: 1,
+      columnsLength: 2,
+      sharedMemorySize: 16,
+      sharedMemoryOffset: 0
+    )
+  );
   public MatrixTests()
   {
     byte[] before = [
