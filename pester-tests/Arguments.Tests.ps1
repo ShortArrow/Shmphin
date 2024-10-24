@@ -2,11 +2,11 @@ BeforeAll {
   . "$PSScriptRoot/Constants.ps1"
 }
 
-Describe 'Quit is working' {
+Describe 'Arguments are working' {
   It 'simple test' {
-    $expected = ""
+    $expected = "QQQQ"
     $res = $(RunCommand(@("test", "--name", "QQQQ"))) | Out-String
     Write-Host $res
-    $res | Should -Be $expected
+    $res | Should -Match $expected
   }
 }

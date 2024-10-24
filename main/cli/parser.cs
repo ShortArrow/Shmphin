@@ -10,16 +10,15 @@ public class Parser
   public System.CommandLine.Parsing.Parser rootCommandWithSplash;
   public Parser()
   {
-    var handler = new handler.Root();
+    var rootHandler = new handler.Root();
+    var testHandler = new handler.Test();
     Commands.rootCommand.AddCommand(Commands.testCommand);
     Commands.rootCommand.AddCommand(Commands.dumpCommand);
     Commands.rootCommand.AddCommand(Commands.helpCommand);
     Commands.testCommand.AddCommand(Commands.testConfigCommand);
 
-    Commands.rootCommand.SetHandler(
-      handler.TUI,
-      Options.sharedMemoryName, Options.sharedMemorySize, Options.sharedMemoryOffset, Options.configFile
-    );
+    Commands.rootCommand.SetHandler(rootHandler.InvokeAsync);
+    Commands.testCommand.SetHandler(testHandler.InvokeAsync);
     rootCommandWithSplash = new CommandLineBuilder(Commands.rootCommand)
       .UseDefaults()
       .UseHelp(context =>

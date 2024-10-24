@@ -8,12 +8,18 @@ class Options
     aliases: ["-n", "--name"], description: "Shared memory name"
   );
   internal static readonly Option<uint?> sharedMemorySize = new(
-    aliases: ["-s", "--size"], description: "Shared memory size"
+    aliases: ["-S", "--size"], description: "Shared memory size"
   );
   internal static readonly Option<uint?> sharedMemoryOffset = new(
     aliases: ["-o", "--offset"], description: "Shared memory offset"
   );
   internal static readonly Option<string> configFile = new(
     aliases: ["-c", "--config"], description: "Config file path"
+  );
+  internal static readonly Option<uint?> cellSize = new(
+    aliases: ["-s", "--cellsize"], description: "Cell size"
+  );
+  internal static readonly Option<uint?> columnsLength = new(
+    aliases: ["-w", "--width"], description: "Grid columns length"
   );
 }
