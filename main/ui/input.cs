@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Diagnostics;
 using System.Text;
 
 using main.operation;
@@ -26,49 +24,36 @@ public class Input(Operations operations, Mode mode)
     while (!mode.cts.Token.IsCancellationRequested)
     {
       var key = Console.ReadKey(true);
-      switch (mode.InputMode)
+      InputMode modename = mode.InputMode;
+      Action Handler = modename switch
       {
-        case InputMode.Ex:
-          var ExHandler = new CommandHandler(
+        InputMode.Ex => new CommandHandler(
             parser.Parse,
             mode.InputMode,
             inputBuffer
-          );
-          ExHandler.Invoke(key).Invoke();
-          break;
-        case InputMode.NewValue:
-          var newValueHandler = new NewPropHandler<byte[]>(
-            Parse.NewValue,
-            mode.newValueTcs,
-            mode.InputMode,
-            inputBuffer
-          );
-          break;
-        case InputMode.NewCellSize:
-          var newCellSizeHandler = new NewPropHandler<uint>(
+          ).Invoke(key).Invoke,
+        InputMode.NewValue => new NewPropHandler<byte[]>(
+          Parse.NewValue,
+          mode.newValueTcs,
+          mode.InputMode,
+          inputBuffer
+        ).Invoke(key).Invoke,
+        InputMode.NewCellSize => new NewPropHandler<uint>(
             Parse.CellSize,
             mode.newCellSizeTcs,
             mode.InputMode,
             inputBuffer
-          );
-          newCellSizeHandler.Invoke(key).Invoke();
-          break;
-        case InputMode.NewColumnsLength:
-          var newColumnsLengthHandler = new NewPropHandler<uint>(
+          ).Invoke(key).Invoke,
+        InputMode.NewColumnsLength => new NewPropHandler<uint>(
             Parse.ColumnsLength,
             mode.newColumnsLengthTcs,
             mode.InputMode,
             inputBuffer
-          );
-          newColumnsLengthHandler.Invoke(key).Invoke();
-          break;
-        case InputMode.Normal:
-          var handler = new Normal(operations);
-          handler.Handling(key).Execute();
-          break;
-        default:
-          break;
-      }
+          ).Invoke(key).Invoke,
+        InputMode.Normal => new Normal(operations).Invoke(key).Invoke,
+        _ => throw new NotSupportedException(),
+      };
+      Handler();
     }
   }
 }

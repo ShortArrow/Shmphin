@@ -1,7 +1,5 @@
 using System.Diagnostics;
 
-using Spectre.Console;
-
 namespace main.ui;
 
 public class Mode

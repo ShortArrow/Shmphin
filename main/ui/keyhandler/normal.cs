@@ -3,24 +3,24 @@ using main.operation;
 namespace main.ui.keyhandler;
 public class Normal(Operations operations)
 {
-  public IOperation Handling(ConsoleKeyInfo keyInfo)
+  public Action Invoke(ConsoleKeyInfo keyInfo)
   {
     return keyInfo.Key switch
     {
-      ConsoleKey.Tab => operations.ChangeFocus,
+      ConsoleKey.Tab => operations.ChangeFocus.Execute,
       _ => keyInfo.KeyChar.ToString() switch
       {
-        "u" => operations.UpdateMemory,
-        "h" => operations.Left,
-        "j" => operations.Down,
-        "k" => operations.Up,
-        "l" => operations.Right,
-        "c" => operations.ChangeMemory,
-        "q" => operations.Quit,
+        "u" => operations.UpdateMemory.Execute,
+        "h" => operations.Left.Execute,
+        "j" => operations.Down.Execute,
+        "k" => operations.Up.Execute,
+        "l" => operations.Right.Execute,
+        "c" => operations.ChangeMemory.Execute,
+        "q" => operations.Quit.Execute,
         "s" => throw new NotImplementedException(),
-        ":" => operations.ExCommand,
-        "?" => operations.Help,
-        "/" => operations.Search,
+        ":" => operations.ExCommand.Execute,
+        "?" => operations.Help.Execute,
+        "/" => operations.Search.Execute,
         _ => throw new NotSupportedException(),
       }
     };
