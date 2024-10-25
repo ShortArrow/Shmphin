@@ -29,7 +29,7 @@ public class Cursor(IConfig config)
     Debug.WriteLine($"move down: x: {x}, y: {y}");
     uint height = (config.SharedMemorySize / (config.ColumnsLength * config.CellLength)) ?? 0;
     if (y < height - 1) { y++; }
-    else { y = height - 1; }
+    else { y = 0; MoveRight(); }
   }
   public void MoveLeft()
   {
