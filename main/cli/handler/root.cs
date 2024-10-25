@@ -37,8 +37,8 @@ public class Root : ICommandHandler
     memory = new(config);
     mode = new();
     focus = new();
-    operations = new(config, cursor, memory, mode, focus);
     snapShot = new(config);
+    operations = new(config, cursor, memory, snapShot, mode, focus);
     input = new(operations, mode);
     ui = new(config, cursor, snapShot, focus, mode);
     AnsiConsole.Clear();

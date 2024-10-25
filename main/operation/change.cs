@@ -1,9 +1,10 @@
 using System.Runtime.Versioning;
 
+using main.memory;
 using main.ui;
 
 namespace main.operation;
-class ChangeMemory(memory.Memory memory, model.Cursor cursor, Mode mode) : Operation()
+class ChangeMemory(Memory memory, SnapShot snapShot, model.Cursor cursor, Mode mode) : Operation()
 {
   public override string Name => "change";
   [SupportedOSPlatform("windows")]
@@ -12,6 +13,6 @@ class ChangeMemory(memory.Memory memory, model.Cursor cursor, Mode mode) : Opera
     var newValue = await mode.NewValue();
     var index = cursor.GetIndex() ?? 0;
     memory.SharedMemory.Update(index, newValue);
-    memory.SnapShot.Update();
+    snapShot.Update();
   }
 }
