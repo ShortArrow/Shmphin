@@ -42,7 +42,7 @@ public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory
   public IOperation Prev => new Prev();
   public IOperation Clear => new Clear();
   public IOperation Jump => new Jump();
-  public IOperation Quit => new Quit();
+  public IOperation Quit => new Quit(mode);
   public IOperation Up => new Cursor(cursor).Up;
   public IOperation Down => new Cursor(cursor).Down;
   public IOperation Left => new Cursor(cursor).Left;

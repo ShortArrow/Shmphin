@@ -1,9 +1,11 @@
+using main.ui;
+
 namespace main.operation;
-class Quit() : Operation()
+class Quit(Mode mode) : Operation()
 {
   public override string Name => "quit";
   public override void Execute()
   {
-    throw new NotImplementedException();
+    mode.cts.Cancel();
   }
 }
