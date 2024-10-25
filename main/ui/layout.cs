@@ -5,10 +5,9 @@ using Spectre.Console;
 
 namespace main.ui;
 
-public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus)
+public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus, Mode mode)
 {
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  private readonly Mode mode = new();
   public Layout CreateLayout(IConfig config, Input input)
   {
     var IsExMode = mode.InputMode == InputMode.Ex;

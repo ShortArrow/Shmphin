@@ -40,7 +40,7 @@ public class Root : ICommandHandler
     operations = new(config, cursor, memory, mode, focus);
     snapShot = new(config);
     input = new(operations, mode);
-    ui = new(config, cursor, snapShot, focus);
+    ui = new(config, cursor, snapShot, focus, mode);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {

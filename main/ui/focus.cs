@@ -13,26 +13,29 @@ public class Focus
   public TargetPanel TargetPanel
   {
     get => targetPanel;
-    set => targetPanel = value;
   }
   private readonly ChangeFocus changeFocus;
   public Focus()
   {
-    changeFocus = new(targetPanel);
+    changeFocus = new(ToggleFocus);
   }
-  public ChangeFocus ChangeFocus => changeFocus;
-}
-
-public class ChangeFocus(TargetPanel focus) : Operation
-{
-  public override string Name => "change_focus";
-  public override void Execute()
+  public void ToggleFocus()
   {
-    focus = focus switch
+    targetPanel = targetPanel switch
     {
       TargetPanel.Left => TargetPanel.Right,
       TargetPanel.Right => TargetPanel.Left,
       _ => throw new Exception("Invalid TargetPanel value"),
     };
+  }
+  public ChangeFocus ChangeFocus => changeFocus;
+}
+
+public class ChangeFocus(Action action) : Operation
+{
+  public override string Name => "change_focus";
+  public override void Execute()
+  {
+    action.Invoke();
   }
 }
