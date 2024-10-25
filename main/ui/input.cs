@@ -1,5 +1,7 @@
+using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
+
 using main.operation;
 using main.ui.keyhandler;
 
@@ -27,88 +29,41 @@ public class Input(Operations operations, Mode mode)
       switch (mode.InputMode)
       {
         case InputMode.Ex:
-          if (key.Key == ConsoleKey.Enter)
-          {
-            mode.InputMode = InputMode.Normal;
-            var command = inputBuffer.ToString()[1..]; // Remove the first character '>'
-            var operation = parser.Parse(command);
-            operation.Execute();
-            inputBuffer.Clear();
-            Debug.WriteLine($"Command: [{operation.Name}]");
-          }
-          else if (key.Key == ConsoleKey.Backspace)
-          {
-            if (inputBuffer.Length > 0)
-              inputBuffer.Remove(inputBuffer.Length - 1, 1);
-          }
-          else
-          {
-            inputBuffer.Append(key.KeyChar);
-          }
+          var ExHandler = new CommandHandler(
+            parser.Parse,
+            mode.InputMode,
+            inputBuffer
+          );
+          ExHandler.Invoke(key).Invoke();
           break;
         case InputMode.NewValue:
-          if (key.Key == ConsoleKey.Enter)
-          {
-            mode.InputMode = InputMode.Normal;
-            var inputString = inputBuffer.ToString();
-            var result = Parse.NewValue(inputString);
-            inputBuffer.Clear();
-            mode.newValueTcs?.SetResult(result);
-          }
-          else if (key.Key == ConsoleKey.Backspace)
-          {
-            if (inputBuffer.Length > 0)
-              inputBuffer.Remove(inputBuffer.Length - 1, 1);
-          }
-          else
-          {
-            Debug.WriteLine($"New value mode: {key.KeyChar}");
-            inputBuffer.Append(key.KeyChar);
-          }
+          var newValueHandler = new NewPropHandler<byte[]>(
+            Parse.NewValue,
+            mode.newValueTcs,
+            mode.InputMode,
+            inputBuffer
+          );
           break;
         case InputMode.NewCellSize:
-          if (key.Key == ConsoleKey.Enter)
-          {
-            mode.InputMode = InputMode.Normal;
-            var inputString = inputBuffer.ToString();
-            var result = Parse.CellSize(inputString);
-            inputBuffer.Clear();
-            mode.newCellSizeTcs?.SetResult(result);
-          }
-          else if (key.Key == ConsoleKey.Backspace)
-          {
-            if (inputBuffer.Length > 0)
-              inputBuffer.Remove(inputBuffer.Length - 1, 1);
-          }
-          else
-          {
-            Debug.WriteLine($"New value mode: {key.KeyChar}");
-            inputBuffer.Append(key.KeyChar);
-          }
+          var newCellSizeHandler = new NewPropHandler<uint>(
+            Parse.CellSize,
+            mode.newCellSizeTcs,
+            mode.InputMode,
+            inputBuffer
+          );
+          newCellSizeHandler.Invoke(key).Invoke();
           break;
         case InputMode.NewColumnsLength:
-          if (key.Key == ConsoleKey.Enter)
-          {
-            mode.InputMode = InputMode.Normal;
-            var inputString = inputBuffer.ToString();
-            var result = Parse.ColumnsLength(inputString);
-            inputBuffer.Clear();
-            mode.newColumnsLengthTcs?.SetResult(result);
-          }
-          else if (key.Key == ConsoleKey.Backspace)
-          {
-            if (inputBuffer.Length > 0)
-              inputBuffer.Remove(inputBuffer.Length - 1, 1);
-          }
-          else
-          {
-            Debug.WriteLine($"New value mode: {key.KeyChar}");
-            inputBuffer.Append(key.KeyChar);
-          }
+          var newColumnsLengthHandler = new NewPropHandler<uint>(
+            Parse.ColumnsLength,
+            mode.newColumnsLengthTcs,
+            mode.InputMode,
+            inputBuffer
+          );
+          newColumnsLengthHandler.Invoke(key).Invoke();
           break;
         case InputMode.Normal:
-          Debug.WriteLine($"nomal mode: {key.KeyChar}");
-          var handler = new NormalKeyEvent(operations);
+          var handler = new Normal(operations);
           handler.Handling(key).Execute();
           break;
         default:
