@@ -18,6 +18,7 @@ public class Root : ICommandHandler
   private Memory? memory;
   private Mode? mode;
   private Question? question;
+  private Focus? focus;
   public int Invoke(InvocationContext context)
   {
     throw new NotSupportedException();
@@ -35,10 +36,11 @@ public class Root : ICommandHandler
     cursor = new(config);
     memory = new(config);
     mode = new();
-    operations = new(config, cursor, memory, mode);
+    focus = new();
+    operations = new(config, cursor, memory, mode, focus);
     snapShot = new(config);
     input = new(operations, mode);
-    ui = new(config, cursor, snapShot);
+    ui = new(config, cursor, snapShot, focus);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {

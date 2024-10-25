@@ -10,7 +10,7 @@ enum EvenOdd
   Even
 }
 
-class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot)
+class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot, Focus focus)
 {
   private readonly Matrix matrix = new(config, snapShot);
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
@@ -37,6 +37,7 @@ class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot)
       {"Address", $"{address}"},
       {"gridWidth", $"{matrix.Width}"},
       {"gridHeight", $"{matrix.Height}"},
+      {"focus", $"{focus.TargetPanel}"}
     };
     foreach (var item in dict)
     {

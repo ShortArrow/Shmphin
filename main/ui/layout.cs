@@ -5,9 +5,9 @@ using Spectre.Console;
 
 namespace main.ui;
 
-class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
+public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus)
 {
-  private readonly MainGrid mainGrid = new(config, cursor, snapShot);
+  private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
   private readonly Mode mode = new();
   public Layout CreateLayout(IConfig config, Input input)
   {
@@ -37,7 +37,7 @@ class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
         mainGrid.CreateCursorView(),
         VerticalAlignment.Middle
       ))
-      .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
+      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
       .Expand()
     );
     layout["Main"]["Right"]["Bottom"].Update(
@@ -47,7 +47,7 @@ class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
       ))
-      .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
+      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
       .Expand()
     );
     layout["Main"]["Left"].Update(
@@ -55,7 +55,7 @@ class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
         mainGrid.CreateDiffView(),
         VerticalAlignment.Middle
       ))
-      .BorderColor(IsExMode ? Color.Default : Focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
+      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
       .Expand()
     );
     layout["Footer"].Update(

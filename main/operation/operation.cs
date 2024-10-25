@@ -27,7 +27,7 @@ public abstract class Operation() : IOperation()
     return base.ExecuteAsync();
   }
 }
-public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory memory, Mode mode)
+public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory memory, Mode mode, Focus focus)
 {
   public IOperation UpdateMemory => new UpdateMemory(memory);
   public IOperation ChangeMemory => new ChangeMemory(memory, cursor, mode);
@@ -47,4 +47,6 @@ public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory
   public IOperation Down => new Cursor(cursor).Down;
   public IOperation Left => new Cursor(cursor).Left;
   public IOperation Right => new Cursor(cursor).Right;
+  public IOperation ExCommand => new ExCommand(mode);
+  public IOperation ChangeFocus => focus.ChangeFocus;
 }

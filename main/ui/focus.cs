@@ -1,21 +1,34 @@
+using main.operation;
 
-enum TargetPanel
+namespace main.ui;
+public enum TargetPanel
 {
   Right,
   Left,
 }
 
-class Focus
+public class Focus
 {
-  private static TargetPanel _targetPanel = TargetPanel.Left;
-  public static TargetPanel TargetPanel
+  private TargetPanel targetPanel = TargetPanel.Left;
+  public TargetPanel TargetPanel
   {
-    get => _targetPanel;
-    set => _targetPanel = value;
+    get => targetPanel;
+    set => targetPanel = value;
   }
-  public static void ChangeFocus()
+  private readonly ChangeFocus changeFocus;
+  public Focus()
   {
-    _targetPanel = _targetPanel switch
+    changeFocus = new(targetPanel);
+  }
+  public ChangeFocus ChangeFocus => changeFocus;
+}
+
+public class ChangeFocus(TargetPanel focus) : Operation
+{
+  public override string Name => "change_focus";
+  public override void Execute()
+  {
+    focus = focus switch
     {
       TargetPanel.Left => TargetPanel.Right,
       TargetPanel.Right => TargetPanel.Left,

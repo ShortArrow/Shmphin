@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using main.operation;
-using main.config;
 using main.ui.keyhandler;
-using Spectre.Console;
 
 namespace main.ui;
 
@@ -110,18 +108,6 @@ public class Input(Operations operations, Mode mode)
           break;
         case InputMode.Normal:
           Debug.WriteLine($"nomal mode: {key.KeyChar}");
-          if (key.Key == ConsoleKey.Tab)
-          {
-            Focus.ChangeFocus();
-            break;
-          }
-          if (Parse.KeyCheck(key, ":"))
-          {
-            mode.InputMode = InputMode.Ex;  // Enter Ex mode
-            inputBuffer.Clear();
-            inputBuffer.Append('>');
-            break;
-          }
           var handler = new NormalKeyEvent(operations);
           handler.Handling(key).Execute();
           break;
