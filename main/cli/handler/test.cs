@@ -11,8 +11,7 @@ public class Test : ICommandHandler
   private CurrentConfig? config;
   private Operations? operations;
   private Input? input;
-  private Ui? ui;
-  private ui.Cursor? cursor;
+  private model.Cursor? cursor;
   public Task<int> InvokeAsync(InvocationContext context)
   {
     var sharedMemoryName = context.ParseResult.GetValueForOption(Options.sharedMemoryName);
@@ -25,7 +24,6 @@ public class Test : ICommandHandler
     cursor = new(config);
     operations = new(config, cursor);
     input = new(config, cursor);
-    ui = new(config, cursor);
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold green]Start Shmphin Test.[/]");
     var grid = new Grid();
@@ -43,7 +41,6 @@ public class Test : ICommandHandler
     grid.AddRow([nameof(configFile), configFile ?? "null"]);
     grid.AddRow([nameof(input.InputBuffer), input.InputBuffer ?? "null"]);
     grid.AddRow([nameof(operations.UpdateMemory), operations.UpdateMemory.ToString() ?? "null"]);
-    grid.AddRow([nameof(ui), ui.ToString() ?? "null"]);
 
     // Write to Console
     AnsiConsole.Write(grid);

@@ -19,7 +19,7 @@ public class Input
 {
   private readonly Operations operations;
   private readonly Parser parser;
-  public Input(IConfig config, Cursor cursor)
+  public Input(IConfig config, model.Cursor cursor)
   {
     operations = new(config, cursor);
     parser = new Parser(operations);

@@ -1,23 +1,25 @@
 using main.model;
 
+using Microsoft.VisualBasic;
+
 using test.mock;
 
 namespace test;
 
 public class MatrixTests
 {
-
-  readonly Matrix matrix = new(
-    new MockConfig(
+  MockConfig config = new(
       sharedMemoryName: "test",
       cellLength: 1,
       columnsLength: 2,
       sharedMemorySize: 16,
       sharedMemoryOffset: 0
-    )
-  );
+    );
+
+  readonly Matrix matrix ;
   public MatrixTests()
   {
+    matrix = new(config, new main.memory.SnapShot(config));
     byte[] before = [
       0, 1, 2, 3, 4, 5, 6, 7,
       8, 9, 10, 11, 12, 13, 14, 15

@@ -3,6 +3,7 @@ using main.ui;
 using main.operation;
 using main.config;
 using System.CommandLine.Invocation;
+using main.memory;
 
 namespace main.cli.handler;
 
@@ -12,7 +13,8 @@ public class Root : ICommandHandler
   private Operations? operations;
   private Input? input;
   private Ui? ui;
-  private ui.Cursor? cursor;
+  private model.Cursor? cursor;
+  private SnapShot? snapShot;
   public int Invoke(InvocationContext context)
   {
     throw new NotSupportedException();
@@ -29,7 +31,8 @@ public class Root : ICommandHandler
     cursor = new(config);
     operations = new(config, cursor);
     input = new(config, cursor);
-    ui = new(config, cursor);
+    snapShot = new(config);
+    ui = new(config, cursor, snapShot);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {

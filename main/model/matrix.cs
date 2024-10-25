@@ -47,8 +47,4 @@ public class Matrix(IConfig config, SnapShot snapShot)
     if (cells == null) throw new Exception("Matrix not initialized");
     return cells.Where(cell => cell.X == x).ToArray();
   }
-  public ulong GetIndex(uint x, uint y)
-  {
-    return y * width * cellSize + x;
-  }
 }

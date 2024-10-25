@@ -27,7 +27,7 @@ public abstract class Operation() : IOperation()
     return base.ExecuteAsync();
   }
 }
-public class Operations(IConfig config, ui.Cursor cursor)
+public class Operations(IConfig config, model.Cursor cursor)
 {
   private readonly memory.Memory memory = new(config);
   // private readonly Input input = new(config);

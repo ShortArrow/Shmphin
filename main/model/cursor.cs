@@ -2,11 +2,10 @@ using main.config;
 
 using System.Diagnostics;
 
-namespace main.ui;
+namespace main.model;
 
 public class Cursor(IConfig config)
 {
-  private IConfig config = config;
   private uint x = 0;
   private uint y = 0;
   public uint X
@@ -28,7 +27,7 @@ public class Cursor(IConfig config)
   public void MoveDown()
   {
     Debug.WriteLine($"move down: x: {x}, y: {y}");
-    uint height = (config.SharedMemorySize / (GridMode.ColumnsLength * GridMode.CellLength)) ?? 0;
+    uint height = (config.SharedMemorySize / (config.ColumnsLength * config.CellLength)) ?? 0;
     if (y < height - 1) { y++; }
     else { y = height - 1; }
   }
@@ -41,7 +40,11 @@ public class Cursor(IConfig config)
   public void MoveRight()
   {
     Debug.WriteLine($"move right: x: {x}, y: {y}");
-    if (X < GridMode.ColumnsLength - 1) { x++; }
-    else { x = GridMode.ColumnsLength - 1; }
+    if (X < config.ColumnsLength - 1) { x++; }
+    else { x = config.ColumnsLength ?? 8 - 1; }
+  }
+  public uint? GetIndex()
+  {
+    return y * config.ColumnsLength * config.CellLength + x;
   }
 }

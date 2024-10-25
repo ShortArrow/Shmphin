@@ -1,6 +1,7 @@
 using Spectre.Console;
 using main.model;
 using main.config;
+using main.memory;
 
 namespace main.ui;
 enum EvenOdd
@@ -9,9 +10,9 @@ enum EvenOdd
   Even
 }
 
-class MainGrid(IConfig config, Cursor cursor)
+class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot)
 {
-  private readonly Matrix matrix = new(config);
+  private readonly Matrix matrix = new(config, snapShot);
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
   private void ToggleRowColor()
   {
@@ -21,11 +22,11 @@ class MainGrid(IConfig config, Cursor cursor)
   {
     matrix.Update();
     var grid = new Grid();
-    var index = Matrix.GetIndex(cursor.X, cursor.Y);
+    var index = cursor.GetIndex() ?? 0;
 
     grid.AddColumns(2);
     grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
-    var address = FromatAddress((uint)index);
+    var address = FromatAddress(index);
     var dict = new Dictionary<string, string>{
       {"x", $"{cursor.X}"},
       {"y", $"{cursor.Y}"},

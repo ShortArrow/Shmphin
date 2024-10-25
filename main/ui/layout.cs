@@ -1,12 +1,13 @@
 using main.config;
+using main.memory;
 
 using Spectre.Console;
 
 namespace main.ui;
 
-class Ui(IConfig config, Cursor cursor)
+class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
 {
-  private readonly MainGrid mainGrid = new(config, cursor);
+  private readonly MainGrid mainGrid = new(config, cursor, snapShot);
   public Layout CreateLayout(IConfig config, Input input)
   {
     var IsExMode = input.Mode == InputMode.Ex;
