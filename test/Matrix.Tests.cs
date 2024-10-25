@@ -8,10 +8,10 @@ namespace test;
 
 public class MatrixTests
 {
-  MockConfig config = new(
+  readonly MockConfig config = new(
       sharedMemoryName: "test",
       cellLength: 1,
-      columnsLength: 2,
+      columnsLength: 8,
       sharedMemorySize: 16,
       sharedMemoryOffset: 0
     );

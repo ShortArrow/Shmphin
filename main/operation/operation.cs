@@ -29,7 +29,7 @@ public abstract class Operation() : IOperation()
 }
 public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory memory, Mode mode)
 {
-  public IOperation UpdateMemory => new UpdateMemory(config);
+  public IOperation UpdateMemory => new UpdateMemory(memory);
   public IOperation ChangeMemory => new ChangeMemory(memory, cursor, mode);
   public IOperation Help => new Help();
   public IOperation Search => new Search();

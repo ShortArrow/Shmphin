@@ -1,15 +1,14 @@
 using System.Runtime.Versioning;
 
-using main.config;
+using main.memory;
 
 namespace main.operation;
-class UpdateMemory(IConfig config) : Operation()
+class UpdateMemory(Memory memory) : Operation()
 {
   public override string Name => "update";
   [SupportedOSPlatform("windows")]
   public override void Execute()
   {
-    memory.Memory memory = new(config);
     memory.SnapShot.Update();
   }
 }

@@ -15,8 +15,8 @@ public class Matrix(IConfig config, SnapShot snapShot)
   {
     before ??= snapShot.Before;
     current ??= snapShot.Current;
-    cellSize = config.CellLength ?? 1;
-    width = config.ColumnsLength ?? 8;
+    cellSize = config.CellLength ?? throw new Exception("CellLength not set");
+    width = config.ColumnsLength ?? throw new Exception("ColumnsLength not set");
     cells = new Cell[current.Length / cellSize];
     height = (Length == 0) ? 0 : (Length / cellSize / width);
     uint index = 0;
