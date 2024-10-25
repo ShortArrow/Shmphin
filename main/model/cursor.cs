@@ -40,8 +40,8 @@ public class Cursor(IConfig config)
   public void MoveRight()
   {
     Debug.WriteLine($"move right: x: {x}, y: {y}");
-    if (X < config.ColumnsLength - 1) { x++; }
-    else { x = config.ColumnsLength ?? 8 - 1; }
+    if (x < config.ColumnsLength - 1) { x++; }
+    else { x = 0; MoveDown(); }
   }
   public uint? GetIndex()
   {
