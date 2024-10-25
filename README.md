@@ -1,5 +1,7 @@
 # Shmphin
 
+![Shmphin top image](./img/top.gif)
+
 ## Summary
 
 Shmphin is a Shared Memory Editor.
