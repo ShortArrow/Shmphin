@@ -1,8 +1,10 @@
 using System.Diagnostics;
 
+using Spectre.Console;
+
 namespace main.ui;
 
-class GridMode
+public class Mode
 {
   private static readonly List<uint> columnsLengthPatterns = [8, 16, 32, 64];
   private static readonly List<uint> cellLengthPatterns = [1, 2, 4, 8];
@@ -30,5 +32,37 @@ class GridMode
         cellLength = value;
       else throw new Exception("Invalid CellLength value");
     }
+  }
+  private InputMode mode = InputMode.Normal;
+  public InputMode InputMode
+  {
+    get => mode;
+    set => mode = value;
+  }
+  public readonly CancellationTokenSource cts = new();
+  public bool IsCancellationRequested => cts.Token.IsCancellationRequested;
+  public TaskCompletionSource<byte[]>? newValueTcs;
+  public TaskCompletionSource<uint>? newCellSizeTcs;
+  public TaskCompletionSource<uint>? newColumnsLengthTcs;
+  public Task<byte[]> NewValue()
+  {
+    mode = InputMode.NewValue;
+    Debug.WriteLine("New value mode");
+    newValueTcs = new TaskCompletionSource<byte[]>();
+    return newValueTcs.Task;
+  }
+  public Task<uint> NewCellSize()
+  {
+    mode = InputMode.NewCellSize;
+    Debug.WriteLine("New cell size mode");
+    newCellSizeTcs = new TaskCompletionSource<uint>();
+    return newCellSizeTcs.Task;
+  }
+  public Task<uint> NewColumnsLength()
+  {
+    mode = InputMode.NewColumnsLength;
+    Debug.WriteLine("New columns length mode");
+    newColumnsLengthTcs = new TaskCompletionSource<uint>();
+    return newColumnsLengthTcs.Task;
   }
 }

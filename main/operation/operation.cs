@@ -27,23 +27,21 @@ public abstract class Operation() : IOperation()
     return base.ExecuteAsync();
   }
 }
-public class Operations(IConfig config, model.Cursor cursor)
+public class Operations(CurrentConfig config, model.Cursor cursor, memory.Memory memory, Mode mode)
 {
-  private readonly memory.Memory memory = new(config);
-  // private readonly Input input = new(config);
   public IOperation UpdateMemory => new UpdateMemory(config);
-  // public IOperation ChangeMemory => new ChangeMemory(memory, cursor, input);
-  // public IOperation Help => new Help();
-  // public IOperation Search => new Search();
-  // public IOperation Size => new Size();
-  // public IOperation Cell => new Cell(input);
-  // public IOperation Columns => new Columns(input);
-  // public IOperation Mark => new Mark();
-  // public IOperation Unmark => new Unmark();
-  // public IOperation Next => new Next();
-  // public IOperation Prev => new Prev();
-  // public IOperation Clear => new Clear();
-  // public IOperation Jump => new Jump();
+  public IOperation ChangeMemory => new ChangeMemory(memory, cursor, mode);
+  public IOperation Help => new Help();
+  public IOperation Search => new Search();
+  public IOperation Size => new Size();
+  public IOperation Cell => new Cell(config, mode);
+  public IOperation Columns => new Columns(config, mode);
+  public IOperation Mark => new Mark();
+  public IOperation Unmark => new Unmark();
+  public IOperation Next => new Next();
+  public IOperation Prev => new Prev();
+  public IOperation Clear => new Clear();
+  public IOperation Jump => new Jump();
   public IOperation Quit => new Quit();
   public IOperation Up => new Cursor(cursor).Up;
   public IOperation Down => new Cursor(cursor).Down;

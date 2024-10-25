@@ -8,10 +8,11 @@ namespace main.ui;
 class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot)
 {
   private readonly MainGrid mainGrid = new(config, cursor, snapShot);
+  private readonly Mode mode = new();
   public Layout CreateLayout(IConfig config, Input input)
   {
-    var IsExMode = input.Mode == InputMode.Ex;
-    var IsNewValueMode = input.Mode == InputMode.NewValue;
+    var IsExMode = mode.InputMode == InputMode.Ex;
+    var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),

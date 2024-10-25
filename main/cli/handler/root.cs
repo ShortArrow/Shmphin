@@ -15,6 +15,9 @@ public class Root : ICommandHandler
   private Ui? ui;
   private model.Cursor? cursor;
   private SnapShot? snapShot;
+  private Memory? memory;
+  private Mode? mode;
+  private Question? question;
   public int Invoke(InvocationContext context)
   {
     throw new NotSupportedException();
@@ -28,16 +31,19 @@ public class Root : ICommandHandler
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
     config = new(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
+    question = new(config);
     cursor = new(config);
-    operations = new(config, cursor);
-    input = new(config, cursor);
+    memory = new(config);
+    mode = new();
+    operations = new(config, cursor, memory, mode);
     snapShot = new(config);
+    input = new(operations, mode);
     ui = new(config, cursor, snapShot);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {
       Welcome.Show();
-      config.SharedMemoryName = Input.GetSharedMemoryName();
+      await question.GetSharedMemoryName();
     }
     config.UpdateConfig(configFile);
     var startMessage = new Markup("[bold green]Start Shmphin.[/]");
@@ -46,7 +52,7 @@ public class Root : ICommandHandler
     .StartAsync(async context =>
     {
       operations.UpdateMemory.Execute();
-      while (!input.IsCancellationRequested)
+      while (!mode.IsCancellationRequested)
       {
         var layout = ui.CreateLayout(config, input);
         context.UpdateTarget(layout);

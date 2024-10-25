@@ -1,6 +1,5 @@
 using Spectre.Console;
 using main.ui;
-using main.operation;
 using main.config;
 using System.CommandLine.Invocation;
 
@@ -9,9 +8,6 @@ namespace main.cli.handler;
 public class Test : ICommandHandler
 {
   private CurrentConfig? config;
-  private Operations? operations;
-  private Input? input;
-  private model.Cursor? cursor;
   public Task<int> InvokeAsync(InvocationContext context)
   {
     var sharedMemoryName = context.ParseResult.GetValueForOption(Options.sharedMemoryName);
@@ -21,9 +17,6 @@ public class Test : ICommandHandler
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
     config = new(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
-    cursor = new(config);
-    operations = new(config, cursor);
-    input = new(config, cursor);
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold green]Start Shmphin Test.[/]");
     var grid = new Grid();
@@ -35,12 +28,10 @@ public class Test : ICommandHandler
 
     // Add header row
     grid.AddRow(["Name", "Value"]);
-    grid.AddRow([nameof(sharedMemoryName), sharedMemoryName ?? "null"]);
-    grid.AddRow([nameof(sharedMemorySize), sharedMemorySize?.ToString() ?? "null"]);
-    grid.AddRow([nameof(sharedMemoryOffset), sharedMemoryOffset?.ToString() ?? "null"]);
+    grid.AddRow([nameof(config.SharedMemoryName), config.SharedMemoryName ?? "null"]);
+    grid.AddRow([nameof(config.SharedMemorySize), config.SharedMemorySize?.ToString() ?? "null"]);
+    grid.AddRow([nameof(config.SharedMemoryOffset), config.SharedMemoryOffset?.ToString() ?? "null"]);
     grid.AddRow([nameof(configFile), configFile ?? "null"]);
-    grid.AddRow([nameof(input.InputBuffer), input.InputBuffer ?? "null"]);
-    grid.AddRow([nameof(operations.UpdateMemory), operations.UpdateMemory.ToString() ?? "null"]);
 
     // Write to Console
     AnsiConsole.Write(grid);

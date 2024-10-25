@@ -1,13 +1,14 @@
+using main.config;
 using main.ui;
 
 namespace main.operation;
 
-class Columns(Input input) : Operation()
+class Columns(CurrentConfig config, Mode mode) : Operation()
 {
   public override string Name => "columns";
   public override async void Execute()
   {
-    var columnsLength = await input.NewColumnsLength();
-    GridMode.ColumnsLength = columnsLength;
+    var columnsLength = await mode.NewColumnsLength();
+    config.ColumnsLength = columnsLength;
   }
 }
