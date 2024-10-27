@@ -59,7 +59,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
     );
     layout["Footer"].Update(
       new Panel(Align.Center(
-        new Markup($"[green]{input.InputBuffer}[/]"),
+        Prompt.ShowInput(input.InputBuffer, mode.InputMode),
         VerticalAlignment.Middle
       ))
       .BorderColor(IsExMode ? Color.Red : Color.Default)

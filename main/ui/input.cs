@@ -35,19 +35,19 @@ public class Input(Operations operations, Mode mode)
         InputMode.NewValue => new NewPropHandler<byte[]>(
           Parse.NewValue,
           mode.newValueTcs,
-          mode.InputMode,
+          mode,
           inputBuffer
         ).Invoke(key).Invoke,
         InputMode.NewCellSize => new NewPropHandler<uint>(
             Parse.CellSize,
             mode.newCellSizeTcs,
-            mode.InputMode,
+            mode,
             inputBuffer
           ).Invoke(key).Invoke,
         InputMode.NewColumnsLength => new NewPropHandler<uint>(
             Parse.ColumnsLength,
             mode.newColumnsLengthTcs,
-            mode.InputMode,
+            mode,
             inputBuffer
           ).Invoke(key).Invoke,
         InputMode.Normal => new Normal(operations).Invoke(key).Invoke,
