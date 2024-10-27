@@ -17,7 +17,7 @@ public class Normal(Operations operations)
         "l" => operations.Right.Execute,
         "c" => operations.ChangeMemory.Execute,
         "q" => operations.Quit.Execute,
-        "s" => throw new NotImplementedException(),
+        "s" => operations.Cell.Execute,
         ":" => operations.ExCommand.Execute,
         "?" => operations.Help.Execute,
         "/" => operations.Search.Execute,
