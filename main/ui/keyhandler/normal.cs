@@ -21,7 +21,7 @@ public class Normal(Operations operations)
         ":" => operations.ExCommand.Execute,
         "?" => operations.Help.Execute,
         "/" => operations.Search.Execute,
-        _ => throw new NotSupportedException(),
+        _ => () => { }
       }
     };
   }
