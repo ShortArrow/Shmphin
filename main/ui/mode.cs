@@ -42,6 +42,7 @@ public class Mode
   public TaskCompletionSource<byte[]>? newValueTcs;
   public TaskCompletionSource<uint>? newCellSizeTcs;
   public TaskCompletionSource<uint>? newColumnsLengthTcs;
+  public TaskCompletionSource<string>? newSharedMemoryNameTcs;
   public Task<byte[]> NewValue()
   {
     mode = InputMode.NewValue;
@@ -62,5 +63,12 @@ public class Mode
     Debug.WriteLine("New columns length mode");
     newColumnsLengthTcs = new TaskCompletionSource<uint>();
     return newColumnsLengthTcs.Task;
+  }
+  public Task<string> NewSharedMemoryName()
+  {
+    mode = InputMode.NewSharedMemoryName;
+    Debug.WriteLine("New shared memory name mode");
+    newSharedMemoryNameTcs = new TaskCompletionSource<string>();
+    return newSharedMemoryNameTcs.Task;
   }
 }

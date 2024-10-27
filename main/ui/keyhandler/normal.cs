@@ -18,6 +18,7 @@ public class Normal(Operations operations)
         "c" => operations.ChangeMemory.Execute,
         "q" => operations.Quit.Execute,
         "s" => operations.Cell.Execute,
+        "n" => operations.Name.Execute,
         ":" => operations.ExCommand.Execute,
         "?" => operations.Help.Execute,
         "/" => operations.Search.Execute,

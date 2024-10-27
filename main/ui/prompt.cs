@@ -13,6 +13,7 @@ public class Prompt
       InputMode.NewValue => "New value :",
       InputMode.NewCellSize => "New cell size :",
       InputMode.NewColumnsLength => "New columns length :",
+      InputMode.NewSharedMemoryName => "New shared memory name :",
       _ => "Unknown mode"
     };
   }

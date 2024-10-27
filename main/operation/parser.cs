@@ -18,6 +18,7 @@ public class Parser(Operations operations)
       "unmark" => operations.Unmark, // remove the book mark from the current cell
       "jump" => operations.Jump, // jump to the book marked cell
       "clear" => operations.Clear, // clear all book marks
+      "name" => operations.Name, // change the shared memory name
       "next" => operations.Next, // move to the next cell search result
       "prev" => operations.Prev, // move to the previous cell search result
       "exit" => operations.Quit, // exit the program

@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace main.ui;
 public class Parse
 {
@@ -53,6 +55,21 @@ public class Parse
       throw new Exception($"Invalid input {inputString} (input should be a number)");
     }
 
+  }
+  public static string SharedMemoryName(string inputString)
+  {
+    if (string.IsNullOrEmpty(inputString))
+    {
+      throw new Exception($"Invalid input {inputString} (input should be a non-empty string)");
+    }
+    else if (inputString.Length <= 32)
+    {
+      return inputString;
+    }
+    else
+    {
+      throw new Exception($"Invalid input {inputString} (input should be less than or equal to 32 characters)");
+    }
   }
   public static byte[] NewValue(string inputString)
   {

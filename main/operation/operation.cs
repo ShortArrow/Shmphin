@@ -36,6 +36,7 @@ public class Operations(CurrentConfig config, model.Cursor cursor, Memory memory
   public IOperation Search => new Search();
   public IOperation Size => new Size();
   public IOperation Cell => new Cell(config, mode);
+  public IOperation Name => new SharedMemoryName(config, mode);
   public IOperation Columns => new Columns(config, mode);
   public IOperation Mark => new Mark();
   public IOperation Unmark => new Unmark();

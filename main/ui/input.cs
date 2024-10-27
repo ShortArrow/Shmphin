@@ -11,7 +11,8 @@ public enum InputMode
   Ex,
   NewValue,
   NewCellSize,
-  NewColumnsLength
+  NewColumnsLength,
+  NewSharedMemoryName,
 }
 
 public class Input(Operations operations, Mode mode)
@@ -50,6 +51,12 @@ public class Input(Operations operations, Mode mode)
             mode,
             inputBuffer
           ).Invoke(key).Invoke,
+        InputMode.NewSharedMemoryName => new NewPropHandler<string>(
+          Parse.SharedMemoryName,
+          mode.newSharedMemoryNameTcs,
+          mode,
+          inputBuffer
+        ).Invoke(key).Invoke,
         InputMode.Normal => new Normal(operations).Invoke(key).Invoke,
         _ => throw new NotSupportedException(),
       };
