@@ -8,6 +8,6 @@ class Cell(CurrentConfig config, Mode mode) : Operation()
   public override async void Execute()
   {
     var cellsize = await mode.NewCellSize();
-    config.ColumnsLength = cellsize;
+    config.CellLength = cellsize;
   }
 }
