@@ -8,6 +8,19 @@ namespace main.memory;
 
 public class SharedMemory(IConfig config)
 {
+  [SupportedOSPlatform("windows")]
+  private MemoryMappedFile mmf = NewMemoryMappedFile(config);
+  [SupportedOSPlatform("windows")]
+  public void UpdateSharedMemory()
+  {
+    mmf.Dispose();
+    mmf = NewMemoryMappedFile(config);
+  }
+  [SupportedOSPlatform("windows")]
+  public static MemoryMappedFile NewMemoryMappedFile(IConfig config)
+  {
+    return MemoryMappedFile.CreateOrOpen(config.SharedMemoryName ?? "NONAME", config.SharedMemorySize ?? 0);
+  }
   /// <summary>
   /// Read data from the specified shared memory by name and range.
   /// </summary>
@@ -20,7 +33,8 @@ public class SharedMemory(IConfig config)
     byte[] buffer = new byte[length];
     try
     {
-      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(config.SharedMemoryName ?? "NONAME");
+      UpdateSharedMemory();
+      if (mmf == null) throw new NullReferenceException("MemoryMappedFile is null.");
       // arguments (position in shared memory, length, access type)
       MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(offset, length, MemoryMappedFileAccess.Read);
       // arguments (position in accessor, buffer, position in buffer, length)
@@ -53,7 +67,8 @@ public class SharedMemory(IConfig config)
   {
     try
     {
-      MemoryMappedFile mmf = MemoryMappedFile.OpenExisting(config.SharedMemoryName ?? "NONAME");
+      UpdateSharedMemory();
+      if (mmf == null) throw new NullReferenceException("MemoryMappedFile is null.");
       // arguments (position in shared memory, length, access type)
       MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor((long)offset, data.Length, MemoryMappedFileAccess.Write);
       // arguments (position in accessor, buffer, position in buffer, length)
