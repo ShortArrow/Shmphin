@@ -30,12 +30,14 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         new Markup($"[blue]{config.SharedMemoryName}[/]"),
         VerticalAlignment.Middle
       ))
+      .Border(BoxBorder.Rounded)
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
         mainGrid.CreateCursorView(),
         VerticalAlignment.Middle
       ))
+      .Border(BoxBorder.Rounded)
       .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
       .Expand()
     );
@@ -46,6 +48,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
       ))
+      .Border(BoxBorder.Rounded)
       .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
       .Expand()
     );
@@ -54,6 +57,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         mainGrid.CreateDiffView(),
         VerticalAlignment.Middle
       ))
+      .Border(BoxBorder.Rounded)
       .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
       .Expand()
     );
@@ -62,6 +66,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         Prompt.ShowInput(input.InputBuffer, mode.InputMode),
         VerticalAlignment.Middle
       ))
+      .Border(BoxBorder.Rounded)
       .BorderColor(IsExMode ? Color.Red : Color.Default)
       .Expand()
     );
