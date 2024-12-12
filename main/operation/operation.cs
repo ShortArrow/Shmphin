@@ -32,7 +32,7 @@ public class Operations(CurrentConfig config, model.Cursor cursor, Memory memory
 {
   public IOperation UpdateMemory => new UpdateMemory(snapShot);
   public IOperation ChangeMemory => new ChangeMemory(memory, snapShot, cursor, mode);
-  public IOperation Help => new Help();
+  public IOperation Help => new Help(mode);
   public IOperation Search => new Search();
   public IOperation Size => new Size();
   public IOperation Cell => new Cell(config, mode);

@@ -56,7 +56,7 @@ public class Root : ICommandHandler
       operations.UpdateMemory.Execute();
       while (!mode.IsCancellationRequested)
       {
-        var layout = ui.CreateLayout(config, input);
+        var layout = mode.IsKeymapShown ? ui.KeyMapView() : ui.CreateLayout(config, input);
         context.UpdateTarget(layout);
       }
       await inputTask;

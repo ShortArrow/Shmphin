@@ -1,9 +1,11 @@
+using main.ui;
+
 namespace main.operation;
-class Help() : Operation()
+class Help(Mode mode) : Operation()
 {
   public override string Name => "help";
   public override void Execute()
   {
-    throw new NotImplementedException();
+    mode.IsKeymapShown = true;
   }
 }

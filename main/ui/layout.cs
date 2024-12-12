@@ -8,6 +8,14 @@ namespace main.ui;
 public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus, Mode mode)
 {
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
+  public Layout KeyMapView()
+  {
+    var layout = new Layout("Root");
+    layout["Root"].Update(
+      new Panel(Align.Center(new Markup($"[blue]Keymap[/]"), VerticalAlignment.Middle))
+    );
+    return layout;
+  }
   public Layout CreateLayout(IConfig config, Input input)
   {
     var IsExMode = mode.InputMode == InputMode.Ex;
