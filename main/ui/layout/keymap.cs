@@ -6,20 +6,28 @@ public class KeymapView
   {
     get
     {
-      var table = new Table();
-      table.AddColumn("Key");
-      table.AddColumn("Action");
+      var grid = new Grid();
+      grid.AddColumn();
+      grid.AddColumn();
+      grid.AddColumn();
+
+      grid.AddRow([
+        new Text("*", new Style(Color.Pink1)).LeftJustified(),
+        new Text("Key", new Style(Color.Blue)).RightJustified(),
+        new Text("Action", new Style(Color.Red)).LeftJustified(),
+      ]);
       var keymap = new KeyMap();
       foreach (var item in keymap.list)
       {
-        table.AddRow(item.Key, item.Value);
+        grid.AddRow([
+          new Text("", new Style(Color.Pink1)).LeftJustified(),
+          new Text(item.Key).RightJustified(),
+          new Text(item.Value).LeftJustified(),
+        ]);
       }
-      table.Border(TableBorder.Rounded);
-      table.Expand();
-
       var layout = new Layout("Root");
       layout["Root"].Update(
-        table
+        new Panel(Align.Center(grid))
       );
       return layout;
     }
