@@ -1,6 +1,6 @@
 public class KeyMap
 {
-  public readonly Dictionary<string, string> keyMap = new(
+  public readonly Dictionary<string, string> list = new(
     [
       new("u", "update display with read from memory"),
       new(":", "command mode"),

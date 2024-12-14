@@ -2,7 +2,7 @@ using Spectre.Console;
 namespace main.ui.layout;
 public class KeymapView
 {
-  public Layout KeyMapView
+  public Layout View
   {
     get
     {
@@ -10,7 +10,7 @@ public class KeymapView
       table.AddColumn("Key");
       table.AddColumn("Action");
       var keymap = new KeyMap();
-      foreach (var item in keymap.keyMap)
+      foreach (var item in keymap.list)
       {
         table.AddRow(item.Key, item.Value);
       }
