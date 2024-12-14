@@ -3,26 +3,18 @@ using main.memory;
 
 using Spectre.Console;
 
-namespace main.ui;
+namespace main.ui.layout;
 
 public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus, Mode mode)
 {
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  public Layout KeyMapView()
-  {
-    var layout = new Layout("Root");
-    layout["Root"].Update(
-      new Panel(Align.Center(new Markup($"[blue]Keymap[/]"), VerticalAlignment.Middle))
-    );
-    return layout;
-  }
   public Layout CreateLayout(IConfig config, Input input)
   {
     var IsExMode = mode.InputMode == InputMode.Ex;
     var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
     if(mode.IsKeymapShown){
-      return KeyMapView();
+      return new KeymapView().KeyMapView;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),

@@ -12,7 +12,7 @@ public class Root : ICommandHandler
   private CurrentConfig? config;
   private Operations? operations;
   private Input? input;
-  private Ui? ui;
+  private ui.layout.Ui? ui;
   private model.Cursor? cursor;
   private SnapShot? snapShot;
   private Memory? memory;

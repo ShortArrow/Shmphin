@@ -1,11 +1,12 @@
-class KeyMap
+public class KeyMap
 {
-  static readonly Dictionary<string, string> keyMap = new(
+  public readonly Dictionary<string, string> keyMap = new(
     [
       new("u", "update display with read from memory"),
       new(":", "command mode"),
       new("q", "quit"),
-      new("h", "help"),
+      new("?", "help"),
+      new("/", "search"),
       new("j", "move cursor down"),
       new("k", "move cursor up"),
       new("l", "move cursor right"),
