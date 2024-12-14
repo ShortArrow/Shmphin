@@ -21,6 +21,9 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
     var IsExMode = mode.InputMode == InputMode.Ex;
     var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
+    if(mode.IsKeymapShown){
+      return KeyMapView();
+    }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),
       new Layout("Main").SplitColumns(
