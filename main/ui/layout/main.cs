@@ -13,8 +13,8 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
     var IsExMode = mode.InputMode == InputMode.Ex;
     var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
-    if(mode.IsKeymapShown){
-      return new KeymapView().View;
+    if(mode.InputMode == InputMode.Help){
+      return new KeymapView(mode).View;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),

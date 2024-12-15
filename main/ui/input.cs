@@ -13,6 +13,7 @@ public enum InputMode
   NewCellSize,
   NewColumnsLength,
   NewSharedMemoryName,
+  Help,
 }
 
 public class Input(Operations operations, Mode mode)
@@ -57,6 +58,7 @@ public class Input(Operations operations, Mode mode)
           mode,
           inputBuffer
         ).Invoke(key).Invoke,
+        InputMode.Help => new HelpViewHandler(mode).Invoke(key).Invoke,
         InputMode.Normal => new Normal(operations).Invoke(key).Invoke,
         _ => throw new NotSupportedException(),
       };

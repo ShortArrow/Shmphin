@@ -4,12 +4,8 @@ namespace main.ui;
 
 public class Mode
 {
-  private bool isKeymapShown = false;
-  public bool IsKeymapShown
-  {
-    get => isKeymapShown;
-    set => isKeymapShown = value;
-  }
+    private model.SelectView selectView = new((uint)new KeyMap().list.Count);
+    public model.SelectView SelectView => selectView;
   private static readonly List<uint> columnsLengthPatterns = [8, 16, 32, 64];
   private static readonly List<uint> cellLengthPatterns = [1, 2, 4, 8];
   private static uint columnsLength = 8;
