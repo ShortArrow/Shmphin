@@ -10,42 +10,25 @@ enum EvenOdd
   Even
 }
 
-class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot, Focus focus)
+class MainGrid
 {
-  private readonly Matrix matrix = new(config, snapShot);
+  public MainGrid(IConfig config, Cursor cursor, SnapShot snapShot, Focus focus)
+  {
+    matrix = new(config, snapShot);
+    cursorInfo = new(cursor, matrix, focus, FormatAddress);
+    this.cursor = cursor;
+  }
+  private readonly Cursor cursor;
+  private readonly Matrix matrix;
+  public Matrix Matrix => matrix;
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
   private void ToggleRowColor()
   {
     currentRowColor = currentRowColor == EvenOdd.Even ? EvenOdd.Odd : EvenOdd.Even;
   }
-  public Grid CreateCursorView()
-  {
-    matrix.Update();
-    var grid = new Grid();
-    var index = cursor.GetIndex() ?? 0;
-
-    grid.AddColumns(2);
-    grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
-    var address = FromatAddress(index);
-    var dict = new Dictionary<string, string>{
-      {"x", $"{cursor.X}"},
-      {"y", $"{cursor.Y}"},
-      {"byteIndex", $"{index}"},
-      {"wordIndex", $"{index / 2}"},
-      {"BeforeValue", $"{matrix.GetCell(cursor.X, cursor.Y).BeforeValue}"},
-      {"CurrentValue", $"{matrix.GetCell(cursor.X, cursor.Y).CurrentValue}"},
-      {"Address", $"{address}"},
-      {"gridWidth", $"{matrix.Width}"},
-      {"gridHeight", $"{matrix.Height}"},
-      {"focus", $"{focus.TargetPanel}"}
-    };
-    foreach (var item in dict)
-    {
-      grid.AddRow(new Text(item.Key), new Text(item.Value).RightJustified());
-    }
-    return grid;
-  }
-  private static string FromatAddress(uint value)
+  private readonly CursorInfo cursorInfo;
+  public Grid CursorInfoView => cursorInfo.CreateCursorView();
+  private static string FormatAddress(uint value)
   {
     var high = value & 0xFFFF_0000;
     var low = value & 0x0000_FFFF;
@@ -53,7 +36,7 @@ class MainGrid(IConfig config, Cursor cursor, SnapShot snapShot, Focus focus)
   }
   private Markup RowNumber(uint value, bool IsCurrentRow = false)
   {
-    var address = FromatAddress(value);
+    var address = FormatAddress(value);
     var color = (currentRowColor == EvenOdd.Even) ? "yellow" : "darkorange";
     var foreground = IsCurrentRow ? "black" : color;
     var background = IsCurrentRow ? color : "default";

@@ -37,7 +37,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        mainGrid.CreateCursorView(),
+        mainGrid.CursorInfoView,
         VerticalAlignment.Middle
       ))
       .Border(BoxBorder.Rounded)
