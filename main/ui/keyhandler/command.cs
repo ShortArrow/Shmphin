@@ -1,11 +1,17 @@
+using System.Data;
 using System.Text;
 
 using main.operation;
 
 namespace main.ui.mode;
-public class CommandHandler(Func<string, IOperation> parse, InputMode mode, StringBuilder inputBuffer)
+public class CommandHandler(Func<string, IOperation> parse) : IUIMode
 {
-  public Action Invoke(ConsoleKeyInfo keyInfo)
+  public IKeyMap Map => new KeyMap([]);
+  public Action SelectAction(ConsoleKeyInfo keyInfo)
+  {
+    throw new NotSupportedException();
+  }
+  public Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
   {
     return keyInfo.Key switch
     {

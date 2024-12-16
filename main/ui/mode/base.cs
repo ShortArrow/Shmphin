@@ -1,8 +1,10 @@
 namespace main.ui.mode;
+using System.Text;
 
 public interface IUIMode
 {
-  Action Handler(ConsoleKeyInfo keyInfo);
+  Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo);
+  Action SelectAction(ConsoleKeyInfo keyInfo);
   IKeyMap Map { get; }
 }
 

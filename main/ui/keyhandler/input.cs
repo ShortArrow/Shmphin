@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 
 using main.model;
@@ -9,6 +10,7 @@ namespace main.ui;
 public enum InputMode
 {
   Normal,
+  Search,
   Ex,
   NewValue,
   NewCellSize,
@@ -63,43 +65,31 @@ public class Input(Operations operations, Mode mode, SelectView selectView)
     while (!mode.cts.Token.IsCancellationRequested)
     {
       var key = Console.ReadKey(true);
-      InputMode modename = mode.InputMode;
-      Action Handler = modename switch
+      IUIMode Handler = mode.InputMode switch
       {
-        InputMode.Ex => new CommandHandler(
-            parser.Parse,
-            mode.InputMode,
-            inputBuffer
-          ).Invoke(key).Invoke,
-        InputMode.NewValue => new NewPropHandler<byte[]>(
-          Parse.NewValue,
-          mode.newValueTcs,
-          mode,
-          inputBuffer
-        ).Invoke(key).Invoke,
-        InputMode.NewCellSize => new NewPropHandler<uint>(
-            Parse.CellSize,
-            mode.newCellSizeTcs,
-            mode,
-            inputBuffer
-          ).Invoke(key).Invoke,
-        InputMode.NewColumnsLength => new NewPropHandler<uint>(
-            Parse.ColumnsLength,
-            mode.newColumnsLengthTcs,
-            mode,
-            inputBuffer
-          ).Invoke(key).Invoke,
-        InputMode.NewSharedMemoryName => new NewPropHandler<string>(
-          Parse.SharedMemoryName,
-          mode.newSharedMemoryNameTcs,
-          mode,
-          inputBuffer
-        ).Invoke(key).Invoke,
-        InputMode.Help => new HelpViewHandler(helpMap).Handler(key).Invoke,
-        InputMode.Normal => new Normal(normalMap).Handler(key).Invoke,
+        InputMode.Ex => new CommandHandler(parser.Parse),
+        InputMode.NewValue => new NewPropHandler<byte[]>(Parse.NewValue, mode.newValueTcs),
+        InputMode.NewCellSize => new NewPropHandler<uint>(Parse.CellSize, mode.newCellSizeTcs),
+        InputMode.NewColumnsLength => new NewPropHandler<uint>(Parse.ColumnsLength, mode.newColumnsLengthTcs),
+        InputMode.NewSharedMemoryName => new NewPropHandler<string>(Parse.SharedMemoryName, mode.newSharedMemoryNameTcs),
+        InputMode.Help => new HelpViewHandler(helpMap),
+        InputMode.Normal => new Normal(normalMap),
         _ => throw new NotSupportedException(),
       };
-      Handler();
+      try
+      {
+        Handler.SelectAction(mode.InputMode, inputBuffer, key).Invoke();
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine(ex.ToString());
+        mode.newValueTcs?.TrySetCanceled();
+        mode.newColumnsLengthTcs?.TrySetCanceled();
+        mode.newCellSizeTcs?.TrySetCanceled();
+        mode.newSharedMemoryNameTcs?.TrySetCanceled();
+        mode.InputMode = InputMode.Normal;
+        inputBuffer.Clear();
+      }
     }
   }
 }

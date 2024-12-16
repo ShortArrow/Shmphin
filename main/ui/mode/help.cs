@@ -1,8 +1,13 @@
+using System.Text;
 namespace main.ui.mode;
 public class HelpViewHandler(IKeyMap map) : IUIMode
 {
   public IKeyMap Map => map;
-  public Action Handler(ConsoleKeyInfo keyInfo)
+  public Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
+  {
+    return SelectAction(keyInfo);
+  }
+  public Action SelectAction(ConsoleKeyInfo keyInfo)
   {
     map.List.TryGetValue(keyInfo.Key.ToString(), out var key);
     if (key == null)
