@@ -1,4 +1,3 @@
-using System.Data;
 using System.Text;
 
 using main.operation;
@@ -11,13 +10,19 @@ public class CommandHandler(Func<string, IOperation> parse) : IUIMode
   {
     throw new NotSupportedException();
   }
-  public Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
+  public Action SelectAction(Mode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
   {
     return keyInfo.Key switch
     {
+      ConsoleKey.Escape => () =>
+      {
+        mode.InputMode = InputMode.Normal;
+        inputBuffer.Clear();
+      }
+      ,
       ConsoleKey.Enter => () =>
       {
-        mode = InputMode.Normal;
+        mode.InputMode = InputMode.Normal;
         string inputString = inputBuffer.ToString();
         var operation = parse.Invoke(inputString);
         inputBuffer.Clear();

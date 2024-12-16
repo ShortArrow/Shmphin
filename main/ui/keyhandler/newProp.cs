@@ -8,13 +8,13 @@ public class NewPropHandler<T>(Func<string, T> parse, TaskCompletionSource<T>? t
   {
     throw new NotSupportedException();
   }
-  public Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
+  public Action SelectAction(Mode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
   {
     return keyInfo.Key switch
     {
       ConsoleKey.Enter => () =>
       {
-        mode = InputMode.Normal;
+        mode.InputMode = InputMode.Normal;
         string inputString = inputBuffer.ToString();
         var result = parse.Invoke(inputString);
         inputBuffer.Clear();

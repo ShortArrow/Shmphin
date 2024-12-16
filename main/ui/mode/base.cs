@@ -3,7 +3,7 @@ using System.Text;
 
 public interface IUIMode
 {
-  Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo);
+  Action SelectAction(Mode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo);
   Action SelectAction(ConsoleKeyInfo keyInfo);
   IKeyMap Map { get; }
 }

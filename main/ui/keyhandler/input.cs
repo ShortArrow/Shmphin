@@ -78,7 +78,7 @@ public class Input(Operations operations, Mode mode, SelectView selectView)
       };
       try
       {
-        Handler.SelectAction(mode.InputMode, inputBuffer, key).Invoke();
+        Handler.SelectAction(mode, inputBuffer, key).Invoke();
       }
       catch (Exception ex)
       {

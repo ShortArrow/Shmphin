@@ -3,7 +3,7 @@ namespace main.ui.mode;
 public class Normal(IKeyMap map) : IUIMode
 {
   public IKeyMap Map => map;
-  public Action SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
+  public Action SelectAction(Mode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
   {
     return SelectAction(keyInfo);
   }
