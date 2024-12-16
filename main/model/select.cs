@@ -1,8 +1,7 @@
 namespace main.model;
-public class SelectView(uint max)
+public class SelectView(Func<uint> getMax)
 {
-  private uint maxRow = max;
-  public uint MaxRow => maxRow;
+  public uint MaxRow => getMax();
   private uint selectedRow = 0;
   public uint SelectedRow => selectedRow;
   public void MoveUp()
@@ -14,7 +13,7 @@ public class SelectView(uint max)
   }
   public void MoveDown()
   {
-    if (selectedRow < maxRow - 1)
+    if (selectedRow < MaxRow - 1)
     {
       selectedRow++;
     }

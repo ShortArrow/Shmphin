@@ -1,5 +1,6 @@
 using main.config;
 using main.memory;
+using main.model;
 using main.ui;
 
 namespace main.operation;

@@ -2,7 +2,7 @@ using System.Text;
 
 using main.operation;
 
-namespace main.ui.keyhandler;
+namespace main.ui.mode;
 public class CommandHandler(Func<string, IOperation> parse, InputMode mode, StringBuilder inputBuffer)
 {
   public Action Invoke(ConsoleKeyInfo keyInfo)

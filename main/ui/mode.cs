@@ -4,8 +4,6 @@ namespace main.ui;
 
 public class Mode
 {
-    private readonly model.SelectView selectView = new((uint)new KeyMaps().list.Count);
-    public model.SelectView SelectView => selectView;
   private static readonly List<uint> columnsLengthPatterns = [8, 16, 32, 64];
   private static readonly List<uint> cellLengthPatterns = [1, 2, 4, 8];
   private static uint columnsLength = 8;
@@ -33,11 +31,17 @@ public class Mode
       else throw new Exception("Invalid CellLength value");
     }
   }
+  private InputMode previousMode = InputMode.Normal;
+  public InputMode PreviousMode => previousMode;
   private InputMode mode = InputMode.Normal;
   public InputMode InputMode
   {
     get => mode;
-    set => mode = value;
+    set
+    {
+      previousMode = mode;
+      mode = value;
+    }
   }
   public readonly CancellationTokenSource cts = new();
   public bool IsCancellationRequested => cts.Token.IsCancellationRequested;

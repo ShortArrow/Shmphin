@@ -1,8 +1,8 @@
-namespace main.ui.keyhandler;
+namespace main.ui.mode;
 
-public interface IKeyHandler
+public interface IUIMode
 {
-  Action Invoke(ConsoleKeyInfo keyInfo);
+  Action Handler(ConsoleKeyInfo keyInfo);
   IKeyMap Map { get; }
 }
 

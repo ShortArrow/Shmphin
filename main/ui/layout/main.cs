@@ -14,7 +14,7 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
     var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
     if(mode.InputMode == InputMode.Help){
-      return new KeymapView(mode).View;
+      return new KeymapView(input).View;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),

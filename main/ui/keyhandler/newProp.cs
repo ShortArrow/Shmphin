@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace main.ui.keyhandler;
+namespace main.ui.mode;
 public class NewPropHandler<T>(Func<string, T> parse, TaskCompletionSource<T>? tcs, Mode mode, StringBuilder inputBuffer)
 {
   public Action Invoke(ConsoleKeyInfo keyInfo)

@@ -4,6 +4,7 @@ using main.operation;
 using main.config;
 using System.CommandLine.Invocation;
 using main.memory;
+using main.model;
 
 namespace main.cli.handler;
 
@@ -39,7 +40,11 @@ public class Root : ICommandHandler
     focus = new();
     snapShot = new(config);
     operations = new(config, cursor, memory, snapShot, mode, focus);
-    input = new(operations, mode);
+    var selectView = new SelectView(() =>
+    {
+      return (uint)(input?.HelpKeyMap.List.Count ?? 0);
+    });
+    input = new(operations, mode, selectView);
     ui = new(config, cursor, snapShot, focus, mode);
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
