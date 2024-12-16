@@ -7,13 +7,27 @@ namespace main.ui.layout;
 
 public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus, Mode mode)
 {
+  private BoxBorder BorderStyle => BoxBorder.Rounded;
+  private Color GetBorderColor(InputMode[]? activeModes = null, InputMode[]? inactiveModes = null)
+  {
+    var defaultColor = Color.Default;
+    var activeColor = Color.Green;
+    if (activeModes != null)
+    {
+      return activeModes.Contains(mode.InputMode) ? activeColor : defaultColor;
+    }
+    if (inactiveModes != null)
+    {
+      return inactiveModes.Contains(mode.InputMode) ? defaultColor : activeColor;
+    }
+    return defaultColor;
+  }
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
   public Layout CreateLayout(IConfig config, Input input)
   {
-    var IsExMode = mode.InputMode == InputMode.Ex;
-    var IsNewValueMode = mode.InputMode == InputMode.NewValue;
     // Create the layout
-    if(mode.InputMode == InputMode.Help){
+    if (mode.InputMode == InputMode.Help)
+    {
       return new KeymapView(input).View;
     }
     var layout = new Layout("Root").SplitRows(
@@ -33,26 +47,26 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         new Markup($"[blue]{config.SharedMemoryName}[/]"),
         VerticalAlignment.Middle
       ))
-      .Border(BoxBorder.Rounded)
+      .Border(BorderStyle)
       .Expand());
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
         mainGrid.CursorInfoView,
         VerticalAlignment.Middle
       ))
-      .Border(BoxBorder.Rounded)
-      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Right ? Color.Green : Color.Default)
+      .Border(BorderStyle)
+      .BorderColor(GetBorderColor())
       .Expand()
     );
     layout["Main"]["Right"]["Bottom"].Update(
       new Panel(Align.Center(
-        IsNewValueMode
+        mode.InputMode == InputMode.NewValue
           ? new Markup($"[red]{input.InputBuffer}[/]")
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
       ))
-      .Border(BoxBorder.Rounded)
-      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
+      .Border(BorderStyle)
+      .BorderColor(GetBorderColor())
       .Expand()
     );
     layout["Main"]["Left"].Update(
@@ -60,8 +74,8 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         mainGrid.CreateDiffView(),
         VerticalAlignment.Middle
       ))
-      .Border(BoxBorder.Rounded)
-      .BorderColor(IsExMode ? Color.Default : focus.TargetPanel == TargetPanel.Left ? Color.Green : Color.Default)
+      .Border(BorderStyle)
+      .BorderColor(GetBorderColor(activeModes: [InputMode.Normal]))
       .Expand()
     );
     layout["Footer"].Update(
@@ -69,8 +83,8 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
         Prompt.ShowInput(input.InputBuffer, mode.InputMode),
         VerticalAlignment.Middle
       ))
-      .Border(BoxBorder.Rounded)
-      .BorderColor(IsExMode ? Color.Red : Color.Default)
+      .Border(BorderStyle)
+      .BorderColor(GetBorderColor(inactiveModes: [InputMode.Normal]))
       .Expand()
     );
     return layout;
