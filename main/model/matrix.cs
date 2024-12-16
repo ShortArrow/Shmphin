@@ -11,6 +11,7 @@ public class Matrix(IConfig config, SnapShot snapShot)
   public uint Width { get => width; }
   private uint height = 0;
   public uint Height { get => height; }
+  public uint LastIndex { get => (uint)((cells?.Length ?? 0) * (config.CellLength ?? 1) - 1); }
   public void Update(byte[]? before = null, byte[]? current = null)
   {
     before ??= snapShot.Before;

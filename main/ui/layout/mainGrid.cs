@@ -28,8 +28,12 @@ class MainGrid
   }
   private readonly CursorInfo cursorInfo;
   public Grid CursorInfoView => cursorInfo.CreateCursorView();
-  private static string FormatAddress(uint value)
+  private string FormatAddress(uint value)
   {
+    if (matrix.LastIndex <= 0xFFFF)
+    {
+      return $"0x{value:X4}";
+    }
     var high = value & 0xFFFF_0000;
     var low = value & 0x0000_FFFF;
     return $"0x{high:X4}_{low:X4}";
