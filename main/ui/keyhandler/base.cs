@@ -6,9 +6,14 @@ public interface IKeyHandler
   IKeyMap Map { get; }
 }
 
-public class KeyAction : IKeyAction
+public class KeyAction(string defaultKey, string description, Action action) : IKeyAction
 {
-  public string DefaultKey { get; }
-  public string Description { get; }
-  public void Execute() { }
+  public string DefaultKey { get => defaultKey; }
+  public string Description { get => description; }
+  public void Execute() => action();
+}
+
+public class KeyMap(Dictionary<string, IKeyAction> dict) : IKeyMap
+{
+  public Dictionary<string, IKeyAction> List { get => dict; }
 }

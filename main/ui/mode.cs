@@ -4,7 +4,7 @@ namespace main.ui;
 
 public class Mode
 {
-    private model.SelectView selectView = new((uint)new KeyMap().list.Count);
+    private readonly model.SelectView selectView = new((uint)new KeyMaps().list.Count);
     public model.SelectView SelectView => selectView;
   private static readonly List<uint> columnsLengthPatterns = [8, 16, 32, 64];
   private static readonly List<uint> cellLengthPatterns = [1, 2, 4, 8];

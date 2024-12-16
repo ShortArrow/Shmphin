@@ -8,7 +8,7 @@ public interface IKeyMap
 {
   Dictionary<string,IKeyAction> List { get; }
 }
-public class KeyMap
+public class KeyMaps
 {
   public readonly Dictionary<string, string> list = new(
     [

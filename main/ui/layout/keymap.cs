@@ -16,7 +16,7 @@ public class KeymapView(Mode mode)
         new Text("Key", new Style(Color.Blue)).RightJustified(),
         new Text("Action", new Style(Color.Red)).LeftJustified(),
       ]);
-      var keymap = new KeyMap();
+      var keymap = new KeyMaps();
       foreach (var item in keymap.list.Select((item, index)=> new{item,index}))
       {
         var row = mode.SelectView.SelectedRow;
