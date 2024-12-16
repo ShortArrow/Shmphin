@@ -9,8 +9,16 @@ class Program
 {
   static async Task<int> Main(string[] args)
   {
-    var parser = new cli.Parser();
-    return await parser.rootCommandWithSplash.InvokeAsync(args);
+    try
+    {
+      var parser = new cli.Parser();
+      return await parser.rootCommandWithSplash.InvokeAsync(args);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.Message);
+      return 1;
+    }
   }
 }
 

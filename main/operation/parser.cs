@@ -1,5 +1,14 @@
 namespace main.operation;
 
+public class NoProcess : IOperation
+{
+  public override string Name => "nop";
+  public override void Execute()
+  {
+    Console.WriteLine("Invalid command");
+  }
+}
+
 public class Parser(Operations operations)
 {
   public IOperation Parse(string input)
@@ -23,7 +32,8 @@ public class Parser(Operations operations)
       "prev" => operations.Prev, // move to the previous cell search result
       "exit" => operations.Quit, // exit the program
       "quit" => operations.Quit, // exit the program
-      _ => throw new Exception("Invalid command")
+      _ => new NoProcess()
+      ,
     };
   }
 }
