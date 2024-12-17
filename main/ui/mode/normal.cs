@@ -1,13 +1,15 @@
 using System.Text;
+
+using main.ui.keyhandler;
 namespace main.ui.mode;
 public class Normal(IKeyMap map) : IUIMode
 {
   public IKeyMap Map => map;
-  public Action SelectAction(Mode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
+  public (Action, InputMode?) SelectAction(InputMode mode, StringBuilder inputBuffer, ConsoleKeyInfo keyInfo)
   {
     return SelectAction(keyInfo);
   }
-  public Action SelectAction(ConsoleKeyInfo keyInfo)
+  public (Action, InputMode?) SelectAction(ConsoleKeyInfo keyInfo)
   {
     map.List.TryGetValue(keyInfo.Key.ToString(), out var key);
     if (key == null)
@@ -15,10 +17,10 @@ public class Normal(IKeyMap map) : IUIMode
       map.List.TryGetValue(keyInfo.KeyChar.ToString(), out var charKey);
       if (charKey == null)
       {
-        return () => { };
+        return (() => { }, null);
       }
-      return charKey.Execute;
+      return (charKey.Execute, null);
     }
-    return key.Execute;
+    return (key.Execute, null);
   }
 }

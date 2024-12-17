@@ -5,7 +5,7 @@ using main.model;
 using main.operation;
 using main.ui.mode;
 
-namespace main.ui;
+namespace main.ui.keyhandler;
 
 public enum InputMode
 {
@@ -78,7 +78,12 @@ public class Input(Operations operations, Mode mode, SelectView selectView)
       };
       try
       {
-        Handler.SelectAction(mode, inputBuffer, key).Invoke();
+        var (Invoke, newMode) = Handler.SelectAction(mode.InputMode, inputBuffer, key);
+        Invoke();
+        if (newMode != null)
+        {
+          mode.InputMode = newMode.Value;
+        }
       }
       catch (Exception ex)
       {

@@ -5,6 +5,7 @@ using main.config;
 using System.CommandLine.Invocation;
 using main.memory;
 using main.model;
+using main.ui.keyhandler;
 
 namespace main.cli.handler;
 
