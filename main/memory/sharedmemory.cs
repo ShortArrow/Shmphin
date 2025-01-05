@@ -8,18 +8,27 @@ namespace main.memory;
 
 public class SharedMemory(IConfig config)
 {
-  [SupportedOSPlatform("windows")]
-  private MemoryMappedFile mmf = NewMemoryMappedFile(config);
-  [SupportedOSPlatform("windows")]
+  private MemoryMappedFile? mmf = NewMemoryMappedFile(config);
   public void UpdateSharedMemory()
   {
-    mmf.Dispose();
+    mmf?.Dispose();
     mmf = NewMemoryMappedFile(config);
   }
-  [SupportedOSPlatform("windows")]
   public static MemoryMappedFile NewMemoryMappedFile(IConfig config)
   {
-    return MemoryMappedFile.CreateOrOpen(config.SharedMemoryName ?? "NONAME", config.SharedMemorySize ?? 0);
+    if (OperatingSystem.IsWindows()) // check windows
+    {
+      return MemoryMappedFile.CreateOrOpen(config.SharedMemoryName ?? "NONAME", config.SharedMemorySize ?? 0);
+    }
+    if (OperatingSystem.IsLinux()) // check linux
+    {
+      var filePath = $"/dev/shm/{config.SharedMemoryName ?? "NONAME"}";
+      return MemoryMappedFile.CreateFromFile(filePath, FileMode.OpenOrCreate, "", config.SharedMemorySize ?? 0);
+    }
+    else
+    {
+      throw new PlatformNotSupportedException("The current platform is not supported.");
+    }
   }
   /// <summary>
   /// Read data from the specified shared memory by name and range.
@@ -27,7 +36,6 @@ public class SharedMemory(IConfig config)
   /// <param name="offset">Read start position (in bytes)</param>
   /// <param name="length">Length of data to read (in bytes)</param>
   /// <returns>Byte array containing the read data</returns>
-  [SupportedOSPlatform("windows")]
   public byte[] ReadFromSharedMemory(long offset, int length)
   {
     byte[] buffer = new byte[length];
@@ -44,14 +52,17 @@ public class SharedMemory(IConfig config)
     catch (FileNotFoundException)
     {
       Console.WriteLine("Not found the specified shared memory.");
+      throw;
     }
     catch (UnauthorizedAccessException)
     {
       Console.WriteLine("Permission denied to access the shared memory.");
+      throw;
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Error occurred: {ex.Message}");
+      throw;
     }
     return buffer;
   }
@@ -62,7 +73,6 @@ public class SharedMemory(IConfig config)
   /// <param name="length">Length of data to read (in bytes)</param>
   /// <param name="data">Data to write</param>
   /// <return>True if the write operation is successful, false otherwise</return>
-  [SupportedOSPlatform("windows")]
   public bool WriteToSharedMemory(ulong offset, byte[] data)
   {
     try
@@ -93,7 +103,6 @@ public class SharedMemory(IConfig config)
     return true;
   }
 
-  [SupportedOSPlatform("windows")]
   internal void Update(ulong index, byte[] newValue)
   {
     Debug.WriteLine($"Update shared memory: index: {index}, newValue: {newValue}");
