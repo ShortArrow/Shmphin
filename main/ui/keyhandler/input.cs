@@ -72,16 +72,16 @@ public class Input(Operations operations, IMode mode) : IInput
   private readonly Parser parser = new(operations);
   public void InputLoop()
   {
-    while (!mode.cts.Token.IsCancellationRequested)
+    while (!mode.Cts.Token.IsCancellationRequested)
     {
       var key = Console.ReadKey(true);
       IUIMode Handler = mode.InputMode switch
       {
         InputMode.Ex => new CommandHandler(parser.Parse),
-        InputMode.NewValue => new NewPropHandler<byte[]>(Parse.NewValue, mode.newValueTcs),
-        InputMode.NewCellSize => new NewPropHandler<uint>(Parse.CellSize, mode.newCellSizeTcs),
-        InputMode.NewColumnsLength => new NewPropHandler<uint>(Parse.ColumnsLength, mode.newColumnsLengthTcs),
-        InputMode.NewSharedMemoryName => new NewPropHandler<string>(Parse.SharedMemoryName, mode.newSharedMemoryNameTcs),
+        InputMode.NewValue => new NewPropHandler<byte[]>(Parse.NewValue, mode.NewValueTcs),
+        InputMode.NewCellSize => new NewPropHandler<uint>(Parse.CellSize, mode.NewCellSizeTcs),
+        InputMode.NewColumnsLength => new NewPropHandler<uint>(Parse.ColumnsLength, mode.NewColumnsLengthTcs),
+        InputMode.NewSharedMemoryName => new NewPropHandler<string>(Parse.SharedMemoryName, mode.NewSharedMemoryNameTcs),
         InputMode.Help => new HelpViewHandler(helpMap),
         InputMode.Normal => new Normal(normalMap),
         _ => throw new NotSupportedException(),
@@ -98,10 +98,10 @@ public class Input(Operations operations, IMode mode) : IInput
       catch (Exception ex)
       {
         Debug.WriteLine(ex.ToString());
-        mode.newValueTcs?.TrySetCanceled();
-        mode.newColumnsLengthTcs?.TrySetCanceled();
-        mode.newCellSizeTcs?.TrySetCanceled();
-        mode.newSharedMemoryNameTcs?.TrySetCanceled();
+        mode.NewValueTcs?.TrySetCanceled();
+        mode.NewColumnsLengthTcs?.TrySetCanceled();
+        mode.NewCellSizeTcs?.TrySetCanceled();
+        mode.NewSharedMemoryNameTcs?.TrySetCanceled();
         mode.InputMode = InputMode.Normal;
         inputBuffer.Clear();
       }

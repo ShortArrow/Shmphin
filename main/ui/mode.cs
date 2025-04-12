@@ -6,14 +6,14 @@ namespace main.ui;
 
 public interface IMode
 {
-  CancellationTokenSource cts { get; }
+  CancellationTokenSource Cts { get; }
   InputMode PreviousMode { get; }
   InputMode InputMode { get; set; }
   bool IsCancellationRequested { get; }
-  TaskCompletionSource<byte[]>? newValueTcs { get; }
-  TaskCompletionSource<uint>? newCellSizeTcs { get; }
-  TaskCompletionSource<uint>? newColumnsLengthTcs { get; }
-  TaskCompletionSource<string>? newSharedMemoryNameTcs { get; }
+  TaskCompletionSource<byte[]>? NewValueTcs { get; }
+  TaskCompletionSource<uint>? NewCellSizeTcs { get; }
+  TaskCompletionSource<uint>? NewColumnsLengthTcs { get; }
+  TaskCompletionSource<string>? NewSharedMemoryNameTcs { get; }
   Task<byte[]> NewValue();
   Task<uint> NewCellSize();
   Task<uint> NewColumnsLength();
@@ -61,38 +61,38 @@ public class Mode : IMode
       mode = value;
     }
   }
-  public CancellationTokenSource cts { get; private set; } = new();
-  public bool IsCancellationRequested => cts.Token.IsCancellationRequested;
-  public TaskCompletionSource<byte[]>? newValueTcs { get; set; }
-  public TaskCompletionSource<uint>? newCellSizeTcs { get; set; }
-  public TaskCompletionSource<uint>? newColumnsLengthTcs { get; set; }
-  public TaskCompletionSource<string>? newSharedMemoryNameTcs { get; set; }
+  public CancellationTokenSource Cts { get; private set; } = new();
+  public bool IsCancellationRequested => Cts.Token.IsCancellationRequested;
+  public TaskCompletionSource<byte[]>? NewValueTcs { get; set; }
+  public TaskCompletionSource<uint>? NewCellSizeTcs { get; set; }
+  public TaskCompletionSource<uint>? NewColumnsLengthTcs { get; set; }
+  public TaskCompletionSource<string>? NewSharedMemoryNameTcs { get; set; }
   public Task<byte[]> NewValue()
   {
     mode = InputMode.NewValue;
     Debug.WriteLine("New value mode");
-    newValueTcs = new TaskCompletionSource<byte[]>();
-    return newValueTcs.Task;
+    NewValueTcs = new TaskCompletionSource<byte[]>();
+    return NewValueTcs.Task;
   }
   public Task<uint> NewCellSize()
   {
     mode = InputMode.NewCellSize;
     Debug.WriteLine("New cell size mode");
-    newCellSizeTcs = new TaskCompletionSource<uint>();
-    return newCellSizeTcs.Task;
+    NewCellSizeTcs = new TaskCompletionSource<uint>();
+    return NewCellSizeTcs.Task;
   }
   public Task<uint> NewColumnsLength()
   {
     mode = InputMode.NewColumnsLength;
     Debug.WriteLine("New columns length mode");
-    newColumnsLengthTcs = new TaskCompletionSource<uint>();
-    return newColumnsLengthTcs.Task;
+    NewColumnsLengthTcs = new TaskCompletionSource<uint>();
+    return NewColumnsLengthTcs.Task;
   }
   public Task<string> NewSharedMemoryName()
   {
     mode = InputMode.NewSharedMemoryName;
     Debug.WriteLine("New shared memory name mode");
-    newSharedMemoryNameTcs = new TaskCompletionSource<string>();
-    return newSharedMemoryNameTcs.Task;
+    NewSharedMemoryNameTcs = new TaskCompletionSource<string>();
+    return NewSharedMemoryNameTcs.Task;
   }
 }
