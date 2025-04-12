@@ -3,7 +3,7 @@ using main.model;
 using main.config;
 using main.memory;
 
-namespace main.ui;
+namespace main.ui.layout;
 enum EvenOdd
 {
   Odd,
@@ -41,14 +41,14 @@ class MainGrid
   private Markup RowNumber(uint value, bool IsCurrentRow = false)
   {
     var address = FormatAddress(value);
-    var color = (currentRowColor == EvenOdd.Even) ? "yellow" : "darkorange";
+    var color = currentRowColor == EvenOdd.Even ? "yellow" : "darkorange";
     var foreground = IsCurrentRow ? "black" : color;
     var background = IsCurrentRow ? color : "default";
     return new($"[{foreground} on {background}]{address}[/]");
   }
   private Markup HeaderNumber(uint value, EvenOdd evenodd)
   {
-    var color = (evenodd == EvenOdd.Even) ? "blue" : "aqua";
+    var color = evenodd == EvenOdd.Even ? "blue" : "aqua";
     var IsCurrentColumn = cursor.X == value;
     var foreground = IsCurrentColumn ? "black" : color;
     var background = IsCurrentColumn ? color : "default";
@@ -64,7 +64,7 @@ class MainGrid
       Expand = true
     };
     grid.AddColumn(); // Left row number column
-    for (int i = 0; i < matrix.Width; i++)
+    for (var i = 0; i < matrix.Width; i++)
     {
       grid.AddColumn();
     }
@@ -72,9 +72,9 @@ class MainGrid
 
     // Create the header
     var header = new List<Markup> { new("") }; // Empty cell for left row number column
-    for (int i = 0; i < matrix.Width; i++)
+    for (var i = 0; i < matrix.Width; i++)
     {
-      EvenOdd evenOdd = i % 2 == 0 ? EvenOdd.Even : EvenOdd.Odd;
+      var evenOdd = i % 2 == 0 ? EvenOdd.Even : EvenOdd.Odd;
       header.Add(HeaderNumber((uint)i, evenOdd));
     }
     header.Add(new Markup("")); // Empty cell for right row number column
@@ -108,7 +108,7 @@ class MainGrid
         }
         else
         { // Display normal
-          markup = (cell.BeforeValue == cell.CurrentValue)
+          markup = cell.BeforeValue == cell.CurrentValue
               ? $"[white]{formatted}[/]"
               : $"[red]{formatted}[/]";
         }

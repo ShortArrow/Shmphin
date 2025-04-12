@@ -1,3 +1,5 @@
+namespace main.ui.keyhandler;
+
 public interface IKeyAction
 {
   public string DefaultKey { get; }
@@ -6,5 +8,5 @@ public interface IKeyAction
 }
 public interface IKeyMap
 {
-  Dictionary<string,IKeyAction> List { get; }
+  Dictionary<string, IKeyAction> List { get; }
 }

@@ -1,7 +1,7 @@
 using Spectre.Console;
 using main.model;
 
-namespace main.ui;
+namespace main.ui.layout;
 public class CursorInfo(ICursor cursor, Matrix matrix, IFocus focus, Func<uint, string> FormatAddress)
 {
   public Grid CreateCursorView()
