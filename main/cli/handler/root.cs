@@ -26,7 +26,7 @@ public class Root(ICurrentConfig config, IQuestion question, IInput input, IMode
     var configFile = context.ParseResult.GetValueForOption(Options.configFile);
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
-    config = new CurrentConfig(new Config(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
+    config = new CurrentConfig(new Args(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {

@@ -30,7 +30,7 @@ public static class Container
     // The command object is created with default (null) values and will be updated later.
     services.AddSingleton<ICurrentConfig>(provider =>
     {
-      var defaultCommand = new Config(null, null, null, null, null);
+      var defaultCommand = new Args(null, null, null, null, null);
       return new CurrentConfig(defaultCommand);
     });
 

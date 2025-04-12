@@ -18,7 +18,7 @@ public class Test(ICurrentConfig config) : ITest
     var configFile = context.ParseResult.GetValueForOption(Options.configFile);
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
-    config = new CurrentConfig(new Config(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
+    config = new CurrentConfig(new Args(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold green]Start Shmphin Test.[/]");
     var grid = new Grid();

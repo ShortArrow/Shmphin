@@ -1,5 +1,9 @@
 namespace main.config;
-class Default : IConfig
+
+public interface IDefaultConfig : IConfig
+{
+}
+class Default : IDefaultConfig
 {
   public string? SharedMemoryName => null;
   public uint? ColumnsLength => 8;

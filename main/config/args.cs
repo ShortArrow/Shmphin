@@ -1,17 +1,17 @@
 namespace main.config;
 
-public class Config(
+public interface IArgs : IConfig
+{
+}
+public class Args(
   string? name,
   uint? cellLength,
   uint? columnsLength,
   uint? sharedMemorySize,
   uint? sharedMemoryOffset
-) : IConfig
+) : IArgs
 {
-  private readonly string? sharedmemoryName = name;
-  private readonly uint? cellLength = cellLength;
-  private readonly uint? columnsLength = columnsLength;
-  public string? SharedMemoryName => sharedmemoryName;
+  public string? SharedMemoryName => name;
   public uint? ColumnsLength => columnsLength;
   public uint? CellLength => cellLength;
   public uint? SharedMemorySize => sharedMemorySize;

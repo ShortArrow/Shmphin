@@ -87,7 +87,11 @@ class Toml : IConfigFile
   }
 }
 
-public class TomlConfig : IConfig
+public interface IToml : IConfig
+{
+}
+
+public class TomlConfig : IToml
 {
   private readonly Toml toml = new();
   private string? sharedMemoryName;
