@@ -77,7 +77,7 @@ public class Mode : IMode
   public Task<uint> NewCellSize()
   {
     mode = InputMode.NewCellSize;
-    Debug.WriteLine("New cell size mode");
+    Debug.WriteLine("New cell size mode (in bytes)");
     NewCellSizeTcs = new TaskCompletionSource<uint>();
     return NewCellSizeTcs.Task;
   }
