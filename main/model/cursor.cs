@@ -4,7 +4,18 @@ using System.Diagnostics;
 
 namespace main.model;
 
-public class Cursor(IConfig config)
+public interface ICursor
+{
+  public uint X { get; set; }
+  public uint Y { get; set; }
+  public void MoveUp();
+  public void MoveDown();
+  public void MoveLeft();
+  public void MoveRight();
+  public uint? GetIndex();
+}
+
+public class Cursor(IConfig config) : ICursor
 {
   private uint x = 0;
   private uint y = 0;
