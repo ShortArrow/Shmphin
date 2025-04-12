@@ -1,7 +1,4 @@
-﻿using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Help;
-using System.CommandLine.Parsing;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace main;
 
@@ -9,16 +6,20 @@ class Program
 {
   static async Task<int> Main(string[] args)
   {
-    try
+    var services = new ServiceCollection();
+
+    services.AddSingleton<IConsole>(implementationFactory: static _ => new DefaultConsole
     {
-      var parser = new cli.Parser();
-      return await parser.rootCommandWithSplash.InvokeAsync(args);
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine(ex.Message);
-      return 1;
-    }
+      IsEnabled = true
+    });
+    services.AddSingleton<IApp, App>();
+
+    var serviceProvider = services.BuildServiceProvider();
+
+    var app = serviceProvider.GetRequiredService<IApp>();
+
+    var result =  await app.MainProcess(args);
+
+    return result;
   }
 }
-
