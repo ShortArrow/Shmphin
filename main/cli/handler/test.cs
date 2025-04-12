@@ -1,5 +1,4 @@
 using Spectre.Console;
-using main.ui;
 using main.config;
 using System.CommandLine.Invocation;
 
