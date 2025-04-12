@@ -1,29 +1,30 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using main.di;
 
 namespace main;
 
+/// <summary>
+/// Main entry point of the application.
+/// </summary>
 class Program
 {
+  /// <summary>
+  /// Application entry point.
+  /// </summary>
+  /// <param name="args">Command-line arguments.</param>
+  /// <returns>Application exit code.</returns>
   static async Task<int> Main(string[] args)
   {
-    HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-    builder.Services.AddSingleton<IConsole, DefaultConsole>();
+    // Create a new ServiceCollection
     var services = new ServiceCollection();
-    using IHost host = builder.Build();
 
-    services.AddSingleton<IConsole>(implementationFactory: static _ => new DefaultConsole
-    {
-      IsEnabled = true
-    });
-    services.AddSingleton<IApp, App>();
+    // Configure services using the DI container configuration
+    var serviceProvider = Container.ConfigureServices(services);
 
-    var serviceProvider = services.BuildServiceProvider();
-
+    // Retrieve the application instance
     var app = serviceProvider.GetRequiredService<IApp>();
 
-    var result = await app.MainProcess(args);
-
-    return result;
+    // Execute the main process and return the result
+    return await app.MainProcess(args);
   }
 }
