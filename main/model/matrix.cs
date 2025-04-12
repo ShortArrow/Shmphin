@@ -48,6 +48,6 @@ public class Matrix(ICurrentConfig config, ISnapShot snapShot)
   public Cell[] GetColumn(uint x)
   {
     if (cells == null) throw new Exception("Matrix not initialized");
-    return cells.Where(cell => cell.X == x).ToArray();
+    return [.. cells.Where(cell => cell.X == x)];
   }
 }
