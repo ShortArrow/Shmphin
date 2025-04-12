@@ -39,9 +39,11 @@ public class Matrix(ICurrentConfig config, ISnapShot snapShot)
   public Cell GetCell(uint x, uint y)
   {
     if (cells == null) throw new Exception("Matrix not initialized");
-    Cell cell = cells.Where(cell => cell.X == x && cell.Y == y).FirstOrDefault()
-      ?? throw new Exception($"Cell({x}, {y}) not found");
-    return cell;
+    // Check if the coordinates are within bounds
+    if (x >= width || y >= height)
+      throw new Exception($"Cell({x}, {y}) is out of bounds (width={width}, height={height}).");
+    uint index = y * width + x; // Calculate index based on row-major order
+    return cells[index];
   }
   public Cell[] GetColumn(uint x)
   {
