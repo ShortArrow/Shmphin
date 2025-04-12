@@ -1,9 +1,13 @@
 using main.config;
-using main.operation;
 
 namespace main.memory;
 
-public class Memory(IConfig config) : Operation()
+public interface IMemory
+{
+  SharedMemory SharedMemory { get; }
+}
+
+public class Memory(ICurrentConfig config) : IMemory
 {
   private readonly SharedMemory sharedMemory = new(config);
   public SharedMemory SharedMemory => sharedMemory;

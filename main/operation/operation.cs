@@ -3,7 +3,7 @@ using main.memory;
 using main.ui;
 
 namespace main.operation;
-public abstract class IOperation()
+public abstract class IOperation
 {
   public virtual string Name => throw new NotImplementedException();
   public virtual void Execute()
@@ -16,7 +16,7 @@ public abstract class IOperation()
   }
 }
 
-public abstract class Operation() : IOperation()
+public abstract class Operation : IOperation
 {
   public override string Name => throw new NotImplementedException();
   public override void Execute()
@@ -28,7 +28,40 @@ public abstract class Operation() : IOperation()
     return base.ExecuteAsync();
   }
 }
-public class Operations(ICurrentConfig config, model.Cursor cursor, Memory memory, SnapShot snapShot, Mode mode, Focus focus)
+
+public interface IOperations
+{
+  IOperation UpdateMemory { get; }
+  IOperation ChangeMemory { get; }
+  IOperation Help { get; }
+  IOperation Search { get; }
+  IOperation Size { get; }
+  IOperation Cell { get; }
+  IOperation Name { get; }
+  IOperation Columns { get; }
+  IOperation Mark { get; }
+  IOperation Unmark { get; }
+  IOperation Next { get; }
+  IOperation Prev { get; }
+  IOperation Clear { get; }
+  IOperation Jump { get; }
+  IOperation Quit { get; }
+  IOperation Up { get; }
+  IOperation Down { get; }
+  IOperation Left { get; }
+  IOperation Right { get; }
+  IOperation ExCommand { get; }
+  IOperation ChangeFocus { get; }
+}
+
+public class Operations(
+  ICurrentConfig config,
+  model.ICursor cursor,
+  IMemory memory,
+  ISnapShot snapShot,
+  IMode mode,
+  IFocus focus
+) : IOperations
 {
   public IOperation UpdateMemory => new UpdateMemory(snapShot);
   public IOperation ChangeMemory => new ChangeMemory(memory, snapShot, cursor, mode);

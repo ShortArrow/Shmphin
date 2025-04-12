@@ -1,9 +1,26 @@
 using System.Diagnostics;
+
 using main.ui.keyhandler;
 
 namespace main.ui;
 
-public class Mode
+public interface IMode
+{
+  CancellationTokenSource cts { get; }
+  InputMode PreviousMode { get; }
+  InputMode InputMode { get; set; }
+  bool IsCancellationRequested { get; }
+  TaskCompletionSource<byte[]>? newValueTcs { get; }
+  TaskCompletionSource<uint>? newCellSizeTcs { get; }
+  TaskCompletionSource<uint>? newColumnsLengthTcs { get; }
+  TaskCompletionSource<string>? newSharedMemoryNameTcs { get; }
+  Task<byte[]> NewValue();
+  Task<uint> NewCellSize();
+  Task<uint> NewColumnsLength();
+  Task<string> NewSharedMemoryName();
+}
+
+public class Mode : IMode
 {
   private static readonly List<uint> columnsLengthPatterns = [8, 16, 32, 64];
   private static readonly List<uint> cellLengthPatterns = [1, 2, 4, 8];
@@ -44,12 +61,12 @@ public class Mode
       mode = value;
     }
   }
-  public readonly CancellationTokenSource cts = new();
+  public CancellationTokenSource cts { get; private set; } = new();
   public bool IsCancellationRequested => cts.Token.IsCancellationRequested;
-  public TaskCompletionSource<byte[]>? newValueTcs;
-  public TaskCompletionSource<uint>? newCellSizeTcs;
-  public TaskCompletionSource<uint>? newColumnsLengthTcs;
-  public TaskCompletionSource<string>? newSharedMemoryNameTcs;
+  public TaskCompletionSource<byte[]>? newValueTcs { get; set; }
+  public TaskCompletionSource<uint>? newCellSizeTcs { get; set; }
+  public TaskCompletionSource<uint>? newColumnsLengthTcs { get; set; }
+  public TaskCompletionSource<string>? newSharedMemoryNameTcs { get; set; }
   public Task<byte[]> NewValue()
   {
     mode = InputMode.NewValue;

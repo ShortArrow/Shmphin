@@ -7,7 +7,14 @@ public enum TargetPanel
   Left,
 }
 
-public class Focus
+public interface IFocus
+{
+  TargetPanel TargetPanel { get; }
+  ChangeFocus ChangeFocus { get; }
+  void ToggleFocus();
+}
+
+public class Focus : IFocus
 {
   private TargetPanel targetPanel = TargetPanel.Left;
   public TargetPanel TargetPanel

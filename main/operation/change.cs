@@ -4,7 +4,7 @@ using main.memory;
 using main.ui;
 
 namespace main.operation;
-class ChangeMemory(Memory memory, SnapShot snapShot, model.Cursor cursor, Mode mode) : Operation()
+class ChangeMemory(IMemory memory, ISnapShot snapShot, model.ICursor cursor, IMode mode) : Operation
 {
   public override string Name => "change";
   [SupportedOSPlatform("windows")]

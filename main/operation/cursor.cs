@@ -1,5 +1,5 @@
 namespace main.operation;
-class Cursor(model.Cursor cursor)
+class Cursor(model.ICursor cursor)
 {
   public IOperation Up => new MoveUp(cursor);
   public IOperation Down => new MoveDown(cursor);
@@ -7,7 +7,7 @@ class Cursor(model.Cursor cursor)
   public IOperation Right => new MoveRight(cursor);
 }
 
-class MoveUp(model.Cursor cursor) : Operation()
+class MoveUp(model.ICursor cursor) : Operation()
 {
   public override string Name => "moveup";
   public override void Execute()
@@ -15,7 +15,7 @@ class MoveUp(model.Cursor cursor) : Operation()
     cursor.MoveUp();
   }
 }
-class MoveDown(model.Cursor cursor) : Operation()
+class MoveDown(model.ICursor cursor) : Operation()
 {
   public override string Name => "movedown";
   public override void Execute()
@@ -23,7 +23,7 @@ class MoveDown(model.Cursor cursor) : Operation()
     cursor.MoveDown();
   }
 }
-class MoveLeft(model.Cursor cursor) : Operation()
+class MoveLeft(model.ICursor cursor) : Operation()
 {
   public override string Name => "moveleft";
   public override void Execute()
@@ -31,7 +31,7 @@ class MoveLeft(model.Cursor cursor) : Operation()
     cursor.MoveLeft();
   }
 }
-class MoveRight(model.Cursor cursor) : Operation()
+class MoveRight(model.ICursor cursor) : Operation()
 {
   public override string Name => "moveright";
   public override void Execute()

@@ -1,12 +1,18 @@
 using main.config;
 using main.memory;
+using main.model;
 using main.ui.keyhandler;
 
 using Spectre.Console;
 
 namespace main.ui.layout;
 
-public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus focus, Mode mode)
+public interface IUi
+{
+  Layout CreateLayout(IConfig config, IInput input);
+}
+
+public class Ui(ICurrentConfig config, model.ICursor cursor, ISnapShot snapShot, IFocus focus, IMode mode, ISelectView selectView) : IUi
 {
   private BoxBorder BorderStyle => BoxBorder.Rounded;
   private Color GetBorderColor(InputMode[]? activeModes = null, InputMode[]? inactiveModes = null)
@@ -24,12 +30,12 @@ public class Ui(IConfig config, model.Cursor cursor, SnapShot snapShot, Focus fo
     return defaultColor;
   }
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  public Layout CreateLayout(IConfig config, Input input)
+  public Layout CreateLayout(IConfig config, IInput input)
   {
     // Create the layout
     if (mode.InputMode == InputMode.Help)
     {
-      return new KeymapView(input).View;
+      return new KeymapView(input, selectView).View;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),

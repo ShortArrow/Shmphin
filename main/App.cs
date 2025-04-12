@@ -1,6 +1,8 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
 
+using main.cli;
+
 namespace main;
 
 public interface IApp
@@ -8,18 +10,17 @@ public interface IApp
   Task<int> MainProcess(string[] args);
 }
 
-public class App : IApp
+public class App(IParser parser, IConsole console) : IApp
 {
   public async Task<int> MainProcess(string[] args)
   {
     try
     {
-      var parser = new cli.Parser();
-      return await parser.rootCommandWithSplash.InvokeAsync(args);
+      return await parser.RootCommandWithSplash.InvokeAsync(args);
     }
     catch (Exception ex)
     {
-      Console.WriteLine(ex.Message);
+      console.WriteLine(ex.Message);
       return 1;
     }
   }

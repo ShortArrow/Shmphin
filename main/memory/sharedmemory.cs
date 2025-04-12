@@ -5,7 +5,7 @@ using main.config;
 
 namespace main.memory;
 
-public class SharedMemory(IConfig config)
+public class SharedMemory(ICurrentConfig config)
 {
   private MemoryMappedFile? mmf = NewMemoryMappedFile(config);
   public void UpdateSharedMemory()

@@ -2,7 +2,7 @@ using main.config;
 using main.memory;
 
 namespace main.model;
-public class Matrix(IConfig config, SnapShot snapShot)
+public class Matrix(ICurrentConfig config, ISnapShot snapShot)
 {
   private Cell[]? cells;
   private uint cellSize = config.CellLength ?? 1;

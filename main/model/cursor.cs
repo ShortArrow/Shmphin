@@ -15,7 +15,7 @@ public interface ICursor
   public uint? GetIndex();
 }
 
-public class Cursor(IConfig config) : ICursor
+public class Cursor(ICurrentConfig config) : ICursor
 {
   private uint x = 0;
   private uint y = 0;

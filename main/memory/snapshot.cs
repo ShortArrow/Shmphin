@@ -4,13 +4,20 @@ using main.config;
 
 namespace main.memory;
 
-public class SnapShot
+public interface ISnapShot
+{
+  byte[] Before { get; set; }
+  byte[] Current { get; set; }
+  void Update();
+}
+
+public class SnapShot : ISnapShot
 {
   private readonly IConfig? config;
   private readonly SharedMemory sharedMemory;
   private byte[] _before = [];
   private byte[] _current = [];
-  public SnapShot(IConfig conf)
+  public SnapShot(ICurrentConfig conf)
   {
     config = conf ?? throw new NullReferenceException();
     sharedMemory = new(conf);

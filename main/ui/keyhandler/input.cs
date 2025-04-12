@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Text;
 
-using main.model;
 using main.operation;
 using main.ui.mode;
 
@@ -19,9 +18,20 @@ public enum InputMode
   Help,
 }
 
-public class Input(Operations operations, Mode mode, SelectView selectView)
+public interface IInput
 {
-  public SelectView SelectView => selectView;
+  public Action SelectViewDown { get; set; }
+  public Action SelectViewUp { get; set; }
+  IKeyMap Keymap { get; }
+  IKeyMap HelpKeyMap { get; }
+  string InputBuffer { get; }
+  void InputLoop();
+}
+
+public class Input(Operations operations, IMode mode) : IInput
+{
+  public Action SelectViewDown { get; set; } = () => { };
+  public Action SelectViewUp { get; set; } = () => { };
   private readonly KeyMap normalMap = new(
     new Dictionary<string, IKeyAction> {
       { "h", new KeyAction("h", "move left", operations.Left.Execute) },
@@ -38,12 +48,12 @@ public class Input(Operations operations, Mode mode, SelectView selectView)
       { "Tab", new KeyAction("Tab", "change focus", operations.ChangeFocus.Execute) }
     }
   );
-  private readonly IKeyMap helpMap = new KeyMap(
+  private IKeyMap helpMap => new KeyMap(
     new Dictionary<string, IKeyAction> {
-      { "j", new KeyAction("j", "move down", selectView.MoveDown) },
-      { "k", new KeyAction("k", "move up", selectView.MoveUp) },
-      { "q", new KeyAction("q", "quit", ()=> {mode.InputMode = InputMode.Normal;} ) },
-      { "Escape", new KeyAction("Escape", "quit", ()=> {mode.InputMode = InputMode.Normal;} ) }
+      { "j", new KeyAction("j", "move down", SelectViewDown) },
+      { "k", new KeyAction("k", "move up", SelectViewUp) },
+      { "q", new KeyAction("q", "quit", () => { mode.InputMode = InputMode.Normal; }) },
+      { "Escape", new KeyAction("Escape", "quit", () => { mode.InputMode = InputMode.Normal; }) }
   });
   public IKeyMap Keymap => mode.InputMode switch
   {

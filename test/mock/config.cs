@@ -9,11 +9,13 @@ public class MockConfig(
   uint? sharedMemorySize,
   uint? sharedMemoryOffset
 
-) : IConfig
+) : ICurrentConfig
 {
-  public string? SharedMemoryName => sharedMemoryName;
-  public uint? CellLength => cellLength;
-  public uint? ColumnsLength => columnsLength;
-  public uint? SharedMemorySize => sharedMemorySize;
-  public uint? SharedMemoryOffset => sharedMemoryOffset;
+  public string? SharedMemoryName { get; set; } = sharedMemoryName;
+  public uint? CellLength { get; set; } = cellLength;
+  public uint? ColumnsLength { get; set; } = columnsLength;
+  public uint? SharedMemorySize { get; set; } = sharedMemorySize;
+  public uint? SharedMemoryOffset { get; set; } = sharedMemoryOffset;
+  public void Sync() { }
+  public void UpdateConfig(string? configFile) { }
 }

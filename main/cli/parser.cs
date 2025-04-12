@@ -3,15 +3,20 @@ using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Parsing;
 
+using main.cli.handler;
+
 namespace main.cli;
 
-public class Parser
+public interface IParser
 {
-  public System.CommandLine.Parsing.Parser rootCommandWithSplash;
-  public Parser()
+  System.CommandLine.Parsing.Parser RootCommandWithSplash { get; }
+}
+
+public class Parser : IParser
+{
+  public System.CommandLine.Parsing.Parser RootCommandWithSplash { get; private set; }
+  public Parser(IRoot rootHandler, ITest testHandler)
   {
-    var rootHandler = new handler.Root();
-    var testHandler = new handler.Test();
     Commands.rootCommand.AddCommand(Commands.testCommand);
     Commands.rootCommand.AddCommand(Commands.dumpCommand);
     Commands.rootCommand.AddCommand(Commands.helpCommand);
@@ -19,7 +24,7 @@ public class Parser
 
     Commands.rootCommand.SetHandler(rootHandler.InvokeAsync);
     Commands.testCommand.SetHandler(testHandler.InvokeAsync);
-    rootCommandWithSplash = new CommandLineBuilder(Commands.rootCommand)
+    RootCommandWithSplash = new CommandLineBuilder(Commands.rootCommand)
       .UseDefaults()
       .UseHelp(context =>
       {
@@ -36,6 +41,6 @@ public class Parser
         );
       })
       .Build() ?? throw new Exception("Command build failed");
-    Commands.helpCommand.SetHandler(() => rootCommandWithSplash.InvokeAsync(["--help"]));
+    Commands.helpCommand.SetHandler(() => RootCommandWithSplash.InvokeAsync(["--help"]));
   }
 }

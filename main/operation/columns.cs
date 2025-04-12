@@ -3,7 +3,7 @@ using main.ui;
 
 namespace main.operation;
 
-class Columns(ICurrentConfig config, Mode mode) : Operation()
+class Columns(ICurrentConfig config, IMode mode) : Operation()
 {
   public override string Name => "columns";
   public override async void Execute()

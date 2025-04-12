@@ -1,26 +1,19 @@
 using Spectre.Console;
 using main.ui;
-using main.operation;
 using main.config;
 using System.CommandLine.Invocation;
-using main.memory;
-using main.model;
 using main.ui.keyhandler;
+using main.ui.layout;
+using main.operation;
 
 namespace main.cli.handler;
 
-public class Root : ICommandHandler
+public interface IRoot : ICommandHandler
 {
-  private ICurrentConfig? config;
-  private Operations? operations;
-  private Input? input;
-  private ui.layout.Ui? ui;
-  private model.Cursor? cursor;
-  private SnapShot? snapShot;
-  private Memory? memory;
-  private Mode? mode;
-  private Question? question;
-  private Focus? focus;
+}
+
+public class Root(ICurrentConfig config, IQuestion question, IInput input, IMode mode, IUi ui, IOperations operations) : IRoot
+{
   public int Invoke(InvocationContext context)
   {
     throw new NotSupportedException();
@@ -33,20 +26,7 @@ public class Root : ICommandHandler
     var configFile = context.ParseResult.GetValueForOption(Options.configFile);
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
-    config = new CurrentConfig(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
-    question = new(config);
-    cursor = new(config);
-    memory = new(config);
-    mode = new();
-    focus = new();
-    snapShot = new(config);
-    operations = new(config, cursor, memory, snapShot, mode, focus);
-    var selectView = new SelectView(() =>
-    {
-      return (uint)(input?.HelpKeyMap.List.Count ?? 0);
-    });
-    input = new(operations, mode, selectView);
-    ui = new(config, cursor, snapShot, focus, mode);
+    config = new CurrentConfig(new Config(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
     AnsiConsole.Clear();
     if (config.SharedMemoryName == null)
     {

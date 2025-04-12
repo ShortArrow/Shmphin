@@ -4,9 +4,12 @@ using System.CommandLine.Invocation;
 
 namespace main.cli.handler;
 
-public class Test : ICommandHandler
+public interface ITest : ICommandHandler
 {
-  private CurrentConfig? config;
+}
+
+public class Test(ICurrentConfig config) : ITest
+{
   public Task<int> InvokeAsync(InvocationContext context)
   {
     var sharedMemoryName = context.ParseResult.GetValueForOption(Options.sharedMemoryName);
@@ -15,7 +18,7 @@ public class Test : ICommandHandler
     var configFile = context.ParseResult.GetValueForOption(Options.configFile);
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
-    config = new(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
+    config = new CurrentConfig(new Config(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
     AnsiConsole.Clear();
     AnsiConsole.MarkupLine("[bold green]Start Shmphin Test.[/]");
     var grid = new Grid();

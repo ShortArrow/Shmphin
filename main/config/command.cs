@@ -1,5 +1,6 @@
 namespace main.config;
-public class Command(
+
+public class Config(
   string? name,
   uint? cellLength,
   uint? columnsLength,

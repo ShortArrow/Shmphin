@@ -11,7 +11,7 @@ public interface ICurrentConfig: IConfig
   void UpdateConfig(string? configFile);
 }
 
-public class CurrentConfig(Command command) : ICurrentConfig
+public class CurrentConfig(IConfig command) : ICurrentConfig
 {
   private readonly TomlConfig toml = new();
   private readonly Default defaultConf = new();

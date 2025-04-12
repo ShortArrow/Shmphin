@@ -12,13 +12,13 @@ enum EvenOdd
 
 class MainGrid
 {
-  public MainGrid(IConfig config, Cursor cursor, SnapShot snapShot, Focus focus)
+  public MainGrid(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus)
   {
     matrix = new(config, snapShot);
-    cursorInfo = new(cursor, matrix, focus, FormatAddress);
+    cursorInfo = new CursorInfo(cursor, matrix, focus, FormatAddress);
     this.cursor = cursor;
   }
-  private readonly Cursor cursor;
+  private readonly ICursor cursor;
   private readonly Matrix matrix;
   public Matrix Matrix => matrix;
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even

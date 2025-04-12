@@ -1,7 +1,8 @@
 using Spectre.Console;
 using main.ui.keyhandler;
+using main.model;
 namespace main.ui.layout;
-public class KeymapView(Input input)
+public class KeymapView(IInput input, ISelectView SelectView)
 {
   public Layout View
   {
@@ -19,7 +20,7 @@ public class KeymapView(Input input)
       ]);
       foreach (var item in input.HelpKeyMap.List.Select((item, index) => new { item, index }))
       {
-        var row = input.SelectView.SelectedRow;
+        var row = SelectView.SelectedRow;
         var selectionStatus = row == item.index ? " > " : "   ";
         grid.AddRow([
           new Text(selectionStatus, new Style(Color.Pink1)).LeftJustified(),
