@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using System.Runtime.Versioning;
 
 using main.config;
 
