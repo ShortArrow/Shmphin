@@ -1,7 +1,4 @@
-using System.IO;
-
 using Microsoft.Extensions.Logging;
-
 using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
