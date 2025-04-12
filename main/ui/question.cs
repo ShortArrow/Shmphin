@@ -5,7 +5,7 @@ using Spectre.Console;
 
 namespace main.ui;
 
-public class Question(CurrentConfig config)
+public class Question(ICurrentConfig config)
 {
   public Task GetSharedMemoryName()
   {

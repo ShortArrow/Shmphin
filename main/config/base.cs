@@ -7,18 +7,18 @@ class Common
 
 public interface IConfigFile
 {
-  public abstract string? GetSharedMemoryName();
-  public abstract uint? GetColumnsLength();
-  public abstract uint? GetCellLength();
-  public abstract uint? GetSharedMemorySize();
-  public abstract uint? GetSharedMemoryOffset();
+  abstract string? GetSharedMemoryName();
+  abstract uint? GetColumnsLength();
+  abstract uint? GetCellLength();
+  abstract uint? GetSharedMemorySize();
+  abstract uint? GetSharedMemoryOffset();
 }
 
 public interface IConfig
 {
-  public abstract string? SharedMemoryName { get; }
-  public abstract uint? ColumnsLength { get; }
-  public abstract uint? CellLength { get; }
-  public abstract uint? SharedMemorySize { get; }
-  public abstract uint? SharedMemoryOffset { get; }
+  string? SharedMemoryName { get; }
+  uint? ColumnsLength { get; }
+  uint? CellLength { get; }
+  uint? SharedMemorySize { get; }
+  uint? SharedMemoryOffset { get; }
 }

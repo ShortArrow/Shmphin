@@ -1,6 +1,17 @@
 namespace main.config;
 
-public class CurrentConfig(Command command) : IConfig
+public interface ICurrentConfig: IConfig
+{
+  new string? SharedMemoryName { get; set; }
+  new uint? ColumnsLength { get; set; }
+  new uint? CellLength { get; set; }
+  new uint? SharedMemorySize { get; set; }
+  new uint? SharedMemoryOffset { get; set; }
+  void Sync();
+  void UpdateConfig(string? configFile);
+}
+
+public class CurrentConfig(Command command) : ICurrentConfig
 {
   private readonly TomlConfig toml = new();
   private readonly Default defaultConf = new();

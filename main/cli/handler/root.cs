@@ -11,7 +11,7 @@ namespace main.cli.handler;
 
 public class Root : ICommandHandler
 {
-  private CurrentConfig? config;
+  private ICurrentConfig? config;
   private Operations? operations;
   private Input? input;
   private ui.layout.Ui? ui;
@@ -33,7 +33,7 @@ public class Root : ICommandHandler
     var configFile = context.ParseResult.GetValueForOption(Options.configFile);
     var cellSize = context.ParseResult.GetValueForOption(Options.cellSize);
     var columnsLength = context.ParseResult.GetValueForOption(Options.columnsLength);
-    config = new(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
+    config = new CurrentConfig(new Command(sharedMemoryName, cellSize, columnsLength, sharedMemorySize, sharedMemoryOffset));
     question = new(config);
     cursor = new(config);
     memory = new(config);

@@ -1,6 +1,5 @@
 using main.config;
 using main.memory;
-using main.model;
 using main.ui;
 
 namespace main.operation;
@@ -29,7 +28,7 @@ public abstract class Operation() : IOperation()
     return base.ExecuteAsync();
   }
 }
-public class Operations(CurrentConfig config, model.Cursor cursor, Memory memory, SnapShot snapShot, Mode mode, Focus focus)
+public class Operations(ICurrentConfig config, model.Cursor cursor, Memory memory, SnapShot snapShot, Mode mode, Focus focus)
 {
   public IOperation UpdateMemory => new UpdateMemory(snapShot);
   public IOperation ChangeMemory => new ChangeMemory(memory, snapShot, cursor, mode);
