@@ -22,6 +22,7 @@ public interface IInput
 {
   public Action SelectViewDown { get; set; }
   public Action SelectViewUp { get; set; }
+  public Action SelectViewSelect { get; set; }
   IKeyMap Keymap { get; }
   IKeyMap HelpKeyMap { get; }
   string InputBuffer { get; }
@@ -32,6 +33,8 @@ public class Input(Operations operations, IMode mode) : IInput
 {
   public Action SelectViewDown { get; set; } = () => { };
   public Action SelectViewUp { get; set; } = () => { };
+  public Action SelectViewSelect { get; set; } = () => { };
+  public Action SelectViewEscape { get; set; } = () => { };
   private readonly KeyMap normalMap = new(
     new Dictionary<string, IKeyAction> {
       { "h", new KeyAction("h", "move left", operations.Left.Execute) },
@@ -52,8 +55,9 @@ public class Input(Operations operations, IMode mode) : IInput
     new Dictionary<string, IKeyAction> {
       { "j", new KeyAction("j", "move down", SelectViewDown) },
       { "k", new KeyAction("k", "move up", SelectViewUp) },
-      { "q", new KeyAction("q", "quit", () => { mode.InputMode = InputMode.Normal; }) },
-      { "Escape", new KeyAction("Escape", "quit", () => { mode.InputMode = InputMode.Normal; }) }
+      { "q", new KeyAction("q", "quit", SelectViewEscape) },
+      { "Escape", new KeyAction("Escape", "quit", SelectViewEscape) },
+      { "Enter", new KeyAction("Enter", "select", SelectViewSelect) },
   });
   public IKeyMap Keymap => mode.InputMode switch
   {
