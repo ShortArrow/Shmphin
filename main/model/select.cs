@@ -25,7 +25,6 @@ public class SelectView : ISelectView
     input.SelectViewDown = MoveDown;
     input.SelectViewUp = MoveUp;
     input.SelectViewSelect = Select;
-    mode.InputMode = InputMode.Help;
   }
   public uint MaxRow => (uint)(input?.HelpKeyMap.List.Count ?? 0);
   private uint selectedRow = 0;
