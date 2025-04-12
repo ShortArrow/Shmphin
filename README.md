@@ -9,6 +9,8 @@ Like a hex editor, or binary editor.
 
 If you know RWeverything, you can think of it as a shared memory version of RWeverything.
 
+**This is a experimental project, and not all features are implemented yet.**
+
 ## Why Shmphin
 
 - Shared memory is a common way to communicate between processes.
