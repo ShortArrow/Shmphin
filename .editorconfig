@@ -1,0 +1,66 @@
+# Be Top-level EditorConfig file
+root = true
+
+# Basic settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# C# file specific settings
+[*.cs]
+# Indentation style and size
+indent_size = 2
+indent_style = space
+
+# Line ending settings and trimming whitespace
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Inheritance style and var usage
+csharp_preserve_single_line_statements = true
+csharp_preserve_single_line_blocks = true
+csharp_style_var_for_built_in_types = true
+csharp_style_var_when_type_is_apparent = true
+csharp_style_var_elsewhere = true
+
+# Brace style
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+
+# Setting for methods, control blocks, and expressions
+csharp_prefer_static_local_function = true
+csharp_prefer_simple_using_statement = true
+csharp_style_deconstructed_variable_declaration = true
+csharp_style_pattern_matching_over_as_with_null_check = true
+csharp_style_pattern_matching_over_is_with_cast_check = true
+csharp_style_inlined_variable_declaration = true
+
+# null settings
+csharp_style_throw_expression = true
+csharp_style_conditional_delegate_call = true
+
+# Import settings for namespaces
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# Make sure to set severity to error for CS8019
+dotnet_diagnostic.CS8019.severity = error
+
+# Make sure to set severity to error for CS0168
+dotnet_diagnostic.CS0168.severity = error
+
+# Make sure to set severity to warning for IDE0001 and IDE0002
+dotnet_diagnostic.IDE0001.severity = warning
+dotnet_diagnostic.IDE0002.severity = warning
+
+# known issue
+dotnet_diagnostic.CS0103.severity = none

@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "usernamehw.errorlens",
+    "mhutchie.git-graph",
+    "davidanson.vscode-markdownlint",
+    "ms-vscode.mono-debug",
+    "ms-vscode.powershell",
+    "evgeniypeshkov.syntax-highlighter",
+    "pspester.pester-test",
+    "editorconfig.editorconfig"
+  ]
+}

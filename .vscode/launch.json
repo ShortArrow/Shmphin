@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "coreclr",
+      "request": "launch",
+      "name": "Launch Internal",
+      "program": "${workspaceFolder}/main/bin/Debug/net8.0/Shmphin.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "coreclr",
+      "request": "launch",
+      "name": "Launch External",
+      "program": "${workspaceFolder}/main/bin/Debug/net8.0/Shmphin.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "externalTerminal"
+    },
+    {
+      "type": "coreclr",
+      "request": "attach",
+      "name": "Attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

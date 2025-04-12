@@ -1,0 +1,13 @@
+[default.sharedmemory]
+name = "TESTshmTEST"
+size = 1024
+offset = 0
+
+[default.columns]
+length = 10
+
+[default.cell]
+length = 1
+
+[debug]
+debug = true
