@@ -63,21 +63,22 @@ class Toml : IConfigFile
   }
   public static string GenerateToml()
   {
+    var defaultConfig = new Default();
     var toml = new TomlTable
     {
       ["default"] = new TomlTable
       {
         ["sharedmemory"] = new TomlTable
         {
-          ["name"] = "shmphin"
+          ["name"] = defaultConfig.SharedMemoryName
         },
         ["columns"] = new TomlTable
         {
-          ["length"] = 8
+          ["length"] = defaultConfig.ColumnsLength
         },
         ["cell"] = new TomlTable
         {
-          ["length"] = 1
+          ["length"] = defaultConfig.CellLength
         }
       }
     };
