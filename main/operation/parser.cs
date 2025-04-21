@@ -2,14 +2,15 @@ namespace main.operation;
 
 public class NoProcess : IOperation
 {
-  public override string Name => "nop";
-  public override void Execute()
+  public string Name => "nop";
+  public Task Execute()
   {
     Console.WriteLine("Invalid command");
+    return Task.CompletedTask;
   }
 }
 
-public class Parser(Operations operations)
+public class Parser(IOperations operations)
 {
   public IOperation Parse(string input)
   {

@@ -1,36 +1,36 @@
 namespace main.operation;
 
-public class Mark() : Operation()
+public class Mark() : IOperation
 {
-  public override string Name => "mark";
-  public override void Execute()
+  public string Name => "mark";
+  public Task Execute()
   {
     throw new NotImplementedException();
   }
 }
 
-public class Unmark() : Operation()
+public class Unmark() : IOperation
 {
-  public override string Name => "unmark";
-  public override void Execute()
+  public string Name => "unmark";
+  public Task Execute()
   {
     throw new NotImplementedException();
   }
 }
 
-public class Jump() : Operation()
+public class Jump() : IOperation
 {
-  public override string Name => "jump";
-  public override void Execute()
+  public string Name => "jump";
+  public Task Execute()
   {
     throw new NotImplementedException();
   }
 }
 
-public class Clear() : Operation()
+public class Clear() : IOperation
 {
-  public override string Name => "clear";
-  public override void Execute()
+  public string Name => "clear";
+  public Task Execute()
   {
     throw new NotImplementedException();
   }

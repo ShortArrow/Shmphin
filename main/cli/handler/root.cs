@@ -39,7 +39,7 @@ public class Root(ICurrentConfig config, IQuestion question, IInput input, IMode
     await AnsiConsole.Live(startMessage)
     .StartAsync(async context =>
     {
-      operations.UpdateMemory.Execute();
+      await operations.UpdateMemory.Execute();
       while (!mode.IsCancellationRequested)
       {
         var layout = ui.CreateLayout(config, input);

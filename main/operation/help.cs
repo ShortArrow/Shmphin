@@ -2,11 +2,12 @@ using main.ui;
 using main.ui.keyhandler;
 
 namespace main.operation;
-class Help(IMode mode) : Operation()
+class Help(IMode mode) : IOperation
 {
-  public override string Name => "help";
-  public override void Execute()
+  public string Name => "help";
+  public Task Execute()
   {
     mode.InputMode = InputMode.Help;
+    return Task.CompletedTask;
   }
 }

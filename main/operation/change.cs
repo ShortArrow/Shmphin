@@ -4,11 +4,11 @@ using main.memory;
 using main.ui;
 
 namespace main.operation;
-class ChangeMemory(IMemory memory, ISnapShot snapShot, model.ICursor cursor, IMode mode) : Operation
+class ChangeMemory(IMemory memory, ISnapShot snapShot, model.ICursor cursor, IMode mode) : IOperation
 {
-  public override string Name => "change";
+  public string Name => "change";
   [SupportedOSPlatform("windows")]
-  public override async void Execute()
+  public async Task Execute()
   {
     var newValue = await mode.NewValue();
     var index = cursor.GetIndex() ?? 0;

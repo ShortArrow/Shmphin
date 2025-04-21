@@ -2,10 +2,10 @@ using main.config;
 using main.ui;
 
 namespace main.operation;
-class Cell(ICurrentConfig config, IMode mode) : Operation()
+class Cell(ICurrentConfig config, IMode mode) : IOperation
 {
-  public override string Name => "cell";
-  public override async void Execute()
+  public string Name => "cell";
+  public async Task Execute()
   {
     var cellsize = await mode.NewCellSize();
     config.CellLength = cellsize;

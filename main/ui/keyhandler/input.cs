@@ -20,21 +20,21 @@ public enum InputMode
 
 public interface IInput
 {
-  public Action SelectViewDown { get; set; }
-  public Action SelectViewUp { get; set; }
-  public Action SelectViewSelect { get; set; }
+  public Func<Task> SelectViewDown { get; set; }
+  public Func<Task> SelectViewUp { get; set; }
+  public Func<Task> SelectViewSelect { get; set; }
   IKeyMap Keymap { get; }
   IKeyMap HelpKeyMap { get; }
   string InputBuffer { get; }
   void InputLoop();
 }
 
-public class Input(Operations operations, IMode mode) : IInput
+public class Input(IOperations operations, IMode mode) : IInput
 {
-  public Action SelectViewDown { get; set; } = () => { };
-  public Action SelectViewUp { get; set; } = () => { };
-  public Action SelectViewSelect { get; set; } = () => { };
-  public Action SelectViewEscape { get; set; } = () => { };
+  public Func<Task> SelectViewDown { get; set; } = () => Task.CompletedTask;
+  public Func<Task> SelectViewUp { get; set; } = () => Task.CompletedTask;
+  public Func<Task> SelectViewSelect { get; set; } = () => Task.CompletedTask;
+  public Func<Task> SelectViewEscape { get; set; } = () => Task.CompletedTask;
   private readonly KeyMap normalMap = new(
     new Dictionary<string, IKeyAction> {
       { "h", new KeyAction("h", "move left", operations.Left.Execute) },

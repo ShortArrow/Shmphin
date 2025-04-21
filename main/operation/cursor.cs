@@ -7,35 +7,39 @@ class Cursor(model.ICursor cursor)
   public IOperation Right => new MoveRight(cursor);
 }
 
-class MoveUp(model.ICursor cursor) : Operation()
+class MoveUp(model.ICursor cursor) : IOperation
 {
-  public override string Name => "moveup";
-  public override void Execute()
+  public string Name => "moveup";
+  public Task Execute()
   {
     cursor.MoveUp();
+    return Task.CompletedTask;
   }
 }
-class MoveDown(model.ICursor cursor) : Operation()
+class MoveDown(model.ICursor cursor) : IOperation
 {
-  public override string Name => "movedown";
-  public override void Execute()
+  public string Name => "movedown";
+  public Task Execute()
   {
     cursor.MoveDown();
+    return Task.CompletedTask;
   }
 }
-class MoveLeft(model.ICursor cursor) : Operation()
+class MoveLeft(model.ICursor cursor) : IOperation
 {
-  public override string Name => "moveleft";
-  public override void Execute()
+  public string Name => "moveleft";
+  public Task Execute()
   {
     cursor.MoveLeft();
+    return Task.CompletedTask;
   }
 }
-class MoveRight(model.ICursor cursor) : Operation()
+class MoveRight(model.ICursor cursor) : IOperation
 {
-  public override string Name => "moveright";
-  public override void Execute()
+  public string Name => "moveright";
+  public Task Execute()
   {
     cursor.MoveRight();
+    return Task.CompletedTask;
   }
 }

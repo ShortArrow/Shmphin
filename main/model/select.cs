@@ -7,9 +7,9 @@ public interface ISelectView
 {
   uint MaxRow { get; }
   uint SelectedRow { get; }
-  void MoveUp();
-  void MoveDown();
-  void Select();
+  Task MoveUp();
+  Task MoveDown();
+  Task Select();
   void Escape();
 }
 
@@ -29,27 +29,30 @@ public class SelectView : ISelectView
   public uint MaxRow => (uint)(input?.HelpKeyMap.List.Count ?? 0);
   private uint selectedRow = 0;
   public uint SelectedRow => selectedRow;
-  public void Select()
+  public Task Select()
   {
     Escape();
     input.HelpKeyMap.List.ElementAt((int)selectedRow).Value.Execute();
+    return Task.CompletedTask;
   }
   public void Escape()
   {
     mode.InputMode = InputMode.Normal;
   }
-  public void MoveUp()
+  public Task MoveUp()
   {
     if (selectedRow > 0)
     {
       selectedRow--;
     }
+    return Task.CompletedTask;
   }
-  public void MoveDown()
+  public Task MoveDown()
   {
     if (selectedRow < MaxRow - 1)
     {
       selectedRow++;
     }
+    return Task.CompletedTask;
   }
 }

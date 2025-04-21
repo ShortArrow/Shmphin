@@ -38,11 +38,12 @@ public class Focus : IFocus
   public ChangeFocus ChangeFocus => changeFocus;
 }
 
-public class ChangeFocus(Action action) : Operation
+public class ChangeFocus(Action action) : IOperation
 {
-  public override string Name => "change_focus";
-  public override void Execute()
+  public string Name => "change_focus";
+  public Task Execute()
   {
     action.Invoke();
+    return Task.CompletedTask;
   }
 }

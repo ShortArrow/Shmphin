@@ -4,7 +4,7 @@ public interface IKeyAction
 {
   public string DefaultKey { get; }
   public string Description { get; }
-  void Execute();
+  Task Execute();
 }
 public interface IKeyMap
 {

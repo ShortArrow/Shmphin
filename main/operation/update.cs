@@ -3,12 +3,13 @@ using System.Runtime.Versioning;
 using main.memory;
 
 namespace main.operation;
-class UpdateMemory(ISnapShot snapShot) : Operation()
+class UpdateMemory(ISnapShot snapShot) : IOperation
 {
-  public override string Name => "update";
+  public string Name => "update";
   [SupportedOSPlatform("windows")]
-  public override void Execute()
+  public Task Execute()
   {
     snapShot.Update();
+    return Task.CompletedTask;
   }
 }

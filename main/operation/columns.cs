@@ -3,10 +3,10 @@ using main.ui;
 
 namespace main.operation;
 
-class Columns(ICurrentConfig config, IMode mode) : Operation()
+class Columns(ICurrentConfig config, IMode mode) : IOperation
 {
-  public override string Name => "columns";
-  public override async void Execute()
+  public string Name => "columns";
+  public async Task Execute()
   {
     var columnsLength = await mode.NewColumnsLength();
     config.ColumnsLength = columnsLength;

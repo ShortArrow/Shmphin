@@ -3,30 +3,10 @@ using main.memory;
 using main.ui;
 
 namespace main.operation;
-public abstract class IOperation
+public interface IOperation
 {
-  public virtual string Name => throw new NotImplementedException();
-  public virtual void Execute()
-  {
-    throw new NotImplementedException();
-  }
-  public virtual Task ExecuteAsync()
-  {
-    throw new NotImplementedException();
-  }
-}
-
-public abstract class Operation : IOperation
-{
-  public override string Name => throw new NotImplementedException();
-  public override void Execute()
-  {
-    base.Execute();
-  }
-  public override Task ExecuteAsync()
-  {
-    return base.ExecuteAsync();
-  }
+  string Name { get; }
+  Task Execute();
 }
 
 public interface IOperations
