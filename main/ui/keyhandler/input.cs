@@ -82,10 +82,10 @@ public class Input(Operations operations, IMode mode) : IInput
       IUIMode Handler = mode.InputMode switch
       {
         InputMode.Ex => new CommandHandler(parser.Parse),
-        InputMode.NewValue => new NewPropHandler<byte[]>(Parse.NewValue, mode.NewValueTcs),
-        InputMode.NewCellSize => new NewPropHandler<uint>(Parse.CellSize, mode.NewCellSizeTcs),
-        InputMode.NewColumnsLength => new NewPropHandler<uint>(Parse.ColumnsLength, mode.NewColumnsLengthTcs),
-        InputMode.NewSharedMemoryName => new NewPropHandler<string>(Parse.SharedMemoryName, mode.NewSharedMemoryNameTcs),
+        InputMode.NewValue => new NewPropHandler<byte[]>(BytesToGrid.NewValue, mode.NewValueTcs),
+        InputMode.NewCellSize => new NewPropHandler<uint>(BytesToGrid.CellSize, mode.NewCellSizeTcs),
+        InputMode.NewColumnsLength => new NewPropHandler<uint>(BytesToGrid.ColumnsLength, mode.NewColumnsLengthTcs),
+        InputMode.NewSharedMemoryName => new NewPropHandler<string>(BytesToGrid.SharedMemoryName, mode.NewSharedMemoryNameTcs),
         InputMode.Help => new HelpViewHandler(helpMap),
         InputMode.Normal => new Normal(normalMap),
         _ => throw new NotSupportedException(),

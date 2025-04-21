@@ -1,5 +1,5 @@
 namespace main.ui;
-public class Parse
+public class BytesToGrid
 {
   public static bool KeyCheck(ConsoleKeyInfo keyInfo, string name)
   {
