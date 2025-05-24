@@ -10,7 +10,7 @@ enum EvenOdd
   Even
 }
 
-class MainGrid
+public class MainGrid
 {
   public MainGrid(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus)
   {
