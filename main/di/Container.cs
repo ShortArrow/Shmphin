@@ -63,7 +63,18 @@ public static class Container
     services.AddSingleton<IApp, App>();
 
     // Additional service registrations can be added here
+    services.AddSingleton<Func<main.ui.layout.MainGrid>>(provider =>
+    {
+        var uiService = provider.GetRequiredService<IUi>();
+        return () => uiService.CurrentMainGrid ?? 
+                     throw new InvalidOperationException("MainGrid is not available from IUi service. Ui.CurrentMainGrid returned null.");
+    });
 
     return services.BuildServiceProvider();
   }
 }
+// Ensure using statements:
+// using System; already implicitly used by Func<> and InvalidOperationException
+// using main.ui; already present
+// using main.ui.layout; already present
+// using Microsoft.Extensions.DependencyInjection; already present

@@ -32,6 +32,8 @@ public interface IOperations
   IOperation Right { get; }
   IOperation ExCommand { get; }
   IOperation ChangeFocus { get; }
+  IOperation ScrollUp { get; }
+  IOperation ScrollDown { get; }
 }
 
 public class Operations(
@@ -40,7 +42,8 @@ public class Operations(
   IMemory memory,
   ISnapShot snapShot,
   IMode mode,
-  IFocus focus
+  IFocus focus,
+  Func<main.ui.layout.MainGrid> getMainGridFunc
 ) : IOperations
 {
   public IOperation UpdateMemory => new UpdateMemory(snapShot);
@@ -58,10 +61,12 @@ public class Operations(
   public IOperation Clear => new Clear();
   public IOperation Jump => new Jump();
   public IOperation Quit => new Quit(mode);
-  public IOperation Up => new Cursor(cursor).Up;
-  public IOperation Down => new Cursor(cursor).Down;
-  public IOperation Left => new Cursor(cursor).Left;
-  public IOperation Right => new Cursor(cursor).Right;
+  public IOperation Up => new Cursor(cursor, getMainGridFunc).Up;
+  public IOperation Down => new Cursor(cursor, getMainGridFunc).Down;
+  public IOperation Left => new Cursor(cursor, getMainGridFunc).Left;
+  public IOperation Right => new Cursor(cursor, getMainGridFunc).Right;
   public IOperation ExCommand => new ExCommand(mode);
   public IOperation ChangeFocus => focus.ChangeFocus;
+  public IOperation ScrollUp => new ScrollUpOperation(getMainGridFunc);
+  public IOperation ScrollDown => new ScrollDownOperation(getMainGridFunc);
 }

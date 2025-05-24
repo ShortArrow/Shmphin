@@ -10,10 +10,12 @@ namespace main.ui.layout;
 public interface IUi
 {
   Layout CreateLayout(IConfig config, IInput input);
+  main.ui.layout.MainGrid CurrentMainGrid { get; }
 }
 
 public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus, IMode mode, ISelectView selectView) : IUi
 {
+  public MainGrid CurrentMainGrid => mainGrid;
   private BoxBorder BorderStyle => BoxBorder.Rounded;
   private Color GetBorderColor(InputMode[]? activeModes = null, InputMode[]? inactiveModes = null)
   {

@@ -1,45 +1,85 @@
+using main.model; // For ICursor
+using main.ui.layout; // For MainGrid
+using System; // For Func
+using System.Threading.Tasks; // For Task
+
 namespace main.operation;
-class Cursor(model.ICursor cursor)
+
+class Cursor
 {
-  public IOperation Up => new MoveUp(cursor);
-  public IOperation Down => new MoveDown(cursor);
-  public IOperation Left => new MoveLeft(cursor);
-  public IOperation Right => new MoveRight(cursor);
+    private readonly model.ICursor _cursor;
+    private readonly Func<MainGrid> _getMainGridFunc; // Changed to Func<MainGrid>
+
+    public Cursor(model.ICursor cursor, Func<MainGrid> getMainGridFunc) // Modified constructor
+    {
+        _cursor = cursor;
+        _getMainGridFunc = getMainGridFunc ?? throw new ArgumentNullException(nameof(getMainGridFunc));
+    }
+
+    public IOperation Up => new MoveUp(_cursor, _getMainGridFunc); // Pass the Func
+    public IOperation Down => new MoveDown(_cursor, _getMainGridFunc); // Pass the Func
+    public IOperation Left => new MoveLeft(_cursor);
+    public IOperation Right => new MoveRight(_cursor);
 }
 
-class MoveUp(model.ICursor cursor) : IOperation
+class MoveUp : IOperation
 {
-  public string Name => "moveup";
-  public Task Execute()
-  {
-    cursor.MoveUp();
-    return Task.CompletedTask;
-  }
+    private readonly model.ICursor _cursor;
+    private readonly Func<MainGrid> _getMainGrid;
+
+    public MoveUp(model.ICursor cursor, Func<MainGrid> getMainGrid)
+    {
+        _cursor = cursor;
+        _getMainGrid = getMainGrid ?? throw new ArgumentNullException(nameof(getMainGrid));
+    }
+
+    public string Name => "moveup";
+
+    public Task Execute()
+    {
+        _cursor.MoveUp();
+        var mainGrid = _getMainGrid();
+        if (mainGrid == null) throw new InvalidOperationException("MainGrid instance cannot be obtained.");
+        mainGrid.EnsureRowIsVisible((int)_cursor.Y);
+        return Task.CompletedTask;
+    }
 }
-class MoveDown(model.ICursor cursor) : IOperation
+
+class MoveDown : IOperation
 {
-  public string Name => "movedown";
-  public Task Execute()
-  {
-    cursor.MoveDown();
-    return Task.CompletedTask;
-  }
+    private readonly model.ICursor _cursor;
+    private readonly Func<MainGrid> _getMainGrid;
+
+    public MoveDown(model.ICursor cursor, Func<MainGrid> getMainGrid)
+    {
+        _cursor = cursor;
+        _getMainGrid = getMainGrid ?? throw new ArgumentNullException(nameof(getMainGrid));
+    }
+
+    public string Name => "movedown";
+
+    public Task Execute()
+    {
+        _cursor.MoveDown();
+        var mainGrid = _getMainGrid();
+        if (mainGrid == null) throw new InvalidOperationException("MainGrid instance cannot be obtained.");
+        mainGrid.EnsureRowIsVisible((int)_cursor.Y);
+        return Task.CompletedTask;
+    }
 }
-class MoveLeft(model.ICursor cursor) : IOperation
+
+class MoveLeft : IOperation
 {
-  public string Name => "moveleft";
-  public Task Execute()
-  {
-    cursor.MoveLeft();
-    return Task.CompletedTask;
-  }
+    private readonly model.ICursor _cursor;
+    public MoveLeft(model.ICursor cursor) { _cursor = cursor; }
+    public string Name => "moveleft";
+    public Task Execute() { _cursor.MoveLeft(); return Task.CompletedTask; }
 }
-class MoveRight(model.ICursor cursor) : IOperation
+
+class MoveRight : IOperation
 {
-  public string Name => "moveright";
-  public Task Execute()
-  {
-    cursor.MoveRight();
-    return Task.CompletedTask;
-  }
+    private readonly model.ICursor _cursor;
+    public MoveRight(model.ICursor cursor) { _cursor = cursor; }
+    public string Name => "moveright";
+    public Task Execute() { _cursor.MoveRight(); return Task.CompletedTask; }
 }

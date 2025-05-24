@@ -18,6 +18,9 @@ class MainGrid
     cursorInfo = new CursorInfo(cursor, matrix, focus, FormatAddress);
     this.cursor = cursor;
   }
+  private int scrollOffsetY = 0;
+  public int TestableScrollOffsetY => scrollOffsetY; // Added for testing
+  private const int DisplayableHeight = 20;
   private readonly ICursor cursor;
   private readonly Matrix matrix;
   public Matrix Matrix => matrix;
@@ -81,18 +84,18 @@ class MainGrid
     grid.AddRow([.. header]);
 
     // Create the main grid
-    for (uint h = 0; h < matrix.Height; h++)
+    for (uint h_abs = (uint)scrollOffsetY; h_abs < Math.Min(matrix.Height, (uint)(scrollOffsetY + DisplayableHeight)); h_abs++)
     {
-      var IsCurrentRow = cursor.Y == h;
+      var IsCurrentRow = cursor.Y == h_abs;
 
       var rowData = new List<Markup>
       { // Left row number
-        RowNumber(h * matrix.Width, IsCurrentRow)
+        RowNumber(h_abs * matrix.Width, IsCurrentRow)
       };
 
       for (uint w = 0; w < matrix.Width; w++)
       {
-        var cell = matrix.GetCell(w, h);
+        var cell = matrix.GetCell(w, h_abs);
         var formatted = cell.Length switch
         {
           1 => $"{cell.CurrentValue:X2}",
@@ -116,10 +119,51 @@ class MainGrid
       }
 
       // Right row number
-      rowData.Add(RowNumber((h + 1) * matrix.Width - 1, IsCurrentRow));
+      rowData.Add(RowNumber((h_abs + 1) * matrix.Width - 1, IsCurrentRow));
       grid.AddRow([.. rowData]);
       ToggleRowColor();
     }
     return grid;
+  }
+
+  public void ScrollUp()
+  {
+    scrollOffsetY = Math.Max(0, scrollOffsetY - 1);
+  }
+
+  public void ScrollDown()
+  {
+    if (matrix.Height == 0) {
+        scrollOffsetY = 0;
+        return;
+    }
+    // Calculate the maximum possible scroll offset. It cannot be negative.
+    int maxPossibleScrollOffset = Math.Max(0, (int)matrix.Height - DisplayableHeight);
+    
+    scrollOffsetY = Math.Min(scrollOffsetY + 1, maxPossibleScrollOffset);
+  }
+
+  public void EnsureRowIsVisible(int absoluteRowY)
+  {
+      if (absoluteRowY < scrollOffsetY)
+      {
+          scrollOffsetY = absoluteRowY;
+      }
+      else if (absoluteRowY >= scrollOffsetY + DisplayableHeight)
+      {
+          scrollOffsetY = absoluteRowY - DisplayableHeight + 1;
+      }
+
+      // Clamp scrollOffsetY to valid bounds
+      scrollOffsetY = Math.Max(0, scrollOffsetY);
+
+      if (matrix.Height == 0) // Avoid issues if matrix is empty
+      {
+          scrollOffsetY = 0;
+          return;
+      }
+
+      int maxPossibleScrollOffset = Math.Max(0, (int)matrix.Height - DisplayableHeight);
+      scrollOffsetY = Math.Min(scrollOffsetY, maxPossibleScrollOffset);
   }
 }

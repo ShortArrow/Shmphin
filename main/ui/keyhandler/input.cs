@@ -41,6 +41,8 @@ public class Input(IOperations operations, IMode mode) : IInput
       { "j", new KeyAction("j", "move down", operations.Down.Execute) },
       { "k", new KeyAction("k", "move up", operations.Up.Execute) },
       { "l", new KeyAction("l", "move right", operations.Right.Execute) },
+      { "PageUp", new KeyAction("PageUp", "scroll view up", operations.ScrollUp.Execute) },
+      { "PageDown", new KeyAction("PageDown", "scroll view down", operations.ScrollDown.Execute) },
       { "c", new KeyAction("c", "change memory", operations.ChangeMemory.Execute) },
       { "q", new KeyAction("q", "quit", operations.Quit.Execute) },
       { "s", new KeyAction("s", "cell", operations.Cell.Execute) },
