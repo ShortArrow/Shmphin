@@ -83,15 +83,15 @@ public class ScrollOperationsTests
     }
     
     [Fact]
-    public void ScrollUpOperation_Execute_ThrowsInvalidOperationException_IfFuncReturnsNull()
+    public async Task ScrollUpOperation_Execute_ThrowsInvalidOperationException_IfFuncReturnsNull()
     {
         // Arrange
         Func<MainGrid> getMainGridFunc = () => null!; // Simulate Func returning null
         var operation = new ScrollUpOperation(getMainGridFunc);
 
         // Act & Assert
-        var exception = Assert.ThrowsAsync<InvalidOperationException>(() => operation.Execute());
-        Assert.Equal("MainGrid instance cannot be obtained.", exception.Result.Message);
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await operation.Execute());
+        Assert.Equal("MainGrid instance cannot be obtained.", exception.Message);
     }
 
     [Fact]
@@ -133,14 +133,14 @@ public class ScrollOperationsTests
     }
 
     [Fact]
-    public void ScrollDownOperation_Execute_ThrowsInvalidOperationException_IfFuncReturnsNull()
+    public async Task ScrollDownOperation_Execute_ThrowsInvalidOperationException_IfFuncReturnsNull()
     {
         // Arrange
         Func<MainGrid> getMainGridFunc = () => null!; // Simulate Func returning null
         var operation = new ScrollDownOperation(getMainGridFunc);
 
         // Act & Assert
-        var exception = Assert.ThrowsAsync<InvalidOperationException>(() => operation.Execute());
-        Assert.Equal("MainGrid instance cannot be obtained.", exception.Result.Message);
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await operation.Execute());
+        Assert.Equal("MainGrid instance cannot be obtained.", exception.Message);
     }
 }

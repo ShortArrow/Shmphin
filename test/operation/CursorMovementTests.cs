@@ -4,6 +4,7 @@ using main.model;
 using main.ui.layout;
 using main.config; // For ICurrentConfig
 using main.memory; // For ISnapShot
+using main.ui; // For IFocus
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -92,7 +93,7 @@ public class CursorMovementTests
         var operation = new MoveUp(mockCursor.Object, getNullMainGridFunc);
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => operation.Execute());
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(async () => await operation.Execute());
         Assert.Equal("MainGrid instance cannot be obtained.", ex.Message);
         
         // Verify that cursor.MoveUp() was still called

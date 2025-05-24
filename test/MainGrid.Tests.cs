@@ -3,6 +3,7 @@ using main.ui.layout;
 using main.model;
 using main.memory;
 using main.config; // For ICurrentConfig
+using main.ui; // For IFocus
 using Moq; // For Moq
 using System; // For byte arrays
 

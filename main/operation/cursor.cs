@@ -5,7 +5,7 @@ using System.Threading.Tasks; // For Task
 
 namespace main.operation;
 
-class Cursor
+public class Cursor
 {
     private readonly model.ICursor _cursor;
     private readonly Func<MainGrid> _getMainGridFunc; // Changed to Func<MainGrid>
@@ -22,7 +22,7 @@ class Cursor
     public IOperation Right => new MoveRight(_cursor);
 }
 
-class MoveUp : IOperation
+public class MoveUp : IOperation
 {
     private readonly model.ICursor _cursor;
     private readonly Func<MainGrid> _getMainGrid;
@@ -45,7 +45,7 @@ class MoveUp : IOperation
     }
 }
 
-class MoveDown : IOperation
+public class MoveDown : IOperation
 {
     private readonly model.ICursor _cursor;
     private readonly Func<MainGrid> _getMainGrid;
@@ -68,7 +68,7 @@ class MoveDown : IOperation
     }
 }
 
-class MoveLeft : IOperation
+public class MoveLeft : IOperation
 {
     private readonly model.ICursor _cursor;
     public MoveLeft(model.ICursor cursor) { _cursor = cursor; }
@@ -76,7 +76,7 @@ class MoveLeft : IOperation
     public Task Execute() { _cursor.MoveLeft(); return Task.CompletedTask; }
 }
 
-class MoveRight : IOperation
+public class MoveRight : IOperation
 {
     private readonly model.ICursor _cursor;
     public MoveRight(model.ICursor cursor) { _cursor = cursor; }
