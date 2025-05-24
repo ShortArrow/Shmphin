@@ -4,6 +4,7 @@ using main.ui.layout;
 using main.model;      // For ICursor
 using main.memory;     // For ISnapShot
 using main.config;     // For ICurrentConfig
+using main.ui;         // For IFocus
 using Moq;
 using System;
 using System.Threading.Tasks;

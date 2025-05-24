@@ -11,14 +11,44 @@ namespace test;
 // MockConfig for testing purposes
 public class MockConfig : ICurrentConfig
 {
-    public uint ColumnsLength { get; set; } = 8;
-    public uint CellLength { get; set; } = 1;
-    public string SharedMemoryName { get; set; } = "test_shm";
+    public string? SharedMemoryName { get; set; }
+    public uint? CellLength { get; set; }
+    public uint? ColumnsLength { get; set; }
+    public uint? SharedMemorySize { get; set; }
+    public uint? SharedMemoryOffset { get; set; }
+
     public event Action? ConfigChanged;
 
-    public void TriggerConfigChanged() => ConfigChanged?.Invoke();
+    // Constructor as per subtask description
+    public MockConfig(string? sharedMemoryName = "test_shm", uint? cellLength = 1, uint? columnsLength = 8, uint? sharedMemorySize = 1024, uint? sharedMemoryOffset = 0)
+    {
+        SharedMemoryName = sharedMemoryName;
+        CellLength = cellLength;
+        ColumnsLength = columnsLength;
+        SharedMemorySize = sharedMemorySize;
+        SharedMemoryOffset = sharedMemoryOffset;
+    }
+    
+    // Parameterless constructor for ease of use in existing tests if only a few properties need setting
+    public MockConfig() : this("test_shm_default", 1, 8, 1024, 0) {}
 
-    public void Update(Args args) { /* No-op for mock */ }
+
+    public void Sync()
+    {
+        // Mock implementation - can be empty
+        ConfigChanged?.Invoke(); // Optionally invoke if tests need to react
+    }
+
+    public void UpdateConfig(string? configFile)
+    {
+        // Mock implementation - can be empty
+    }
+
+    public void Update(Args args) 
+    { 
+        // No-op for mock, or update properties based on args if needed for specific tests
+        // For now, ensure it's present to satisfy ICurrentConfig
+    }
 }
 
 public class MainGridTests
@@ -27,7 +57,8 @@ public class MainGridTests
 
     private MainGrid SetupMainGridWithMatrixHeight(uint desiredMatrixHeight, uint columnsLength = 8, uint cellLength = 1)
     {
-        var mockConfig = new MockConfig { ColumnsLength = columnsLength, CellLength = cellLength };
+        // Use the new MockConfig constructor or property initializers
+        var mockConfig = new MockConfig { ColumnsLength = columnsLength, CellLength = cellLength, SharedMemoryName = "test_shm_gridtests" };
         var mockCursor = new Mock<ICursor>();
         var mockFocus = new Mock<IFocus>();
         var snapShot = new SnapShot(mockConfig);
