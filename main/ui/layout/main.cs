@@ -51,9 +51,10 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
 
     // Update the left column
+    var currentScrollOffset = this.mainGrid.TestableScrollOffsetY;
     layout["Header"].Update(
       new Panel(Align.Center(
-        new Markup($"[blue]{config.SharedMemoryName}[/]"),
+        new Markup($"[blue]{config.SharedMemoryName}[/] | ScrollY: {currentScrollOffset}"),
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
