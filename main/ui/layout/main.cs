@@ -32,71 +32,10 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     return defaultColor;
   }
   private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  public Layout CreateLayout(IConfig config, IInput input)
+  public Layout CreateLayout(IConfig config, IInput input) // The parameters config and input will not be used in this temporary version.
   {
-    // Create the layout
-    if (mode.InputMode == InputMode.Help)
-    {
-      return new KeymapView(input, selectView).View;
-    }
-    var layout = new Layout("Root").SplitRows(
-      new Layout("Header").Size(3),
-      new Layout("Main").SplitColumns(
-        new Layout("Left"),
-        new Layout("Right").SplitRows(
-          new Layout("Top"),
-          new Layout("Bottom")
-        )),
-      new Layout("Footer").Size(3)
-    );
-
-    // Update the left column
-    // var currentScrollOffset = this.mainGrid.TestableScrollOffsetY; // Commented out
-    layout["Header"].Update(
-      new Panel(Align.Center(
-        new Markup("[bold red]DEBUG: HEADER TEST OK[/]"), // Changed to fixed string
-        VerticalAlignment.Middle
-      ))
-      .Border(BorderStyle)
-      .Expand());
-    layout["Main"]["Right"]["Top"].Update(
-      new Panel(Align.Center(
-        mainGrid.CursorInfoView,
-        VerticalAlignment.Middle
-      ))
-      .Border(BorderStyle)
-      .BorderColor(GetBorderColor())
-      .Expand()
-    );
-    layout["Main"]["Right"]["Bottom"].Update(
-      new Panel(Align.Center(
-        mode.InputMode == InputMode.NewValue
-          ? new Markup($"[red]{input.InputBuffer}[/]")
-          : new Markup($"[green]shmphin[/]"),
-        VerticalAlignment.Middle
-      ))
-      .Border(BorderStyle)
-      .BorderColor(GetBorderColor())
-      .Expand()
-    );
-    layout["Main"]["Left"].Update(
-      new Panel(Align.Center(
-        mainGrid.CreateDiffView(),
-        VerticalAlignment.Middle
-      ))
-      .Border(BorderStyle)
-      .BorderColor(GetBorderColor(activeModes: [InputMode.Normal]))
-      .Expand()
-    );
-    layout["Footer"].Update(
-      new Panel(Align.Center(
-        Prompt.ShowInput(input.InputBuffer, mode.InputMode),
-        VerticalAlignment.Middle
-      ))
-      .Border(BorderStyle)
-      .BorderColor(GetBorderColor(inactiveModes: [InputMode.Normal]))
-      .Expand()
-    );
-    return layout;
+      var layout = new Layout("Root");
+      layout.Update(new Panel(new Markup("[bold green]MINIMAL UI TEST OK[/]")));
+      return layout;
   }
 }
