@@ -12,8 +12,21 @@ public interface IUi
   Layout CreateLayout(IConfig config, IInput input);
 }
 
-public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus, IMode mode, ISelectView selectView) : IUi
+public class Ui : IUi
 {
+  private readonly ICurrentConfig _config;
+  private readonly IMode _mode;
+  private readonly ISelectView _selectView;
+  private readonly MainGrid _mainGrid;
+
+  public Ui(ICurrentConfig config, IMode mode, ISelectView selectView, MainGrid mainGrid)
+  {
+    _config = config;
+    _mode = mode;
+    _selectView = selectView;
+    _mainGrid = mainGrid;
+  }
+
   private BoxBorder BorderStyle => BoxBorder.Rounded;
   private Color GetBorderColor(InputMode[]? activeModes = null, InputMode[]? inactiveModes = null)
   {
@@ -21,21 +34,21 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     var activeColor = Color.Green;
     if (activeModes != null)
     {
-      return activeModes.Contains(mode.InputMode) ? activeColor : defaultColor;
+      return activeModes.Contains(_mode.InputMode) ? activeColor : defaultColor;
     }
     if (inactiveModes != null)
     {
-      return inactiveModes.Contains(mode.InputMode) ? defaultColor : activeColor;
+      return inactiveModes.Contains(_mode.InputMode) ? defaultColor : activeColor;
     }
     return defaultColor;
   }
-  private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  public Layout CreateLayout(IConfig config, IInput input)
+
+  public Layout CreateLayout(IConfig config, IInput input) // config parameter here is a bit redundant if _config is the same, but CreateLayout is an interface method.
   {
     // Create the layout
-    if (mode.InputMode == InputMode.Help)
+    if (_mode.InputMode == InputMode.Help)
     {
-      return new KeymapView(input, selectView).View;
+      return new KeymapView(input, _selectView).View;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),
@@ -51,14 +64,25 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     // Update the left column
     layout["Header"].Update(
       new Panel(Align.Center(
-        new Markup($"[blue]{config.SharedMemoryName}[/]"),
+        new Markup($"[blue]{_config.SharedMemoryName}[/]"), // Use injected _config
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
       .Expand());
+
+    // Set viewport dimensions for mainGrid.
+    // STEP 1: Query Layout Region Dimensions:
+    // Attempted to find a way to get character dimensions of layout["Main"]["Left"].
+    // However, Spectre.Console typically resolves dimensions during the rendering pass,
+    // and direct querying of pre-render dimensions for a LayoutRegion is not reliably available.
+    // STEP 4: Fallback/Reporting:
+    // Using fallback: full matrix dimensions. The core requirement of "actual displayable range"
+    // based on panel size is not met due to this limitation.
+    _mainGrid.SetViewportDimensions(_mainGrid.Matrix.Height, _mainGrid.Matrix.Width); // Use injected _mainGrid
+
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        mainGrid.CursorInfoView,
+        _mainGrid.CursorInfoView, // Use injected _mainGrid
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
@@ -67,7 +91,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Main"]["Right"]["Bottom"].Update(
       new Panel(Align.Center(
-        mode.InputMode == InputMode.NewValue
+        _mode.InputMode == InputMode.NewValue // Use injected _mode
           ? new Markup($"[red]{input.InputBuffer}[/]")
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
@@ -78,7 +102,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Main"]["Left"].Update(
       new Panel(Align.Center(
-        mainGrid.CreateDiffView(),
+        _mainGrid.CreateDiffView(), // Use injected _mainGrid
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
@@ -87,7 +111,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Footer"].Update(
       new Panel(Align.Center(
-        Prompt.ShowInput(input.InputBuffer, mode.InputMode),
+        Prompt.ShowInput(input.InputBuffer, _mode.InputMode), // Use injected _mode
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
