@@ -22,7 +22,7 @@ public class SharedMemory(ICurrentConfig config)
     if (OperatingSystem.IsLinux()) // check linux
     {
       var filePath = $"/dev/shm/{config.SharedMemoryName ?? "NONAME"}";
-      return MemoryMappedFile.CreateFromFile(filePath, FileMode.OpenOrCreate, "", config.SharedMemorySize ?? 0);
+      return MemoryMappedFile.CreateFromFile(filePath, FileMode.OpenOrCreate, null, config.SharedMemorySize ?? 0);
     }
     else
     {

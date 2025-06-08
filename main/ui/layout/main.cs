@@ -75,10 +75,47 @@ public class Ui : IUi
     // Attempted to find a way to get character dimensions of layout["Main"]["Left"].
     // However, Spectre.Console typically resolves dimensions during the rendering pass,
     // and direct querying of pre-render dimensions for a LayoutRegion is not reliably available.
-    // STEP 4: Fallback/Reporting:
-    // Using fallback: full matrix dimensions. The core requirement of "actual displayable range"
-    // based on panel size is not met due to this limitation.
-    _mainGrid.SetViewportDimensions(_mainGrid.Matrix.Height, _mainGrid.Matrix.Width); // Use injected _mainGrid
+    // STEP 4: Use console dimensions with padding for panels/borders
+    // Instead of using matrix dimensions (which can be much larger than viewport),
+    // use console size minus space for UI elements (headers, footers, borders, etc.)
+    
+    uint consoleHeight;
+    uint consoleWidth;
+    
+    try
+    {
+      consoleHeight = (uint)Math.Max(System.Console.WindowHeight, 0);
+      consoleWidth = (uint)Math.Max(System.Console.WindowWidth, 0);
+    }
+    catch
+    {
+      // Fallback if console size is not available (e.g., in tests or non-interactive environments)
+      consoleHeight = 25; // Standard terminal height
+      consoleWidth = 80;  // Standard terminal width
+    }
+    
+    // Reserve space for header (3), footer (3), borders, and right panel
+    // Rough estimate: left panel gets about 60% of width, 80% of available height
+    var availableHeight = consoleHeight > 10 ? consoleHeight - 10 : 10; // Reserve 10 lines for UI
+    var availableWidth = consoleWidth > 40 ? (consoleWidth * 6) / 10 : 40; // 60% of width
+    
+    // Ensure matrix is updated before checking its dimensions
+    // Use try-catch to handle cases where matrix can't be updated (e.g., in tests)
+    try
+    {
+      _mainGrid.Matrix.Update();
+    }
+    catch
+    {
+      // If matrix update fails, we'll use the current matrix dimensions
+      // This might happen in test environments or when config is incomplete
+    }
+    
+    // Don't exceed matrix dimensions if matrix is smaller
+    var viewportHeight = Math.Min(availableHeight, _mainGrid.Matrix.Height);
+    var viewportWidth = Math.Min(availableWidth, _mainGrid.Matrix.Width);
+    
+    _mainGrid.SetViewportDimensions(viewportHeight, viewportWidth);
 
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(

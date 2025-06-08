@@ -56,6 +56,6 @@ public class Cursor(ICurrentConfig config) : ICursor
   }
   public uint? GetIndex()
   {
-    return y * config.ColumnsLength * config.CellLength + x;
+    return y * config.ColumnsLength + x;
   }
 }

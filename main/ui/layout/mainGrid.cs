@@ -10,7 +10,7 @@ enum EvenOdd
   Even
 }
 
-class MainGrid
+public class MainGrid
 {
   public MainGrid(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus)
   {
@@ -20,7 +20,7 @@ class MainGrid
   }
   private readonly ICursor cursor;
   private readonly Matrix matrix;
-  public Matrix Matrix => matrix;
+  public virtual Matrix Matrix => matrix;
   public uint ViewportHeight { get; private set; } = 0;
   public uint ViewportWidth { get; private set; } = 0;
   private EvenOdd currentRowColor = EvenOdd.Even;  // Start with zefo = Even
@@ -28,13 +28,13 @@ class MainGrid
   {
     currentRowColor = currentRowColor == EvenOdd.Even ? EvenOdd.Odd : EvenOdd.Even;
   }
-  public void SetViewportDimensions(uint height, uint width)
+  public virtual void SetViewportDimensions(uint height, uint width)
   {
     ViewportHeight = height;
     ViewportWidth = width;
   }
   private readonly CursorInfo cursorInfo;
-  public Grid CursorInfoView => cursorInfo.CreateCursorView();
+  public virtual Grid CursorInfoView => cursorInfo.CreateCursorView();
   private string FormatAddress(uint value)
   {
     if (matrix.LastIndex <= 0xFFFF)
@@ -61,7 +61,7 @@ class MainGrid
     var background = IsCurrentColumn ? color : "default";
     return new Markup($"[{foreground} on {background}]{value:X2}[/]");
   }
-  public Grid CreateDiffView()
+  public virtual Grid CreateDiffView()
   {
     matrix.Update();
 

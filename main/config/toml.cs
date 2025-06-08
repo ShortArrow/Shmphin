@@ -39,28 +39,28 @@ class Toml : IConfigFile
   }
   public string? GetSharedMemoryName()
   {
-    var token = table?["default"]["sharedmemory"]["name"];
-    return (string?)(token ?? token?.IsString ? token?.AsString : null);
+    var token = table?["default"]?["sharedmemory"]?["name"];
+    return token?.IsString == true ? token.AsString : null;
   }
   public uint? GetColumnsLength()
   {
-    var token = table?["default"]["columns"]["length"];
-    return (uint?)(token ?? token?.IsInteger ? token?.AsInteger : null);
+    var token = table?["default"]?["columns"]?["length"];
+    return token?.IsInteger == true ? (uint?)token.AsInteger : null;
   }
   public uint? GetCellLength()
   {
-    var token = table?["default"]["cell"]["length"];
-    return (uint?)(token ?? token?.IsInteger ? token?.AsInteger : null);
+    var token = table?["default"]?["cell"]?["length"];
+    return token?.IsInteger == true ? (uint?)token.AsInteger : null;
   }
   public uint? GetSharedMemorySize()
   {
-    var token = table?["default"]["sharedmemory"]["size"];
-    return (uint?)(token ?? token?.IsInteger ? token?.AsInteger : null);
+    var token = table?["default"]?["sharedmemory"]?["size"];
+    return token?.IsInteger == true ? (uint?)token.AsInteger : null;
   }
   public uint? GetSharedMemoryOffset()
   {
-    var token = table?["default"]["sharedmemory"]["offset"];
-    return (uint?)(token ?? token?.IsInteger ? token?.AsInteger : null);
+    var token = table?["default"]?["sharedmemory"]?["offset"];
+    return token?.IsInteger == true ? (uint?)token.AsInteger : null;
   }
   public static string GenerateToml()
   {

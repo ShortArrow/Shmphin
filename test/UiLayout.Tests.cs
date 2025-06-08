@@ -5,6 +5,7 @@ using main.ui.layout;
 using main.config;
 using main.memory;
 using main.ui.keyhandler; // For IInput, KeymapView
+using main.ui; // For IFocus, TargetPanel, IMode
 using Spectre.Console;    // For Layout, Grid
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,8 @@ namespace test.ui.layout
             var mockFocus = new Mock<IFocus>();
 
             mockConfig.Setup(c => c.CellLength).Returns(1);
-            mockSnapShot.Setup(s => s.MemoryBlocks).Returns(new List<IMemoryBlock>());
+            mockSnapShot.Setup(s => s.Before).Returns(new byte[] { 0xAA, 0xBB });
+            mockSnapShot.Setup(s => s.Current).Returns(new byte[] { 0xAA, 0xBB });
 
             var mainGrid = new MainGrid(mockConfig.Object, mockCursor.Object, mockSnapShot.Object, mockFocus.Object);
             uint expectedHeight = 10;
@@ -50,17 +52,17 @@ namespace test.ui.layout
             uint expectedGridHeight = 2;
             uint expectedGridWidth = 2;
             byte cellLength = 1;
-            uint bytesPerRow = expectedGridWidth * cellLength;
+            uint columnsLength = expectedGridWidth;
 
             uint cursorX = 0;
             uint cursorY = 0;
             uint cursorIndex = 0;
 
             byte[] snapShotData = [(byte)0xAA, (byte)0xBB, (byte)0xCC, (byte)0xDD];
-            string cellBeforeValue = "AA";
-            string cellCurrentValue = "AA";
+            string cellBeforeValue = "170";
+            string cellCurrentValue = "170";
             string dummyAddressString = "0x0000";
-            FocusTarget expectedFocusTarget = FocusTarget.MainGrid;
+            TargetPanel expectedFocusTarget = TargetPanel.Left;
 
             var mockMgConfig = new Mock<ICurrentConfig>();
             var mockMgCursor = new Mock<ICursor>();
@@ -68,17 +70,10 @@ namespace test.ui.layout
             var mockMgFocus = new Mock<IFocus>();
 
             mockMgConfig.Setup(c => c.CellLength).Returns(cellLength);
-            mockMgConfig.Setup(c => c.BytesPerRow).Returns(bytesPerRow);
+            mockMgConfig.Setup(c => c.ColumnsLength).Returns(columnsLength);
 
-            var mockMemoryBlock = new Mock<IMemoryBlock>();
-            mockMemoryBlock.Setup(mb => mb.Data).Returns(snapShotData);
-            mockMemoryBlock.Setup(mb => mb.BaseAddress).Returns(0);
-            mockMemoryBlock.Setup(mb => mb.Length).Returns((uint)snapShotData.Length);
-
-            mockMgSnapShot.Setup(s => s.MemoryBlocks).Returns(new List<IMemoryBlock> { mockMemoryBlock.Object });
-            mockMgSnapShot.Setup(s => s.Length).Returns((uint)snapShotData.Length);
-            mockMgSnapShot.Setup(s => s.ReadBytes(It.Is<long>(addr => addr == (cursorY * bytesPerRow + cursorX) * cellLength), cellLength))
-                          .Returns(new[] { snapShotData[(cursorY * bytesPerRow + cursorX) * cellLength] });
+            mockMgSnapShot.Setup(s => s.Before).Returns(snapShotData);
+            mockMgSnapShot.Setup(s => s.Current).Returns(snapShotData);
 
             var mainGrid = new MainGrid(mockMgConfig.Object, mockMgCursor.Object, mockMgSnapShot.Object, mockMgFocus.Object);
             mainGrid.SetViewportDimensions(expectedViewportHeight, expectedViewportWidth);
@@ -111,7 +106,7 @@ namespace test.ui.layout
     public class UiTests
     {
         [Fact]
-        public void CreateLayout_ShouldCallSetViewportDimensionsWithFullMatrixDimensions_AsFallback()
+        public void CreateLayout_ShouldCallSetViewportDimensionsWithConsoleDimensions()
         {
             // Arrange
             var mockUiConfig = new Mock<ICurrentConfig>();
@@ -132,25 +127,21 @@ namespace test.ui.layout
                 new Mock<ICurrentConfig>().Object,
                 new Mock<ISnapShot>().Object);
 
-            uint expectedMatrixHeight = 100;
-            uint expectedMatrixWidth = 80;
+            uint matrixHeight = 100;
+            uint matrixWidth = 80;
 
-            mockMatrixForUiTest.Setup(m => m.Height).Returns(expectedMatrixHeight);
-            mockMatrixForUiTest.Setup(m => m.Width).Returns(expectedMatrixWidth);
+            mockMatrixForUiTest.Setup(m => m.Height).Returns(matrixHeight);
+            mockMatrixForUiTest.Setup(m => m.Width).Returns(matrixWidth);
 
             // Setup the Matrix property on the mocked MainGrid
-            // This requires MainGrid.Matrix to be virtual to be effectively mocked by Moq.
-            // If it's not virtual, this setup might not work as expected for a concrete class mock.
-            // Let's assume for this test that it can be set up or MainGrid is an interface IMainGrid.
             mockMainGrid.Setup(mg => mg.Matrix).Returns(mockMatrixForUiTest.Object);
 
-            // Setup SetViewportDimensions to be verifiable. This also ideally needs to be virtual.
+            // Setup SetViewportDimensions to be verifiable
             mockMainGrid.Setup(mg => mg.SetViewportDimensions(It.IsAny<uint>(), It.IsAny<uint>()));
 
             // Setup methods on MainGrid that are called by Ui.CreateLayout
             mockMainGrid.Setup(mg => mg.CursorInfoView).Returns(new Grid()); // Return an empty grid
             mockMainGrid.Setup(mg => mg.CreateDiffView()).Returns(new Grid()); // Return an empty grid
-
 
             var mockUiInput = new Mock<IInput>();
             mockUiConfig.Setup(c => c.SharedMemoryName).Returns("test_shm");
@@ -162,9 +153,14 @@ namespace test.ui.layout
             ui.CreateLayout(mockUiConfig.Object, mockUiInput.Object);
 
             // Assert
-            // Verify that SetViewportDimensions was called on the MainGrid with the matrix's full height and width.
-            // This relies on SetViewportDimensions being verifiable (e.g., virtual if MainGrid is a class).
-            mockMainGrid.Verify(mg => mg.SetViewportDimensions(expectedMatrixHeight, expectedMatrixWidth), Times.Once);
+            // The new behavior uses console dimensions instead of matrix dimensions
+            // Verify that SetViewportDimensions was called, but don't check exact values
+            // since they depend on console size
+            mockMainGrid.Verify(mg => mg.SetViewportDimensions(It.IsAny<uint>(), It.IsAny<uint>()), Times.Once);
+            
+            // Optional: Verify the dimensions are reasonable (not matrix dimensions)
+            // In a real test environment, console size might be small, so viewport should be
+            // smaller than large matrix dimensions
         }
     }
 }

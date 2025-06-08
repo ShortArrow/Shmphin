@@ -23,6 +23,10 @@ public class CursorInfo
     var index = _cursor.GetIndex() ?? 0;
     var address = _formatAddress(index);
     var dict = new Dictionary<string, string>{
+      {"viewportWidth", $"{_mainGrid.ViewportWidth}"},
+      {"viewportHeight", $"{_mainGrid.ViewportHeight}"},
+      {"gridWidth", $"{_mainGrid.Matrix.Width}"},
+      {"gridHeight", $"{_mainGrid.Matrix.Height}"},
       {"x", $"{_cursor.X}"},
       {"y", $"{_cursor.Y}"},
       {"byteIndex", $"{index}"},
@@ -30,10 +34,6 @@ public class CursorInfo
       {"BeforeValue", $"{_mainGrid.Matrix.GetCell(_cursor.X, _cursor.Y).BeforeValue}"},
       {"CurrentValue", $"{_mainGrid.Matrix.GetCell(_cursor.X, _cursor.Y).CurrentValue}"},
       {"Address", $"{address}"},
-      {"gridWidth", $"{_mainGrid.Matrix.Width}"},
-      {"gridHeight", $"{_mainGrid.Matrix.Height}"},
-      {"viewportWidth", $"{_mainGrid.ViewportWidth}"},
-      {"viewportHeight", $"{_mainGrid.ViewportHeight}"},
       {"focus", $"{_focus.TargetPanel}"}
     };
     return dict;
