@@ -12,6 +12,12 @@ public interface IUi
   Layout CreateLayout(IConfig config, IInput input);
 }
 
+public static class LayoutConstants
+{
+  public const uint ReservedUiHeight = 10; // Space for header (3), footer (3), borders, and padding
+  public const uint MinimumViewportWidth = 40; // Minimum usable width for content display
+}
+
 public class Ui : IUi
 {
   private readonly ICurrentConfig _config;
@@ -96,8 +102,8 @@ public class Ui : IUi
     
     // Reserve space for header (3), footer (3), borders, and right panel
     // Rough estimate: left panel gets about 60% of width, 80% of available height
-    var availableHeight = consoleHeight > 10 ? consoleHeight - 10 : 10; // Reserve 10 lines for UI
-    var availableWidth = consoleWidth > 40 ? (consoleWidth * 6) / 10 : 40; // 60% of width
+    var availableHeight = consoleHeight > LayoutConstants.ReservedUiHeight ? consoleHeight - LayoutConstants.ReservedUiHeight : LayoutConstants.ReservedUiHeight;
+    var availableWidth = consoleWidth > LayoutConstants.MinimumViewportWidth ? (consoleWidth * 6) / 10 : LayoutConstants.MinimumViewportWidth;
     
     // Ensure matrix is updated before checking its dimensions
     // Use try-catch to handle cases where matrix can't be updated (e.g., in tests)
