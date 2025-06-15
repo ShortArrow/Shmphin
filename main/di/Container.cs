@@ -46,10 +46,11 @@ public static class Container
     services.AddSingleton<IMode, Mode>();
     services.AddSingleton<IFocus, Focus>();
     services.AddSingleton<ISnapShot, SnapShot>();
+    services.AddSingleton<MainGrid>(); // Register MainGrid
     // services.AddSingleton<IOperation, Operation>();
     services.AddSingleton<IOperations, Operations>();
     services.AddSingleton(provider => (Operations)provider.GetRequiredService<IOperations>());
-    services.AddSingleton<IUi, Ui>();
+    services.AddSingleton<IUi, Ui>(); // Ui now depends on MainGrid
     services.AddSingleton<IInput>(provider =>
     {
       var operations = provider.GetRequiredService<Operations>();

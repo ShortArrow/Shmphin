@@ -12,8 +12,27 @@ public interface IUi
   Layout CreateLayout(IConfig config, IInput input);
 }
 
-public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocus focus, IMode mode, ISelectView selectView) : IUi
+public static class LayoutConstants
 {
+  public const uint ReservedUiHeight = 10; // Space for header (3), footer (3), borders, and padding
+  public const uint MinimumViewportWidth = 40; // Minimum usable width for content display
+}
+
+public class Ui : IUi
+{
+  private readonly ICurrentConfig _config;
+  private readonly IMode _mode;
+  private readonly ISelectView _selectView;
+  private readonly MainGrid _mainGrid;
+
+  public Ui(ICurrentConfig config, IMode mode, ISelectView selectView, MainGrid mainGrid)
+  {
+    _config = config;
+    _mode = mode;
+    _selectView = selectView;
+    _mainGrid = mainGrid;
+  }
+
   private BoxBorder BorderStyle => BoxBorder.Rounded;
   private Color GetBorderColor(InputMode[]? activeModes = null, InputMode[]? inactiveModes = null)
   {
@@ -21,21 +40,21 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     var activeColor = Color.Green;
     if (activeModes != null)
     {
-      return activeModes.Contains(mode.InputMode) ? activeColor : defaultColor;
+      return activeModes.Contains(_mode.InputMode) ? activeColor : defaultColor;
     }
     if (inactiveModes != null)
     {
-      return inactiveModes.Contains(mode.InputMode) ? defaultColor : activeColor;
+      return inactiveModes.Contains(_mode.InputMode) ? defaultColor : activeColor;
     }
     return defaultColor;
   }
-  private readonly MainGrid mainGrid = new(config, cursor, snapShot, focus);
-  public Layout CreateLayout(IConfig config, IInput input)
+
+  public Layout CreateLayout(IConfig config, IInput input) // config parameter here is a bit redundant if _config is the same, but CreateLayout is an interface method.
   {
     // Create the layout
-    if (mode.InputMode == InputMode.Help)
+    if (_mode.InputMode == InputMode.Help)
     {
-      return new KeymapView(input, selectView).View;
+      return new KeymapView(input, _selectView).View;
     }
     var layout = new Layout("Root").SplitRows(
       new Layout("Header").Size(3),
@@ -51,14 +70,58 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     // Update the left column
     layout["Header"].Update(
       new Panel(Align.Center(
-        new Markup($"[blue]{config.SharedMemoryName}[/]"),
+        new Markup($"[blue]{_config.SharedMemoryName}[/]"), // Use injected _config
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
       .Expand());
+
+    // Set viewport dimensions for mainGrid.
+    // STEP 1: Query Layout Region Dimensions:
+    // Attempted to find a way to get character dimensions of layout["Main"]["Left"].
+    // However, Spectre.Console typically resolves dimensions during the rendering pass,
+    // and direct querying of pre-render dimensions for a LayoutRegion is not reliably available.
+    // STEP 4: Use console dimensions with padding for panels/borders
+    // Instead of using matrix dimensions (which can be much larger than viewport),
+    // use console size minus space for UI elements (headers, footers, borders, etc.)
+    
+    uint consoleHeight;
+    uint consoleWidth;
+    
+    try
+    {
+      consoleHeight = (uint)Math.Max(System.Console.WindowHeight, 0);
+      consoleWidth = (uint)Math.Max(System.Console.WindowWidth, 0);
+    }
+    catch
+    {
+      // Fallback if console size is not available (e.g., in tests or non-interactive environments)
+      consoleHeight = 25; // Standard terminal height
+      consoleWidth = 80;  // Standard terminal width
+    }
+    
+    // Reserve space for header (3), footer (3), borders, and right panel
+    // Rough estimate: left panel gets about 60% of width, 80% of available height
+    var availableHeight = consoleHeight > LayoutConstants.ReservedUiHeight ? consoleHeight - LayoutConstants.ReservedUiHeight : LayoutConstants.ReservedUiHeight;
+    var availableWidth = consoleWidth > LayoutConstants.MinimumViewportWidth ? (consoleWidth * 6) / 10 : LayoutConstants.MinimumViewportWidth;
+    
+    // Ensure matrix is updated before checking its dimensions
+    // Use try-catch to handle cases where matrix can't be updated (e.g., in tests)
+    try
+    {
+      _mainGrid.Matrix.Update();
+    }
+    catch
+    {
+      // If matrix update fails, we'll use the current matrix dimensions
+      // This might happen in test environments or when config is incomplete
+    }
+    
+    _mainGrid.SetViewportDimensions(availableHeight, availableWidth);
+
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
-        mainGrid.CursorInfoView,
+        _mainGrid.CursorInfoView, // Use injected _mainGrid
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
@@ -67,7 +130,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Main"]["Right"]["Bottom"].Update(
       new Panel(Align.Center(
-        mode.InputMode == InputMode.NewValue
+        _mode.InputMode == InputMode.NewValue // Use injected _mode
           ? new Markup($"[red]{input.InputBuffer}[/]")
           : new Markup($"[green]shmphin[/]"),
         VerticalAlignment.Middle
@@ -78,7 +141,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Main"]["Left"].Update(
       new Panel(Align.Center(
-        mainGrid.CreateDiffView(),
+        _mainGrid.CreateDiffView(), // Use injected _mainGrid
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)
@@ -87,7 +150,7 @@ public class Ui(ICurrentConfig config, ICursor cursor, ISnapShot snapShot, IFocu
     );
     layout["Footer"].Update(
       new Panel(Align.Center(
-        Prompt.ShowInput(input.InputBuffer, mode.InputMode),
+        Prompt.ShowInput(input.InputBuffer, _mode.InputMode), // Use injected _mode
         VerticalAlignment.Middle
       ))
       .Border(BorderStyle)

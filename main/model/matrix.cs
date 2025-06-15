@@ -8,9 +8,9 @@ public class Matrix(ICurrentConfig config, ISnapShot snapShot)
   private uint cellSize = config.CellLength ?? 1;
   public uint Length { get => (uint)(cells?.Length ?? 0); }
   private uint width = config.ColumnsLength ?? 8;
-  public uint Width { get => width; }
+  public virtual uint Width { get => width; }
   private uint height = 0;
-  public uint Height { get => height; }
+  public virtual uint Height { get => height; }
   public uint LastIndex { get => (uint)((cells?.Length ?? 0) * (config.CellLength ?? 1) - 1); }
   public void Update(byte[]? before = null, byte[]? current = null)
   {

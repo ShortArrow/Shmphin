@@ -2,30 +2,51 @@ using Spectre.Console;
 using main.model;
 
 namespace main.ui.layout;
-public class CursorInfo(ICursor cursor, Matrix matrix, IFocus focus, Func<uint, string> FormatAddress)
+public class CursorInfo
 {
-  public Grid CreateCursorView()
-  {
-    matrix.Update();
-    var grid = new Grid();
-    var index = cursor.GetIndex() ?? 0;
+  private readonly ICursor _cursor;
+  private readonly MainGrid _mainGrid;
+  private readonly IFocus _focus;
+  private readonly Func<uint, string> _formatAddress;
 
-    grid.AddColumns(2);
-    grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
-    var address = FormatAddress(index);
+  public CursorInfo(ICursor cursor, MainGrid mainGrid, IFocus focus, Func<uint, string> FormatAddress)
+  {
+    _cursor = cursor;
+    _mainGrid = mainGrid;
+    _focus = focus;
+    _formatAddress = FormatAddress;
+  }
+
+  public Dictionary<string, string> GetViewData()
+  {
+    _mainGrid.Matrix.Update(); // It's important this is called if data relies on updated matrix state
+    var index = _cursor.GetIndex() ?? 0;
+    var address = _formatAddress(index);
     var dict = new Dictionary<string, string>{
-      {"x", $"{cursor.X}"},
-      {"y", $"{cursor.Y}"},
+      {"viewportWidth", $"{_mainGrid.ViewportWidth}"},
+      {"viewportHeight", $"{_mainGrid.ViewportHeight}"},
+      {"gridWidth", $"{_mainGrid.Matrix.Width}"},
+      {"gridHeight", $"{_mainGrid.Matrix.Height}"},
+      {"x", $"{_cursor.X}"},
+      {"y", $"{_cursor.Y}"},
       {"byteIndex", $"{index}"},
       {"wordIndex", $"{index / 2}"},
-      {"BeforeValue", $"{matrix.GetCell(cursor.X, cursor.Y).BeforeValue}"},
-      {"CurrentValue", $"{matrix.GetCell(cursor.X, cursor.Y).CurrentValue}"},
+      {"BeforeValue", $"{_mainGrid.Matrix.GetCell(_cursor.X, _cursor.Y).BeforeValue}"},
+      {"CurrentValue", $"{_mainGrid.Matrix.GetCell(_cursor.X, _cursor.Y).CurrentValue}"},
       {"Address", $"{address}"},
-      {"gridWidth", $"{matrix.Width}"},
-      {"gridHeight", $"{matrix.Height}"},
-      {"focus", $"{focus.TargetPanel}"}
+      {"focus", $"{_focus.TargetPanel}"}
     };
-    foreach (var item in dict)
+    return dict;
+  }
+
+  public Grid CreateCursorView()
+  {
+    var grid = new Grid();
+    grid.AddColumns(2);
+    grid.AddRow(new Markup($"[green bold]Name[/]"), new Markup($"[red bold]Value[/]"));
+
+    var data = GetViewData();
+    foreach (var item in data)
     {
       grid.AddRow(new Text(item.Key), new Text(item.Value).RightJustified());
     }
