@@ -117,11 +117,7 @@ public class Ui : IUi
       // This might happen in test environments or when config is incomplete
     }
     
-    // Don't exceed matrix dimensions if matrix is smaller
-    var viewportHeight = Math.Min(availableHeight, _mainGrid.Matrix.Height);
-    var viewportWidth = Math.Min(availableWidth, _mainGrid.Matrix.Width);
-    
-    _mainGrid.SetViewportDimensions(viewportHeight, viewportWidth);
+    _mainGrid.SetViewportDimensions(availableHeight, availableWidth);
 
     layout["Main"]["Right"]["Top"].Update(
       new Panel(Align.Center(
