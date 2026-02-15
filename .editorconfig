@@ -12,7 +12,7 @@ indent_style = space
 # C# file specific settings
 [*.cs]
 # Indentation style and size
-indent_size = 2
+indent_size = 4
 indent_style = space
 
 # Line ending settings and trimming whitespace
